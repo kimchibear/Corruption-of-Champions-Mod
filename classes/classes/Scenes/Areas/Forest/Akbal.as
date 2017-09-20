@@ -1,7 +1,8 @@
-﻿package classes.Scenes.Areas.Forest
+package classes.Scenes.Areas.Forest
 {
 	import classes.*;
-	import classes.internals.WeightedDrop;
+import classes.StatusEffects.Combat.AkbalSpeedDebuff;
+import classes.internals.WeightedDrop;
 
 	public class Akbal extends Monster
 	{
@@ -11,30 +12,30 @@
 			//Chances to miss:
 			var damage:Number = 0;
 			//Blind dodge change
-			if (findStatusAffect(StatusAffects.Blind) >= 0) {
-				outputText(capitalA + short + " seems to have no problem guiding his attacks towards you, despite his blindness.\n", false);
+			if (hasStatusEffect(StatusEffects.Blind)) {
+				outputText(capitalA + short + " seems to have no problem guiding his attacks towards you, despite his blindness.\n");
 			}
 			//Determine if dodged!
 			if (player.spe - spe > 0 && int(Math.random() * (((player.spe - spe) / 4) + 80)) > 80) {
 				if (player.spe - spe < 8)
-					outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!", false);
+					outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!");
 				if (player.spe - spe >= 8 && player.spe - spe < 20)
-					outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!", false);
+					outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!");
 				if (player.spe - spe >= 20)
-					outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".", false);
-				game.combatRoundOver();
+					outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".");
+				game.combat.combatRoundOver();
 				return;
 			}
 			//Determine if evaded
 			if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
-				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.", false);
-				game.combatRoundOver();
+				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.");
+				game.combat.combatRoundOver();
 				return;
 			}
 			//Determine if flexibilitied
 			if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 10) {
-				outputText("Using your cat-like agility, you twist out of the way of " + a + short + "'s attack.", false);
-				game.combatRoundOver();
+				outputText("Using your cat-like agility, you twist out of the way of " + a + short + "'s attack.");
+				game.combat.combatRoundOver();
 				return;
 			}
 			//Determine damage - str modified by enemy toughness!
@@ -43,30 +44,30 @@
 				//(medium HP damage)
 				damage = int((str + weaponAttack) - Math.random() * (player.tou) - player.armorDef);
 				if (damage <= 0) {
-					outputText("Akbal lunges forwards but with your toughness", false);
+					outputText("Akbal lunges forwards but with your toughness");
 					if (player.armorDef > 0)
-						outputText(" and " + player.armorName + ", he fails to deal any damage.", false);
+						outputText(" and " + player.armorName + ", he fails to deal any damage.");
 					else
-						outputText(" he fails to deal any damage.", false);
+						outputText(" he fails to deal any damage.");
 				}
 				else {
-					outputText("Akbal rushes at you, his claws like lightning as they leave four red-hot lines of pain across your stomach.", false);
+					outputText("Akbal rushes at you, his claws like lightning as they leave four red-hot lines of pain across your stomach.");
 					player.takeDamage(damage);
 				}
 			} else { //*Normal Attack B
 				//(high HP damage)
 				damage = int((str + 25 + weaponAttack) - Math.random() * (player.tou) - player.armorDef);
 				if (damage == 0) {
-					outputText("Akbal lunges forwards but between your toughness ", false);
+					outputText("Akbal lunges forwards but between your toughness ");
 					if (player.armorDef > 0)
-						outputText("and " + player.armorName + ", he fails to deal any damage.", false);
+						outputText("and " + player.armorName + ", he fails to deal any damage.");
 				}
 				else {
-					outputText("Akbal snarls as he flies towards you, snapping his ivory teeth on your arm. You scream out in pain as you throw him off.", false);
+					outputText("Akbal snarls as he flies towards you, snapping his ivory teeth on your arm. You scream out in pain as you throw him off.");
 					player.takeDamage(damage);
 				}
 			}
-			game.combatRoundOver();
+			game.combat.combatRoundOver();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
@@ -77,27 +78,28 @@
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
 			game.forest.akbalScene.akbalWon(hpVictory,pcCameWorms);
-			game.cleanupAfterCombat();
+			game.combat.cleanupAfterCombat();
 		}
 		
 		public function akbalLustAttack():void
 		{
 			//*Lust Attack - 
-			if (player.findStatusAffect(StatusAffects.Whispered) < 0)
+			if (!player.hasStatusEffect(StatusEffects.Whispered))
 			{
-				outputText("You hear whispering in your head. Akbal begins speaking to you as he circles you, telling all the ways he'll dominate you once he beats the fight out of you.", false);
+				outputText("You hear whispering in your head. Akbal begins speaking to you as he circles you, telling all the ways he'll dominate you once he beats the fight out of you.");
 				//(Lust increase)
-				game.dynStats("lus", 7 + (100 - player.inte) / 10);
-				player.createStatusAffect(StatusAffects.Whispered,0,0,0,0);
+				player.takeLustDamage(7 + (100 - player.inte) / 10, true);
+				player.createStatusEffect(StatusEffects.Whispered,0,0,0,0);
 			}
 			//Continuous Lust Attack - 
 			else
 			{
-				outputText("The whispering in your head grows, many voices of undetermined sex telling you all the things the demon wishes to do to you. You can only blush.", false);
+				outputText("The whispering in your head grows, many voices of undetermined sex telling you all the things the demon wishes to do to you. You can only blush.");
 				//(Lust increase)
-				game.dynStats("lus", 12 + (100 - player.inte) / 10);
+				var lustDmg:int = 12 + (100 - player.inte) / 10;
+				player.takeLustDamage(lustDmg, true);
 			}
-			game.combatRoundOver();
+			game.combat.combatRoundOver();
 		}
 		
 		public function akbalSpecial():void
@@ -105,62 +107,58 @@
 			//*Special Attack A - 
 			if (rand(2) == 0 && player.spe > 20)
 			{
-				var speedChange:Number = player.spe / 5 * -1;
-				outputText("Akbal's eyes fill with light, and a strange sense of fear begins to paralyze your limbs.", false);
+				outputText("Akbal's eyes fill with light, and a strange sense of fear begins to paralyze your limbs.");
 				//(Speed decrease)
-				game.dynStats("spe", speedChange);
-				if (player.findStatusAffect(StatusAffects.AkbalSpeed) >= 0)
-					player.addStatusValue(StatusAffects.AkbalSpeed, 1, speedChange);
-				else
-					player.createStatusAffect(StatusAffects.AkbalSpeed, speedChange, 0, 0, 0);
+				var ase:AkbalSpeedDebuff = player.createOrFindStatusEffect(StatusEffects.AkbalSpeed) as AkbalSpeedDebuff;
+				ase.increase();
 			}
 			//*Special Attack B - 
 			else
 			{
-				outputText("Akbal releases an ear-splitting roar, hurling a torrent of emerald green flames towards you.\n", false);
+				outputText("Akbal releases an ear-splitting roar, hurling a torrent of emerald green flames towards you.\n");
 				//(high HP damage)
 				//Determine if dodged!
 				if (player.spe - spe > 0 && int(Math.random() * (((player.spe - spe) / 4) + 80)) > 80)
 				{
 					if (player.spe - spe < 8)
-						outputText("You narrowly avoid " + a + short + "'s fire!", false);
+						outputText("You narrowly avoid " + a + short + "'s fire!");
 					if (player.spe - spe >= 8 && player.spe - spe < 20)
-						outputText("You dodge " + a + short + "'s fire with superior quickness!", false);
+						outputText("You dodge " + a + short + "'s fire with superior quickness!");
 					if (player.spe - spe >= 20)
-						outputText("You deftly avoid " + a + short + "'s slow fire-breath.", false);
-					game.combatRoundOver();
+						outputText("You deftly avoid " + a + short + "'s slow fire-breath.");
+					game.combat.combatRoundOver();
 					return;
 				}
 				//Determine if evaded
 				if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 20)
 				{
-					outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s fire-breath.", false);
-					game.combatRoundOver();
+					outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s fire-breath.");
+					game.combat.combatRoundOver();
 					return;
 				}
 				//Determine if flexibilitied
 				if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 10)
 				{
-					outputText("Using your cat-like agility, you contort your body to avoid " + a + short + "'s fire-breath.", false);
-					game.combatRoundOver();
+					outputText("Using your cat-like agility, you contort your body to avoid " + a + short + "'s fire-breath.");
+					game.combat.combatRoundOver();
 					return;
 				}
-				outputText("You are burned badly by the flames! ("+player.takeDamage(40)+")", false);
+				outputText("You are burned badly by the flames! ("+player.takeDamage(40) +")");
 				;
 			}
-			game.combatRoundOver();
+			game.combat.combatRoundOver();
 		}
 		
 		//*Support ability - 
 		public function akbalHeal():void
 		{
 			if (HPRatio() >= 1)
-				outputText("Akbal licks himself, ignoring you for now.", false);
+				outputText("Akbal licks himself, ignoring you for now.");
 			else
-				outputText("Akbal licks one of his wounds, and you scowl as the injury quickly heals itself.", false);
+				outputText("Akbal licks one of his wounds, and you scowl as the injury quickly heals itself.");
 			addHP(30);
 			lust += 10;
-			game.combatRoundOver();
+			game.combat.combatRoundOver();
 		}
 
 		public function Akbal()

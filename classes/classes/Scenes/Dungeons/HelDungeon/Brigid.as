@@ -7,41 +7,41 @@ package classes.Scenes.Dungeons.HelDungeon
 
 		//Attack One: Hot Poker, Right Up Your Ass!
 		private function brigidPoke():void {
-			outputText("Brigid stalks forward with confidence, her shield absorbing your defensive blows until she's right on top of you. She bats your [weapon] aside and thrashes you with her hot poker, scalding your " + player.skin() + " and sending you reeling.");
+			outputText("Brigid stalks forward with confidence, her shield absorbing your defensive blows until she's right on top of you. She bats your [weapon] aside and thrashes you with her hot poker, scalding your [skin] and sending you reeling. ");
 			//(Effect: Heavy Damage)
 			var damage:Number = Math.round((str + weaponAttack) - rand(player.tou) - player.armorDef);
-			if(damage < 30) damage = 30;
+			if (damage < 30) damage = 30;
 			damage = player.takeDamage(damage, true);
-			game.combatRoundOver();
+			game.combat.combatRoundOver();
 		}
 
 		//Attack Two: SHIELD BOP! OOM BOP!
 		private function brigidBop():void {
-			outputText("The harpy feints at you with her poker; you dodge the blow, but you leave yourself vulnerable as she spins around and slams her heavy shield into you, knocking you off balance.");
+			outputText("The harpy feints at you with her poker; you dodge the blow, but you leave yourself vulnerable as she spins around and slams her heavy shield into you, knocking you off balance. ");
 			//(Effect: Stagger/Stun)
 			var damage:Number = 5;
 			damage = player.takeDamage(damage, true);
-			if(player.findPerk(PerkLib.Resolute) >= 0) outputText("  Of course, your resolute posture prevents her from accomplishing much.");
-			else player.createStatusAffect(StatusAffects.Stunned,0,0,0,0);
-			game.combatRoundOver();
+			if (player.findPerk(PerkLib.Resolute) >= 0) outputText("  Of course, your resolute posture prevents her from accomplishing much.");
+			else player.createStatusEffect(StatusEffects.Stunned,0,0,0,0);
+			game.combat.combatRoundOver();
 		}
 
 		//Attack Three: Harpy Ass Grind GO!
 		private function BrigidAssGrind():void {
 			outputText("Brigid grins as she approaches you.  She handily deflects a few defensive blows and grabs you by the shoulders.  She forces you onto your knees and before you can blink, has turned around and smashed your face into her ass!  \"<i>Mmm, you like that, don'tcha?</i>\" she growls, grinding her huge, soft ass across your face, giving you an up-close and personal feel of her egg-laying hips.");
-			game.dynStats("lus", 30);
-			game.combatRoundOver();
+			player.takeLustDamage(30, true);
+			game.combat.combatRoundOver();
 		}
 		override protected function performCombatAction():void
 		{
-			if(player.findStatusAffect(StatusAffects.Stunned) >= 0) {
-				player.removeStatusAffect(StatusAffects.Stunned);
-				if(rand(2) == 0) BrigidAssGrind();
+			if (player.hasStatusEffect(StatusEffects.Stunned)) {
+				player.removeStatusEffect(StatusEffects.Stunned);
+				if (rand(2) == 0) BrigidAssGrind();
 				else brigidPoke();
 				return;
 			}
-			if(rand(3) == 0) BrigidAssGrind();
-			else if(rand(2) == 0) brigidBop();
+			if (rand(3) == 0) BrigidAssGrind();
+			else if (rand(2) == 0) brigidBop();
 			else brigidPoke();
 		}
 
@@ -65,7 +65,7 @@ package classes.Scenes.Dungeons.HelDungeon
 			// this.plural = false;
 			this.createVagina(false, VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_LOOSE);
 			if (LOWER_BODY_TYPE_HARPY > 0) {
-				this.createStatusAffect(StatusAffects.BonusVCapacity, LOWER_BODY_TYPE_HARPY, 0, 0, 0);
+				this.createStatusEffect(StatusEffects.BonusVCapacity, LOWER_BODY_TYPE_HARPY, 0, 0, 0);
 			}
 			createBreastRow(Appearance.breastCupInverse("D"));
 			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
@@ -88,7 +88,7 @@ package classes.Scenes.Dungeons.HelDungeon
 			this.lustVuln = .25;
 			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
 			this.level = 19;
-			this.gems = rand(25)+140;
+			this.gems = rand(25) +140;
 			this.additionalXP = 50;
 			this.wingType = WING_TYPE_FEATHERED_LARGE;
 			this.tailType = TAIL_TYPE_DEMONIC;

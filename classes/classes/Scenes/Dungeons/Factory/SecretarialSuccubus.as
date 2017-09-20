@@ -12,33 +12,32 @@ package classes.Scenes.Dungeons.Factory
 		override public function defeated(hpVictory:Boolean):void
 		{
 			if (player.gender > 0) {
-				var dildo:Function = (player.hasKeyItem("Deluxe Dildo") >= 0 ? game.succubusGetsDildoed : null);
-				
+				clearOutput();
 				if (hpVictory) {
-					outputText("You smile in satisfaction as the " + short + " collapses, unable to continue fighting.  Now would be the perfect opportunity to taste the fruits of her sex-ready form...\n\nDo you rape her?", true);
-					game.dynStats("lus", 1);
-					game.simpleChoices("Yes", factory.doRapeSuccubus, "", 0, "", 0, "", 0, "No", factory.doLeaveSuccubus);
-					if (player.hasKeyItem("Deluxe Dildo") >= 0) game.addButton(1, "Dildo Rape", factory.dildoSuccubus);
-				} else if (player.lust>=33){
-					outputText("You smile in satisfaction as the " + short + " gives up on fighting you and starts masturbating, begging for you to fuck her.  Now would be the perfect opportunity to taste the fruits of her sex-ready form...\n\nDo you fuck her?", true);
-					game.dynStats("lus", 1);
-					game.simpleChoices("Yes", factory.doRapeSuccubus, "", 0, "", 0, "", 0, "No", factory.doLeaveSuccubus);
-					if (player.hasKeyItem("Deluxe Dildo") >= 0) game.addButton(1, "Dildo Rape", factory.dildoSuccubus);
+					outputText("You smile in satisfaction as the " + short + " collapses, unable to continue fighting.  Now would be the perfect opportunity to taste the fruits of her sex-ready form...\n\nDo you rape her?");
+					player.takeLustDamage(1, true);
+					game.doYesNo(factory.secretarialSuccubus.doRapeSuccubus, factory.secretarialSuccubus.doLeaveSuccubus)
+					if (player.hasKeyItem("Deluxe Dildo") >= 0) game.addButton(2, "Dildo Rape", factory.secretarialSuccubus.dildoSuccubus);
+				} else if (player.lust >= 33) {	
+					outputText("You smile in satisfaction as the " + short + " gives up on fighting you and starts masturbating, begging for you to fuck her.  Now would be the perfect opportunity to taste the fruits of her sex-ready form...\n\nDo you fuck her?");
+					player.takeLustDamage(1, true);
+					game.doYesNo(factory.secretarialSuccubus.doRapeSuccubus, factory.secretarialSuccubus.doLeaveSuccubus)
+					if (player.hasKeyItem("Deluxe Dildo") >= 0) game.addButton(2, "Dildo Rape", factory.secretarialSuccubus.dildoSuccubus);
 				} else {
-					doNext(factory.doLeaveSuccubus);
+					doNext(factory.secretarialSuccubus.doLeaveSuccubus);
 				}
 			} else {
-				doNext(factory.doLeaveSuccubus);
+				doNext(factory.secretarialSuccubus.doLeaveSuccubus);
 			}
 		}
 
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
-			if(pcCameWorms){
+			if (pcCameWorms){
 				outputText("\n\nYour foe doesn't seem to care...");
-				doNext(game.endLustLoss);
+				doNext(game.combat.endLustLoss);
 			} else {
-				doNext(factory.doLossSuccubus);
+				doNext(factory.secretarialSuccubus.doLossSuccubus);
 			}
 		}
 
@@ -49,7 +48,7 @@ package classes.Scenes.Dungeons.Factory
 			this.long = "The succubus across from you balances gracefully on her spiked heels, twirling and moving unpredictably.  Sexy dark stockings hug every curve of her perfectly shaped flesh until they disappear into her tiny miniskirt.  Her impressive breasts wobble delightfully as she moves, despite the inadequate efforts of her straining vest.  A pair of foot-long horns curve up from her otherwise perfect face and forehead, wreathed in lustrous blonde hair.  The very air around her is filled with an unidentifiable fragrance that makes you tingle and shiver.";
 			// this.plural = false;
 			this.createVagina(false, VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_NORMAL);
-			this.createStatusAffect(StatusAffects.BonusVCapacity, 30, 0, 0, 0);
+			this.createStatusEffect(StatusEffects.BonusVCapacity, 30, 0, 0, 0);
 			createBreastRow(Appearance.breastCupInverse("DD"));
 			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
 			this.ass.analWetness = ANAL_WETNESS_SLIME_DROOLING;
@@ -73,7 +72,7 @@ package classes.Scenes.Dungeons.Factory
 			this.lust = 30;
 			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
 			this.level = 7;
-			this.gems = rand(25)+10;
+			this.gems = rand(25) + 10;
 			this.additionalXP = 50;
 			this.drop = new WeightedDrop(consumables.LACTAID, 1);
 			this.wingType = WING_TYPE_BAT_LIKE_TINY;

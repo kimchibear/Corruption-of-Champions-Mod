@@ -1,7 +1,7 @@
 ﻿package classes.Scenes.Dungeons.D3 
 {
 	import classes.BaseContent;
-	import classes.StatusAffects;
+	import classes.StatusEffects;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.CockTypesEnum;
 	
@@ -125,7 +125,7 @@
 			//Dicks
 			else
 			{
-				outputText("\n\nThat monstrous, hungry-looking pussy wastes no time in descending towards your " + multiCockDescriptLight() + ".");
+				outputText("\n\nThat monstrous, hungry-looking pussy wastes no time in descending towards your " + player.multiCockDescriptLight() + ".");
 				if (player.biggestCockLength() <= 12) outputText(" The ease with which you slide inside is no surprise, given the disparity in size.");
 				else if (player.biggestCockLength() <= 30) outputText(" The ease with which you enter is no real surprise, given that even your bloated length"+ ((player.cocks.length > 1) ? "s are" : " is") +" small by comparison.");
 				else if (player.biggestCockLength() <= 48) outputText(" You slide in with ease, perfectly matched to the hungry fuck-tunnel in size.");
@@ -138,15 +138,15 @@
 				//Dicks need to grow
 				if (player.biggestCockLength() <= 30)
 				{
-					outputText("\n\nGlowing orange goo leaks from the oversized slit in thick beads. You briefly wonder what purpose the odd coloration could serve when the feeling of your cock"+ ((player.cocks.length > 1) ? "s" : "") +" stretching answers. It's making you grow bigger, somehow! The sensation is akin to stretching long-dormant muscles... an subtle flexing of unrealized potential that makes you aware of just how much you can do, or in this case, how big you can get. Your vision swims as your body works to keep up with the sudden change, and you close your eyes to keep from sicking up.");
+					outputText("\n\nGlowing orange goo leaks from the oversized slit in thick beads. You briefly wonder what purpose the odd coloration could serve when the feeling of your cock"+ ((player.cocks.length > 1) ? "s" : "") +" stretching answers. It's making you grow bigger, somehow! The sensation is akin to stretching long-dormant muscles... a subtle flexing of unrealized potential that makes you aware of just how much you can do, or in this case, how big you can get. Your vision swims as your body works to keep up with the sudden change, and you close your eyes to keep from sicking up.");
 
-					outputText("\n\nThe tentacle starts sliding up and down. At first, it's motions are slow and languid, giving you plenty of time to feel the supple slickness of its interior texture against you, but as your mass increases, so too does the speed of its up-and-down pumping motion. Even when it's pushing down, it somehow maintains a gentle suction that the velvety walls are tight against you, allowing you to subsume yourself in slippery cunt. The bigger you get, the better it feels. You aren't sure whether you're simply feeling more and more pussy at once or if you're somehow getting more sensitive, but it's enough to make your eyes roll back and your " + multiCockDescriptLight() + " practically piss pre-cum.");
+					outputText("\n\nThe tentacle starts sliding up and down. At first, it's motions are slow and languid, giving you plenty of time to feel the supple slickness of its interior texture against you, but as your mass increases, so too does the speed of its up-and-down pumping motion. Even when it's pushing down, it somehow maintains a gentle suction that the velvety walls are tight against you, allowing you to subsume yourself in slippery cunt. The bigger you get, the better it feels. You aren't sure whether you're simply feeling more and more pussy at once or if you're somehow getting more sensitive, but it's enough to make your eyes roll back and your " + player.multiCockDescriptLight() + " practically piss pre-cum.");
 
 					outputText("\n\nWhimpering from more ecstasy than you know what to do with, you feel yourself surge in size again. It's impossible to tell just how big you've gotten with your view forced to look straight ahead. All you can be sure of is that it's getting bigger, and you're feeling a LOT of pussy. By comparison, the dozens of other tentacles surrounding you are barely there. It's like your cock" + ((player.cocks.length > 1) ? "s are" : " is") + " the only part of you worth feeling, and the rest of you is just floating in a void - a sensation that strengthens with every inch of length and girth that you gain.");
 
 					outputText("\n\nCumming almost comes as a surprise to you, but there's only so much pleasure a body can receive before it helplessly and completely cumming, spraying thick wads of jism into the tentacle's hungry folds with instinctive convulsions. Every squirt leaves you a few inches longer and a good deal thicker. Only after emptying every ounce of cum from your [balls] does the feverish expansion finally halt.");
 
-					outputText("\n\nUnfortunately, the sensations don't. Even though the tentacle has stopped moving to digest its meal, you're still hyper-aware of the feeling of its slick folds against you. There's enough sensitivity in your enhanced package that unmoving pressure is giving your nervous system more feedback than your old dick's most vigorous fuck. The glowing, orange goo wasn't just making you bigger! It was stimulating nerve growth in your " + multiCockDescriptLight() + ", making you so sensitive that you can't help but stay hard, even after cumming.");
+					outputText("\n\nUnfortunately, the sensations don't. Even though the tentacle has stopped moving to digest its meal, you're still hyper-aware of the feeling of its slick folds against you. There's enough sensitivity in your enhanced package that unmoving pressure is giving your nervous system more feedback than your old dick's most vigorous fuck. The glowing, orange goo wasn't just making you bigger! It was stimulating nerve growth in your " + player.multiCockDescriptLight() + ", making you so sensitive that you can't help but stay hard, even after cumming.");
 
 					outputText("\n\nA few seconds later, the tentacle starts its slow, up-and-down stroking. You moan, giving a nearby vine the opening it needs to force itself into your mouth. It's tough to notice or care compared to the cacophony of signals coming from your crotch. Even your vision seems wasted and useless, the tactile resolution of your dickskin many times greater than your eyes' meager output.");
 
@@ -159,7 +159,7 @@
 				{
 					outputText("\n\nGlowing orange goo leaks out around your base" + ((player.cocks.length > 1) ? "s":"") + ". That must be what passes for the tentacle's girlcum. It feels like normal lubricant, at least. It doesn't burn or numb you, and it certainly doesn't seem to be making you grow any more. Wait... you close your eyes and focus on the feel of it. It's... it's better than normal lubricant! You're not sure why or how, but it feels subtly slicker than a normal pussy, and not in a bad 'no friction' kind of way. Every fold and silken caress still rubs your nerves just right. How can it be so slick and yet so powerfully soft and gripping?");
 
-					outputText("\n\nThe inside of the tentacle contracts slightly, yet the accompanying pleasure is anything but slight. It feels like the whole world tightens against your " + multiCockDescriptLight() + ", cradling them in cotton softness girded with velvet silk. You moan and cum, flooding the tube with the creamy goo of your release. Your body tries to thrust, but you're held completely immobile, forced to climax to the tentacle's tune. The ropes of pure pleasure are soon squirting to the timing of the gloriously textured fuck-tunnel, and it is only when your orgasm ends that you realize what the orange goo is doing to you; it's making you more sensitive.");
+					outputText("\n\nThe inside of the tentacle contracts slightly, yet the accompanying pleasure is anything but slight. It feels like the whole world tightens against your " + player.multiCockDescriptLight() + ", cradling them in cotton softness girded with velvet silk. You moan and cum, flooding the tube with the creamy goo of your release. Your body tries to thrust, but you're held completely immobile, forced to climax to the tentacle's tune. The ropes of pure pleasure are soon squirting to the timing of the gloriously textured fuck-tunnel, and it is only when your orgasm ends that you realize what the orange goo is doing to you; it's making you more sensitive.");
 
 					outputText("\n\nYou don't go soft after you finish squirting. You don't even get to catch your breath. The orange channel might be holding still as it digests your load, but your dick" + ((player.cocks.length > 1) ? "s are" : " is") + " still getting more sensitive. You don't even need motion for the clutching walls to arouse you any more, and once it starts moving... you're not sure you'll be able to handle it.");
 
@@ -167,7 +167,7 @@
 
 					outputText("\n\nSometime later, you come to in between orgasms, surrounded in green, but there is so much sensory data coming from your crotch that your eyes might as well be blind by comparison. You marvel at this new life and wonder if you'll ever tire of admiring the texture of these walls. The next orgasm blasts those thoughts away, answering the question for you. Raw, unfiltered pleasure. That's what matters to you now.");
 
-					doBadEnd();
+					getGame().gameOver();
 				}
 			}
 		}
@@ -177,18 +177,18 @@
 			clearOutput();
 			outputText("\n\nYou're held captive, overwhelmed by your own senses, and brought to nirvana ceaselessly. The demons never even try to free your fate, held captive as you are by one of the eldest tentacle beasts. You spend the rest of your life feeding it, incapable of focusing on anything but your own feelings of ecstasy.");
 			
-			doBadEnd();
+			getGame().gameOver();
 		}
 
 		private function endHer():void
 		{
 			clearOutput();
-			outputText("You circle behind her an put and end to her evil while she is busy with her pet, then turn to walk away. When you look back over your shoulder, her body is gone. Nothing remains but an empty pathway.");
+			outputText("You circle behind her and put an end to her evil while she is busy with her pet, then turn to walk away. When you look back over your shoulder, her body is gone. Nothing remains but an empty pathway.");
 
 			flags[kFLAGS.D3_GARDENER_DEFEATED] = GARDENER_KILLED;
 
 			menu();
-			cleanupAfterCombat(getGame().d3.resumeFromFight);
+			combat.cleanupAfterCombat(getGame().dungeons.resumeFromFight);
 		}
 
 		private function leaveHer():void
@@ -199,7 +199,7 @@
 			flags[kFLAGS.D3_GARDENER_DEFEATED] = GARDENER_LEFT;
 
 			menu();
-			cleanupAfterCombat(getGame().d3.resumeFromFight);
+			combat.cleanupAfterCombat(getGame().dungeons.resumeFromFight);
 		}
 
 		public function surrenderToTheGardener(hpVictory:Boolean = false):void
@@ -239,7 +239,7 @@
 			else outputText(", too turned on to try and stop your hands from diving into your needy crotch.");
 			
 			outputText("\n\n<i>\"Fallen already? Has the once mighty champion finally lost herself to the corruption of this land? Who would have thought that the one to");
-			if (player.findStatusAffect(StatusAffects.FactoryOverload) >= 0) outputText(" destroy");
+			if (flags[kFLAGS.FACTORY_SHUTDOWN] == 2) outputText(" destroy");
 			else outputText(" shut down");
 			outputText(" our factory would fall to a simple succubus and her lowly garden?\"</i> She strides over to you, hips wiggling in pleasure, and kneels alongside you, running her hand over your abdomen like a girl handling a new pet for the first time. <i>\"You're going to be so useful in my garden!\"</i>");
 			
@@ -253,7 +253,7 @@
 			else outputText(" You cast a worried look towards the writhing vines. They seem so eager, yet they hold back for now, perhaps waiting for their mistress to finish. No... you can't go down like this!");
 			
 			outputText("\n\nGently removing your [armor] a piece at a time, the succubus coos, <i>\"Are you looking forward to it yet, [name]? Being wholly, totally embraced, every hole filled with pulsing, eager lengths?\"</i> She strokes your cheek in a gesture that you would mistake for affection from anyone but a demon.");
-			if (player.hasVagina()) outputText(" Against your better judgement, you're starting to get wet from the promises of her words. You know you're being given to a neverending hell of sexual stimulation, but you can't stop your body's libido from responding to the idea.");
+			if (player.hasVagina()) outputText(" Against your better judgment, you're starting to get wet from the promises of her words. You know you're being given to a neverending hell of sexual stimulation, but you can't stop your body's libido from responding to the idea.");
 			outputText(" <i>\"Yeah, you want it, doncha?\"</i> Slim fingers deftly press at your");
 			if (!player.hasVagina())
 			{
@@ -279,7 +279,7 @@
 			
 			outputText("\n\nA whimpering, <i>\"Yes,\"</i> squeezes past your lips as you arch back against her palm.");
 			
-			outputText("\n\nSmiling sadly, the succubus pulls her fingers away. A web of your own clear lubricant hangs suspended between her fingers and your moistened box for a moment, then snaps. <i>\"You're going to be a wonderful mother my for pets, I just know it.\"</i> She loops an arm under your shoulder and lifts you to your [feet]. <i>\"Now, lets get you what you want, dear.\"</i>");
+			outputText("\n\nSmiling sadly, the succubus pulls her fingers away. A web of your own clear lubricant hangs suspended between her fingers and your moistened box for a moment, then snaps. <i>\"You're going to be a wonderful mother for my pets, I just know it.\"</i> She loops an arm under your shoulder and lifts you to your [feet]. <i>\"Now, lets get you what you want, dear.\"</i>");
 			
 			outputText("\n\nYou're led up to the very edge of the wall of vines. The writhe and twist against one another, in constant, aching motion, signalling their feverish want for you, but they hold back all the same. Their mistress has certainly trained them to act like gentlemen... for now at least.");
 			
@@ -297,13 +297,13 @@
 			outputText("\n\nIt grows dark as the tentacles adjust to your presence within their midst. Those not actively engaged in sliding across your [skinFurScales] are straightening once more, blocking the light and warmth of the sun out for what is perhaps the last time. Bands of slick, wet plant roll across your shoulders and [chest], enveloping them much like your limbs a moment before. A narrow band slides over your collarband and worms around your neck into an impromptu collar, tight enough that it's impossible to ignore but loose enough to allow you to breathe.");
 			
 			outputText("\n\nWetness drizzles your [vagina]");
-			if (player.hasCock()) outputText(" and " + multiCockDescriptLight());
+			if (player.hasCock()) outputText(" and " + player.multiCockDescriptLight());
 			outputText(" with foreign wetness. The vines' lubricant is surprisingly warm on your skin, and the feeling of rivulets of it running down the crack of your [butt] and over your [asshole] is surprisingly pleasant.");
 			if (player.isBiped()) outputText(" Your [legs] are eased open, but who are you to stop them? You're as wet as anything, and if spreading wide is the next step towards scratching your itch, so be it.");
 			outputText(" Your [clit] must look like a");
-			if (player.clitLength > 6) outputText(" glistening, cum-soaked shaft");
-			else if (player.clitLength > 3) outputText(" tiny, cum-soaked cock");
-			else if (player.clitLength > 1) outputText(" swollen, lube-lacquered gumball");
+			if (player.getClitLength() > 6) outputText(" glistening, cum-soaked shaft");
+			else if (player.getClitLength() > 3) outputText(" tiny, cum-soaked cock");
+			else if (player.getClitLength() > 1) outputText(" swollen, lube-lacquered gumball");
 			else outputText(" glistening, pink target");
 			outputText(" by now. You roll your [hips] as much as your position will allow. Your passion inflamed pussy has thus far avoided the tentacles' affections, though it's the one part that wants them more than anything.");
 			
@@ -327,14 +327,14 @@
 			
 			//Back to normal.
 			outputText("\n\nMore cum splatters across the exterior of your womanhood a moment before an enclosure envelops your [clit].");
-			if (player.clitLength > 6) outputText(" It stretches some around the cock-sized button");
-			else if (player.clitLength > 3) outputText(" It has no trouble handling your plus-sized button");
+			if (player.getClitLength() > 6) outputText(" It stretches some around the cock-sized button");
+			else if (player.getClitLength() > 3) outputText(" It has no trouble handling your plus-sized button");
 			else outputText(" Your tiny button seems dwarfed by the tube enveloping it");
 			outputText(", but that doesn't make it feel heavenly. It gently pulsates around your buzzer, rippling and squeezing, rhythmically whipping electric lashes of sensation into your fuck-crazed body one after another.");
 			
 			outputText("\n\nThe fleshy spear ravaging your honeypot quivers and slows, then thrusts hard enough to rock your body");
 			if (player.biggestTitSize() > 2) outputText(" and jiggle your tits");
-			outputText(", pressing itself flat against your cervix before finally exploding, creaming your insides with a thick layer of molten-hot seed. You would groan or whimper if your throat wasn't crammed so full of plantcock. Instead, your eyes roll back under their fluttering lids, revealing a narrow band of white as you lose all control. Your body shakes like a seizure victim's, all except for the muscles down south. They're too busy clenching and squeezing the lengthy intrudor, wringing every drop of lust-imbued cum");
+			outputText(", pressing itself flat against your cervix before finally exploding, creaming your insides with a thick layer of molten-hot seed. You would groan or whimper if your throat wasn't crammed so full of plantcock. Instead, your eyes roll back under their fluttering lids, revealing a narrow band of white as you lose all control. Your body shakes like a seizure victim's, all except for the muscles down south. They're too busy clenching and squeezing the lengthy intruder, wringing every drop of lust-imbued cum");
 			if (player.isPregnant()) outputText(" to splatter against your occupied womb.");
 			else outputText(" to fill your womb, to make it round with life so that others can feel what you're feeling.");
 			
@@ -344,7 +344,7 @@
 			
 			outputText("\n\nAnother, larger tentacle takes its place, sealing most of the first's load inside. There's no waiting, only fucking and climbing to one orgasm after another. The space between climaxes narrows with each one until your world becomes a constant, irresistible tide of bliss.");
 			
-			doBadEnd();
+			getGame().gameOver();
 		}
 		
 		private function maleLoss(hpVictory:Boolean):void
@@ -391,7 +391,7 @@
 			
 			outputText("\n\n<i>\"Yessss,\"</i> you hiss, forgetting your role in the heat of the moment.");
 			
-			outputText("\n\nStars erupt in your vision as you're kicked in the head, and you're not sure which is worse - the ache of her none-to-subtle reprimand or the void of sensation on your throbbing tool. The phantom memeory of her warm, soft toes cradling your veiny fuckstick teases you worse than anything she could say, and you look up at her, a hurtful look plain on your face.");
+			outputText("\n\nStars erupt in your vision as you're kicked in the head, and you're not sure which is worse - the ache of her none-to-subtle reprimand or the void of sensation on your throbbing tool. The phantom memory of her warm, soft toes cradling your veiny fuckstick teases you worse than anything she could say, and you look up at her, a hurtful look plain on your face.");
 			
 			outputText("\n\nHer visage is painted with displeasure, but hints of possessive affection as well. It would be easy to confirm it for a kind of motherly displeasure were it not for the glint of prideful ownership in her eyes. <i>\"Pets don't talk,\"</i> she explains. <i>\"I'll fix that later, but for right now, you can be my good little puppy, right?\"</i>");
 			
@@ -401,7 +401,7 @@
 			if (player.balls > 0) outputText(", just above your [balls],");
 			outputText(" once more, cooing, <i>\"I knew you'd train well. Now, I'm going to lead you to your new home, and then you'll get to blow all that nasty, pent-up spunk all over my hand. But you have to be good until then, okay?\"</i>");
 			
-			outputText("\n\nYou... you're not sure you can! You're so hot and so close! Pearls of clear pre are oozing out of your " + multiCockDescriptLight() + " like water from a leaky faucet, and all you'd need to do is grab hold of her leg and just hump away.");
+			outputText("\n\nYou... you're not sure you can! You're so hot and so close! Pearls of clear pre are oozing out of your " + player.multiCockDescriptLight() + " like water from a leaky faucet, and all you'd need to do is grab hold of her leg and just hump away.");
 			
 			outputText("\n\nPerhaps sensing this or simply because she intends to lead you away, she pulls away. <i>\"I suppose you can have a treat before you go.\"</i> The blue-hued demon turns to a depression in the ground and leans over, holding you down with her foot to keep you from mischief. After all, you haven't been properly trained. Her tremendous breasts hang down in elongated teardrops, only sagging slightly in spite of their huge size. When her fingers grab her pebbly, hardened nipples and begin to tug, a ripple passes back the creamy skin of her teats, and a torrent of amber-white sap erupts.");
 			
@@ -418,7 +418,7 @@
 			else if (player.isTaur()) outputText(" your hooves");
 			else outputText(" fours");
 			outputText(".");
-			if (!player.isTaur()) outputText(" You scrabble over, unusued to having to move in such a way,");
+			if (!player.isTaur()) outputText(" You scrabble over, unused to having to move in such a way,");
 			else outputText(" You gallop over and drop down on your forelegs");
 			outputText(" and plant your [face] right into the succubus' milk. It's a little thicker than milk normally is and stickier too, like honey, but it's also sweeter. The ambrosial fluid fills your mouth with scintillating, indescribable flavor that sets");
 			if (player.tailType != 0)
@@ -490,7 +490,7 @@
 			outputText("\n\nThere's just too much physical sensation going on for you to focus on coherent thoughts. Every part of your body feels like it's screaming its awareness at you. Your tail is a little itchy, for instance. Your legs are a little tired, but it's that good kind of 'just went for walkies' tired. Your nose can smell soooo much. And best of all, your cock feels like it's three times as sensitive. It's so much easier to just think in emotions and images instead of abstract concepts like words.");
 
 			outputText("\n\nMistress clasps a collar around your furry neck.");
-			if (player.skinType != SKIN_TYPE_FUR) outputText(" Was that there before?");
+			if (!player.hasFur()) outputText(" Was that there before?");
 			outputText(" It feels very right, and in your excitement, it's hard not to hump her leg. It must be obvious to her, because your dick");
 			if (player.cocks.length > 1) outputText("s are");
 			else outputText(" is");
@@ -527,7 +527,7 @@
 		{
 			clearOutput();
 			outputText("The champion, more canine than [man], became little more than one mutt among many that the demons had tamed, used for everything from breeding to hunting escaped slaves, and " + player.mf("he","she") + " loved it, delighted in it even. Eventually, " + player.mf("his","her") + " owner bred her numerous times, creating a bloodline of strong, loyal servants that eventually helped keep all of Mareth under the demon's heels.");
-			doBadEnd();
+			getGame().gameOver();
 		}
 		
 		private function maleLossFeeder():void
@@ -557,14 +557,14 @@
 			outputText(" twitching length, the succubus giggles. <i>\"Can you feel it? Can you feel your body just welling up with cum? I suppose I should have mentioned that, huh?\"</i> She runs her finger back the other way, and your muscles clench, squeezing out a big, fat drop of pre from your cock, dripping down to hit");
 			if (player.biggestTitSize() >= 3) outputText(" the underside of your breasts");
 			else outputText(" your chin");
-			outputText(". You whimper with need. It's impossible not to. Hell, your " + multiCockDescriptLight());
+			outputText(". You whimper with need. It's impossible not to. Hell, your " + player.multiCockDescriptLight());
 			if (player.cocks.length == 1) outputText(" is");
 			else outputText(" are");
 			outputText(" flexing, and if you had anything to brace off of, you'd be thrusting into the first orifice you could find.");
 
 			outputText("\n\nYou look at up at the gorgeous woman pleadingly, bound and dripping, helpless and aroused beyond measure. More tentacles wrap your arms tightly to your sides while she considers your situation. Her hands withdraw from your length, but the tentacle in your mouth is starting to pump in and out, squirting ropes of heavenly sap down your throat. There's something so indescribably erotic about the situation - you hanging there, suspended and helpless, pumped full of corruptive, cock-engorging chemicals that make every part of you so wonderfully sensitive.");
 
-			outputText("\n\nA breeze caresses your [leg] as the succubus casually removes your [armor]. It feels like oiled fingertips sliding over your flesh. Your [nipples] are like live wires, and your " + multiCockDescriptLight() + ".... Well, you're leaking pre in thick, solid ropes now, an act that feels like halfway between a good tonguing and orgasm itself. Your lips are slick with the tentacle's fluid and tingling like sex-organs of their own. Sealing them tight, you moan, gurgle, and swallow. Attempts to beg for more have fallen away. This is enough, and if it keeps up, you're going to cum, touches or no.");
+			outputText("\n\nA breeze caresses your [leg] as the succubus casually removes your [armor]. It feels like oiled fingertips sliding over your flesh. Your [nipples] are like live wires, and your " + player.multiCockDescriptLight() + ".... Well, you're leaking pre in thick, solid ropes now, an act that feels like halfway between a good tonguing and orgasm itself. Your lips are slick with the tentacle's fluid and tingling like sex-organs of their own. Sealing them tight, you moan, gurgle, and swallow. Attempts to beg for more have fallen away. This is enough, and if it keeps up, you're going to cum, touches or no.");
 
 			//Prostate swelling
 			if (player.balls == 0)
@@ -597,7 +597,7 @@
 		private function maleLossFeederII():void
 		{
 			clearOutput();
-			outputText("Trapped in a hellish loop of constant yet unsatisfied orgasm, you're pulled into the sea of tentacles. Your eyes have rolled back too far to see the grinning demoness or her confidently swaggering derriere, but if they could, they'd grow wide with worry once the twisting, dripping vines blocked her out. Hunger and thirst soon compete with pleasure for your attention. The swelling of your belly has already receeded, the fluid inside long side converted to ivory jets of release.");
+			outputText("Trapped in a hellish loop of constant yet unsatisfied orgasm, you're pulled into the sea of tentacles. Your eyes have rolled back too far to see the grinning demoness or her confidently swaggering derriere, but if they could, they'd grow wide with worry once the twisting, dripping vines blocked her out. Hunger and thirst soon compete with pleasure for your attention. The swelling of your belly has already receded, the fluid inside long side converted to ivory jets of release.");
 
 			outputText("\n\nA stalk as thick as your leg rises up, its tip nearly divided by a gash big enough to swallow a man whole, and");
 			if (player.biggestCockLength() < 6)
@@ -624,7 +624,7 @@
 			}
 			outputText(". The interior is covered with tiny, wiggling nubs that wiggle into action on contact with your trembling member");
 			if (player.cocks.length > 1) outputText("s");
-			outputText(". It's like every single nerve has its own skilled masseuse giving it a rubdown, coaxing more pleasure from every square inch of skin than you thought it capable of producing. You cry out, totally overwhelmed, only to be silenced by a familiar presense in your mouth.");
+			outputText(". It's like every single nerve has its own skilled masseuse giving it a rubdown, coaxing more pleasure from every square inch of skin than you thought it capable of producing. You cry out, totally overwhelmed, only to be silenced by a familiar presence in your mouth.");
 
 			outputText("\n\nThis new tentacle is already cumming, though. Using its own sappy spooge for lube, it slithers past your unresisting tonsils to provide its life-giving moisture directly. It can't quite compete with the huge, stalk-distending blobs of jism you're pouring out, at least not alone. A second tendril winds its way");
 			if (player.tailType != 0) outputText(" past your tail to slither");
@@ -655,7 +655,7 @@
 
 			outputText("\n\nYou never want to leave. In fact, you never want again.");
 
-			doBadEnd();
+			getGame().gameOver();
 		}		
 	}
 }

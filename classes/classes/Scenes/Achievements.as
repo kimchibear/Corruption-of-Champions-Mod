@@ -11,28 +11,25 @@ package classes.Scenes
 		public var achievementsEarned:int = 0;
 		public var achievementsTotal:int = 0;
 		
-		public function Achievements() 
-		{
-			
-		}
+		public function Achievements() {}
 		
-		public function addAchievement(title:String, achievement:*, descLocked:String, descUnlocked:String = "", isShadow:Boolean = false):void {
+		private function addAchievement(title:String, achievement:*, descLocked:String, descUnlocked:String = "", isShadow:Boolean = false):void {
 			//If not specified, default to the locked description.
 			if (descUnlocked == "") descUnlocked = descLocked;
 			if (isShadow && achievements[achievement] <= 0) return;
 			//Set text.
-			outputText("<b>" + title + ":</b> ");
+			outputText("<li><b>" + title + ":</b> ");
 			if (achievements[achievement] > 0) {
 				outputText("<font color=\"#008000\">Unlocked</font> - " + descUnlocked);
 				achievementsEarned++;
 			}
 			else outputText("<font color=\"#800000\">Locked</font> - " + descLocked);
 			if (isShadow) outputText(" - <font color=\"#660066\">Shadow Achievement</font>");
-			outputText("\n");
+			outputText("</li>");
 			achievementsTotal++;
 		}
 		
-		public function titleAchievementSection(title:String):void {
+		private function titleAchievementSection(title:String):void {
 			outputText("\n<b><u>" + title + "</u></b>\n");
 		}
 		
@@ -40,13 +37,13 @@ package classes.Scenes
 			achievementsEarned = 0;
 			achievementsTotal = 0;
 			clearOutput();
-			outputText("<font size=\"36\" face=\"Georgia\">Achievements</font>\n", false)
+			kGAMECLASS.displayHeader("Achievements");
 			outputText("Note: Some achievements are contradictory and may require multiple playthroughs to obtain every achievement.\n");
 			titleAchievementSection("Storyline"); //4 achievements
 			addAchievement("Newcomer", kACHIEVEMENTS.STORY_NEWCOMER, "Enter the realm of Mareth.");
 			addAchievement("Marae's Savior", kACHIEVEMENTS.STORY_MARAE_SAVIOR, "Complete Marae's quest.");
 			addAchievement("Revenge at Last", kACHIEVEMENTS.STORY_ZETAZ_REVENGE, "Defeat Zetaz and obtain the map.");
-			addAchievement("Demon Slayer", kACHIEVEMENTS.STORY_FINALBOSS, "Defeat Lethice."); //Need to wait for dungeon 3 to be finished.
+			addAchievement("Demon Slayer", kACHIEVEMENTS.STORY_FINALBOSS, "Defeat Lethice.");
 			
 			titleAchievementSection("Zones"); //16 achievements
 			addAchievement("Explorer", kACHIEVEMENTS.ZONE_EXPLORER, "Discover every zone.");
@@ -74,16 +71,21 @@ package classes.Scenes
 			addAchievement("Journeyman", kACHIEVEMENTS.LEVEL_JOURNEYMAN, "Get to level 15.");
 			addAchievement("Expert", kACHIEVEMENTS.LEVEL_EXPERT, "Get to level 20.");
 			addAchievement("Master", kACHIEVEMENTS.LEVEL_MASTER, "Get to level 30.");
-			addAchievement("Grandmaster", kACHIEVEMENTS.LEVEL_GRANDMASTER, "Get to level 40.", "", true);
+			addAchievement("Grandmaster", kACHIEVEMENTS.LEVEL_GRANDMASTER, "Get to level 45.");
+			addAchievement("Illustrious", kACHIEVEMENTS.LEVEL_ILLUSTRIOUS, "Get to level 60.");
 			addAchievement("Are you a god?", kACHIEVEMENTS.LEVEL_ARE_YOU_A_GOD, "Get to level 100.", "Get to level 100. (Your powers would have surpassed Marae's by now.)", true);
 			
-			titleAchievementSection("Population"); //6 achievements
+			titleAchievementSection("Population"); //10 achievements
 			addAchievement("My First Companion", kACHIEVEMENTS.POPULATION_FIRST, "Have a camp population of 2.");
 			addAchievement("Hamlet", kACHIEVEMENTS.POPULATION_HAMLET, "Have a camp population of 5.");
 			addAchievement("Village", kACHIEVEMENTS.POPULATION_VILLAGE, "Have a camp population of 10.");
 			addAchievement("Town", kACHIEVEMENTS.POPULATION_TOWN, "Have a camp population of 25.");
 			addAchievement("City", kACHIEVEMENTS.POPULATION_CITY, "Have a camp population of 100.");
-			addAchievement("Metropolis", kACHIEVEMENTS.POPULATION_METROPOLIS, "Have a camp population of 500.", "", true);
+			addAchievement("Metropolis", kACHIEVEMENTS.POPULATION_METROPOLIS, "Have a camp population of 250.");
+			addAchievement("Megalopolis", kACHIEVEMENTS.POPULATION_MEGALOPOLIS, "Have a camp population of 500.");
+			addAchievement("City-State", kACHIEVEMENTS.POPULATION_CITY_STATE, "Have a camp population of 1,000.", "", true);
+			addAchievement("Kingdom", kACHIEVEMENTS.POPULATION_KINGDOM, "Have a camp population of 2,500.", "", true);
+			addAchievement("Empire", kACHIEVEMENTS.POPULATION_EMPIRE, "Have a camp population of 5,000.", "", true);
 			
 			titleAchievementSection("Time"); //9 achievements
 			addAchievement("It's been a month", kACHIEVEMENTS.TIME_MONTH, "Get to day 30.");
@@ -96,19 +98,21 @@ package classes.Scenes
 			addAchievement("Century", kACHIEVEMENTS.TIME_CENTURY, "Get to day 36,500. (100 years)", "Get to day 36,500. (100 years | It's time to stop playing. Go outside.)", true);
 			addAchievement("Time Traveller", kACHIEVEMENTS.TIME_TRAVELLER, "Get to day 36,500+ by tampering with save", "", true);
 			
-			titleAchievementSection("Dungeons"); //8 achievements
-			addAchievement("Delver", kACHIEVEMENTS.DUNGEON_DELVER, "Clear 3 dungeons.");
+			titleAchievementSection("Dungeons"); //10 achievements
+			addAchievement("Delver", kACHIEVEMENTS.DUNGEON_DELVER, "Clear any dungeon.");
+			addAchievement("Delver Apprentice", kACHIEVEMENTS.DUNGEON_DELVER, "Clear 3 dungeons.");
 			addAchievement("Delver Master", kACHIEVEMENTS.DUNGEON_DELVER_MASTER, "Clear every dungeon in the game.");
 			addAchievement("Shut Down Everything", kACHIEVEMENTS.DUNGEON_SHUT_DOWN_EVERYTHING, "Clear the Factory.");
 			addAchievement("You're in Deep", kACHIEVEMENTS.DUNGEON_YOURE_IN_DEEP, "Fully clear the Deep Cave.");
+			addAchievement("End of Reign", kACHIEVEMENTS.DUNGEON_END_OF_REIGN, "Fully clear the Lethice Stronghold.");
 			addAchievement("Friend of the Sand Witches", kACHIEVEMENTS.DUNGEON_SAND_WITCH_FRIEND, "Fully clear the Desert Cave.");
 			addAchievement("Fall of the Phoenix", kACHIEVEMENTS.DUNGEON_PHOENIX_FALL, "Clear the Tower of the Phoenix.");
 			addAchievement("Accomplice", kACHIEVEMENTS.DUNGEON_ACCOMPLICE, "Watch Helia kill the Harpy Queen.", "", true);
-			addAchievement("Extremely Chaste Delver", kACHIEVEMENTS.DUNGEON_EXTREMELY_CHASTE_DELVER, "Complete Phoenix Tower without ever orgasming from the beginning.", "", true);
+			addAchievement("Extremely Celibate Delver", kACHIEVEMENTS.DUNGEON_EXTREMELY_CHASTE_DELVER, "Complete Phoenix Tower without ever orgasming from the beginning.", "", true);
 			
 			titleAchievementSection("Fashion"); //3 achievements
 			addAchievement("Wannabe Wizard", kACHIEVEMENTS.FASHION_WANNABE_WIZARD, "Equip wizard robes and magic staff.");
-			//addAchievement("Cosplayer", kACHIEVEMENTS.FASHION_COSPLAYER, "Wear 10 different clothings/armors.");
+			addAchievement("Cosplayer", kACHIEVEMENTS.FASHION_COSPLAYER, "Wear 10 different clothings/armors.");
 			addAchievement("Dominatrix", kACHIEVEMENTS.FASHION_DOMINATRIX, "Wear any form of kinky clothing and wield any form of whip.");
 			addAchievement("Going Commando", kACHIEVEMENTS.FASHION_GOING_COMMANDO, "Wear no undergarments while wearing any clothes or armours.");
 			addAchievement("Bling Bling", kACHIEVEMENTS.FASHION_BLING_BLING, "Wear jewelry that is valued over 1,000 gems.");
@@ -131,7 +135,7 @@ package classes.Scenes
 			//addAchievement("Damage Sponge", kACHIEVEMENTS.COMBAT_DAMAGE_SPONGE, "Take a total of 10,000 damage.");
 			addAchievement("Bloodletter", kACHIEVEMENTS.COMBAT_BLOOD_LETTER, "Deal a total of 50,000 damage.");
 			
-			titleAchievementSection("Holiday Events"); //10 achievements
+			titleAchievementSection("Seasonal Events"); //10 achievements
 			addAchievement("Egg Hunter", kACHIEVEMENTS.HOLIDAY_EGG_HUNTER, "Find 10 eggs as random drops during Easter event.", "", true);
 			addAchievement("Happy Birthday, Helia!", kACHIEVEMENTS.HOLIDAY_HELIA_BIRTHDAY, "Participate into Helia's birthday event. (August)", "", true);
 			addAchievement("Thankslutting", kACHIEVEMENTS.HOLIDAY_THANKSGIVING_I, "Meet the Piggy-Slut (Thanksgiving)", "", true);
@@ -184,10 +188,12 @@ package classes.Scenes
 			addAchievement("Incredible Stats", kACHIEVEMENTS.GENERAL_STATS_100, "Have at least 100 of each stat. (Libido, sensitivity, corruption optional)");
 			addAchievement("Like Chuck Norris", kACHIEVEMENTS.GENERAL_LIKE_CHUCK_NORRIS, "Defeat the Frost Giant without any equipment.", "Defeat the Frost Giant without any equipment. Way to be a badass!");
 			addAchievement("Tentacle Beast Slayer", kACHIEVEMENTS.GENERAL_TENTACLE_BEAST_SLAYER, "Slay your first Tentacle Beast.");
-			addAchievement("I'm No Lumberjack", kACHIEVEMENTS.GENERAL_IM_NO_LUMBERJACK, "Buy a total of 100 wood.");
-			addAchievement("Deforester", kACHIEVEMENTS.GENERAL_DEFORESTER, "Cut down 100 wood pieces.");
 			addAchievement("Hammer Time", kACHIEVEMENTS.GENERAL_HAMMER_TIME, "Buy a total of 300 nails.");
 			addAchievement("Nail Scavenger", kACHIEVEMENTS.GENERAL_NAIL_SCAVENGER, "Scavenge a total of 200 nails from the library wreckage");
+			addAchievement("I'm No Lumberjack", kACHIEVEMENTS.GENERAL_IM_NO_LUMBERJACK, "Buy a total of 100 wood.");
+			addAchievement("Deforester", kACHIEVEMENTS.GENERAL_DEFORESTER, "Cut down 100 wood pieces.");
+			addAchievement("Yabba Dabba Doo", kACHIEVEMENTS.GENERAL_YABBA_DABBA_DOO, "Buy a total of 100 stones.");
+			addAchievement("AntWorks", kACHIEVEMENTS.GENERAL_ANTWORKS, "Gather a total of 200 stones with Phylla help.");
 			addAchievement("Home Sweet Home", kACHIEVEMENTS.GENERAL_HOME_SWEET_HOME, "Finish the cabin and complete it with furnishings.");
 			addAchievement("Getaway", kACHIEVEMENTS.GENERAL_GETAWAY, "Spend the night outside your camp.");
 			addAchievement("My Tent's (not) Better Than Yours", kACHIEVEMENTS.GENERAL_MY_TENT_NOT_BETTER, "Sleep in Arian's tent.");
@@ -196,15 +202,16 @@ package classes.Scenes
 			addAchievement("Now You're Fucking With Portals", kACHIEVEMENTS.GENERAL_FUCK_WITH_PORTALS, "Engage in portal sex with Ceraph.", "", true);
 			addAchievement("Getting Wood", kACHIEVEMENTS.GENERAL_GETTING_WOOD, "Punch a tree until wood falls out... Wait, what?", "", true);
 			addAchievement("Dick Banisher", kACHIEVEMENTS.GENERAL_DICK_BANISHER, "Remove cocks from at least three dedickable NPCs. Don't you think they'll miss having their own cocks?", "", true);
+			addAchievement("You Bastard", kACHIEVEMENTS.GENERAL_YOU_BASTARD, "Perform something only someone who's evil would do. Like corrupting NPCs or removing dick from at least 7 dedickable NPCs.", "", true);
 			addAchievement("Up to Eleven", kACHIEVEMENTS.GENERAL_UP_TO_11, "Take your height up to 11 feet.");
+			addAchievement("Off With Her Head!", kACHIEVEMENTS.GENERAL_OFF_WITH_HER_HEAD, "You've managed to behead Lethice and show her head to the demons!", "", true);
+			addAchievement("NOOOOOOOOOOOO!", kACHIEVEMENTS.GENERAL_NOOOOOOO, "You've managed to kill yourself before Lethice takes you as her slave.", "", true);
+			addAchievement("Make Mareth Great Again", kACHIEVEMENTS.GENERAL_MAKE_MARETH_GREAT_AGAIN, "Build a wall around your camp to defend from those pesky imps.");
+			addAchievement("Terracotta Impy", kACHIEVEMENTS.GENERAL_TERRACOTTA_IMPY, "You've placed 100 imp statues around your camp wall. No, bassy. Bad bassy! Baaad Mr. Bassy!!!", "", true);
 			
 			menu();
-			addButton(13, "" + achievementsEarned + "/" + achievementsTotal + " unlocked", eventParser, 9999);
-			addButton(14, "Back", kGAMECLASS.mainMenu);
-		}
-		
-		public function achievementsStoryline():void {
-			
+			addButton(13, "" + achievementsEarned + "/" + achievementsTotal + " unlocked", kGAMECLASS.doNothing);
+			addButton(14, "Back", kGAMECLASS.mainMenu.mainMenu);
 		}
 		
 	}

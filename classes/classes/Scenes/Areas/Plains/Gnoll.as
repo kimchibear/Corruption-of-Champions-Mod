@@ -15,72 +15,72 @@ package classes.Scenes.Areas.Plains
 			var damage:Number = 0;
 			var attack:Number = rand(6);
 			//return to combat menu when finished
-			doNext(1);
+			doNext(game.playerMenu);
 			//Blind dodge change
-			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
-				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
+			if (hasStatusEffect(StatusEffects.Blind) && rand(3) < 2) {
+				outputText(capitalA + short + " completely misses you with a blind attack!\n");
 			}
 			//Determine if dodged!
-			else if(player.spe - spe > 0 && int(Math.random()*(((player.spe-spe)/4)+80)) > 80) {
-				if(player.spe - spe < 8) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n", false);
-				else if(player.spe - spe >= 8 && player.spe-spe < 20) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n", false);
-				else if(player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n", false);
+			else if (player.spe - spe > 0 && int(Math.random()*(((player.spe-spe)/4) +80)) > 80) {
+				if (player.spe - spe < 8) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n");
+				else if (player.spe - spe >= 8 && player.spe-spe < 20) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n");
+				else if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n");
 			}
 			//Determine if evaded
-			else if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
-				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
+				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n");
 			}
 			//("Misdirection"
-			else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
-				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n");
 			}
 			//Determine if cat'ed
-			else if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
-				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
-				if(plural) outputText("' attacks.\n", false);
-				else outputText("'s attack.\n", false);
+			else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
+				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "");
+				if (plural) outputText("' attacks.\n");
+				else outputText("'s attack.\n");
 			}
 			else {
 				//Determine damage - str modified by enemy toughness!
 				damage = int((str + weaponAttack) - Math.random()*(player.tou) - player.armorDef);
-				if(damage <= 0) {
+				if (damage <= 0) {
 					damage = 0;
 					//hapies have their own shit
-					if(short == "harpy") outputText("The harpy dives at you with her foot-talons, but you deflect the attack, grasp onto her leg, and swing her through the air, tossing her away from you before she has a chance to right herself.", false);
+					if (short == "harpy") outputText("The harpy dives at you with her foot-talons, but you deflect the attack, grasp onto her leg, and swing her through the air, tossing her away from you before she has a chance to right herself.");
 					//Due to toughness or amor...
-					else if(rand(player.armorDef + player.tou) < player.armorDef) outputText("Your " + player.armorName + " absorb and deflect every " + weaponVerb + " from " + a + short + ".", false);
-					else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you.", false);
+					else if (rand(player.armorDef + player.tou) < player.armorDef) outputText("Your " + player.armorName + " absorb and deflect every " + weaponVerb + " from " + a + short + ".");
+					else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you.");
 				}
 				//everyone else
 				else {
 					//Gnoll Attack #1
-					if(attack == 0) {
-						outputText("The gnoll leaps forward, her jaws slamming shut across your upper arm.  She twists away before you can touch her, laughing the entire time.", false);
+					if (attack == 0) {
+						outputText("The gnoll leaps forward, her jaws slamming shut across your upper arm.  She twists away before you can touch her, laughing the entire time.");
 						damage += 10;
 					}
 					//Gnoll Attack #2
-					else if(attack == 1) {
-						outputText("With a shudder and lurch, the gnoll barrels forward into your gut, the claws of her free hand raking across your belly.", false);
+					else if (attack == 1) {
+						outputText("With a shudder and lurch, the gnoll barrels forward into your gut, the claws of her free hand raking across your belly.");
 						damage += 3;
 					}
 					//Gnoll Attack #3
-					else if(attack == 2) {
-						outputText("The gnoll tumbles to the ground, then comes up with a handful of sand.  The sand goes in your face; the club goes into your cheek.  Ow.", false);
+					else if (attack == 2) {
+						outputText("The gnoll tumbles to the ground, then comes up with a handful of sand.  The sand goes in your face; the club goes into your cheek.  Ow.");
 						damage += 13;
 					}
 					//Gnoll Attack #4
-					else if(attack == 3) {
-						outputText("The hyena girl giggles and darts forward, teeth snapping.  Spittle flies everywhere, and the snapping teeth find purchase, drawing red lines across your body.", false);
+					else if (attack == 3) {
+						outputText("The hyena girl giggles and darts forward, teeth snapping.  Spittle flies everywhere, and the snapping teeth find purchase, drawing red lines across your body.");
 						damage += 8;
 					}
 					//Gnoll Attack #5
-					else if(attack == 4) {
-						outputText("With a mocking laugh, the gnoll brings her club high and then down in a savage strike that catches you across the temple.", false);
+					else if (attack == 4) {
+						outputText("With a mocking laugh, the gnoll brings her club high and then down in a savage strike that catches you across the temple.");
 						damage += 25;
 					}
 					//Gnoll Attack #6
 					else {
-						outputText("The gnoll waves her club threateningly, but it's her foot that snaps up from the dusty plain to connect with your gut.", false);
+						outputText("The gnoll waves her club threateningly, but it's her foot that snaps up from the dusty plain to connect with your gut.");
 					}
 					outputText(" ");
 					player.takeDamage(damage, true);
@@ -93,34 +93,34 @@ package classes.Scenes.Areas.Plains
 			var tease:Number = rand(6);
 			var bonus:Number = 0;
 			//Gnoll Tease #1
-			if(tease == 0) {
-				outputText("The gnoll takes a moment to stretch her sleek, athletic body.  Her free hand runs up her side and she leers knowingly at you.", false);
+			if (tease == 0) {
+				outputText("The gnoll takes a moment to stretch her sleek, athletic body.  Her free hand runs up her side and she leers knowingly at you.");
 				bonus += 5;
 			}
 			//Gnoll Tease #2
-			else if(tease == 1) {
-				outputText("With one hand, the hyena girl grasps her eight-inch clitoris and strokes it.  \"<i>I know you're curious!</i>\" she laughs.  \"<i>You want to try this.</i>\"", false);
+			else if (tease == 1) {
+				outputText("With one hand, the hyena girl grasps her eight-inch clitoris and strokes it.  \"<i>I know you're curious!</i>\" she laughs.  \"<i>You want to try this.</i>\"");
 				bonus += 5;
 			}
 			//Gnoll Tease #3
-			else if(tease == 2) {
-				outputText("The gnoll bounds forward, but instead of clobbering you she slides her lithe body against yours.  \"<i>We don't have to fight,</i>\" she titters.  \"<i>It's lots easier if I just fuck you.</i>\"", false);
+			else if (tease == 2) {
+				outputText("The gnoll bounds forward, but instead of clobbering you she slides her lithe body against yours.  \"<i>We don't have to fight,</i>\" she titters.  \"<i>It's lots easier if I just fuck you.</i>\"");
 				bonus += 10;
 			}
 			//Gnoll Tease #4
-		 	else if(tease == 3) {
-				outputText("The gnoll slides her fingers down the length of her pseudo-penis and collects the cream that drips from its end.  With two steps, she's inside your guard, but all she does is wave her hand in front of your nose.  The reek of sex nearly bowls you over.", false);
+		 	else if (tease == 3) {
+				outputText("The gnoll slides her fingers down the length of her pseudo-penis and collects the cream that drips from its end.  With two steps, she's inside your guard, but all she does is wave her hand in front of your nose.  The reek of sex nearly bowls you over.");
 				bonus += 12;
 			}
 			//Gnoll Tease #5
-			else if(tease == 4) outputText("\"<i>I love outlanders,</i>\" the gnoll confides in you as she circles.  \"<i>You have such interesting cries when you get fucked in a new way.</i>\"  She laughs, and the sound is far louder than it has any right to be.\n\n", false);
+			else if (tease == 4) outputText("\"<i>I love outlanders,</i>\" the gnoll confides in you as she circles.  \"<i>You have such interesting cries when you get fucked in a new way.</i>\"  She laughs, and the sound is far louder than it has any right to be.\n\n");
 			//Gnoll Tease #6
 			else {
-				outputText("The gnoll dances forward, then back, her whole body alive with sensual movement.  She catches the way you watch her and smirks, throwing in a hip-shake just for you.", false);
+				outputText("The gnoll dances forward, then back, her whole body alive with sensual movement.  She catches the way you watch her and smirks, throwing in a hip-shake just for you.");
 				bonus += 6;
 			}
-			game.dynStats("lus", (bonus + 10 + player.lib/20 + rand(player.cor/20)));
-			outputText("\n", false);
+			player.takeLustDamage((bonus + 10 + player.lib/20 + rand(player.cor/20)), true);
+			outputText("\n");
 		}
 
 		override public function eAttack():void
@@ -128,30 +128,30 @@ package classes.Scenes.Areas.Plains
 			var damage:Number = 0;
 			var attack:Number = rand(6);
 //return to combat menu when finished
-			doNext(1);
+			doNext(game.playerMenu);
 //Blind dodge change
-			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
-				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
+			if (hasStatusEffect(StatusEffects.Blind) && rand(3) < 2) {
+				outputText(capitalA + short + " completely misses you with a blind attack!\n");
 			}
 			//Determine if dodged!
 			else if (player.spe - spe > 0 && int(Math.random() * (((player.spe - spe) / 4) + 80)) > 80) {
-				if (player.spe - spe < 8) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n", false);
-				else if (player.spe - spe >= 8 && player.spe - spe < 20) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n", false);
-				else if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n", false);
+				if (player.spe - spe < 8) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n");
+				else if (player.spe - spe >= 8 && player.spe - spe < 20) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n");
+				else if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n");
 			}
 			//Determine if evaded
 			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
-				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
+				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n");
 			}
 			//("Misdirection"
 			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
-				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
+				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n");
 			}
 			//Determine if cat'ed
 			else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
-				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
-				if (plural) outputText("' attacks.\n", false);
-				else outputText("'s attack.\n", false);
+				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "");
+				if (plural) outputText("' attacks.\n");
+				else outputText("'s attack.\n");
 			}
 			else {
 				//Determine damage - str modified by enemy toughness!
@@ -159,41 +159,41 @@ package classes.Scenes.Areas.Plains
 				if (damage <= 0) {
 					damage = 0;
 					//hapies have their own shit
-					if (short == "harpy") outputText("The harpy dives at you with her foot-talons, but you deflect the attack, grasp onto her leg, and swing her through the air, tossing her away from you before she has a chance to right herself.", false);
+					if (short == "harpy") outputText("The harpy dives at you with her foot-talons, but you deflect the attack, grasp onto her leg, and swing her through the air, tossing her away from you before she has a chance to right herself.");
 					//Due to toughness or amor...
-					else if (rand(player.armorDef + player.tou) < player.armorDef) outputText("Your " + player.armorName + " absorb and deflect every " + weaponVerb + " from " + a + short + ".", false);
-					else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you.", false);
+					else if (rand(player.armorDef + player.tou) < player.armorDef) outputText("Your " + player.armorName + " absorb and deflect every " + weaponVerb + " from " + a + short + ".");
+					else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you.");
 				}
 				//everyone else
 				else {
 					//Gnoll Attack #1
 					if (attack == 0) {
-						outputText("The gnoll leaps forward, her jaws slamming shut across your upper arm.  She twists away before you can touch her, laughing the entire time.", false);
+						outputText("The gnoll leaps forward, her jaws slamming shut across your upper arm.  She twists away before you can touch her, laughing the entire time.");
 						damage += 10;
 					}
 					//Gnoll Attack #2
 					else if (attack == 1) {
-						outputText("With a shudder and lurch, the gnoll barrels forward into your gut, the claws of her free hand raking across your belly.", false);
+						outputText("With a shudder and lurch, the gnoll barrels forward into your gut, the claws of her free hand raking across your belly.");
 						damage += 3;
 					}
 					//Gnoll Attack #3
 					else if (attack == 2) {
-						outputText("The gnoll tumbles to the ground, then comes up with a handful of sand.  The sand goes in your face; the club goes into your cheek.  Ow.", false);
+						outputText("The gnoll tumbles to the ground, then comes up with a handful of sand.  The sand goes in your face; the club goes into your cheek.  Ow.");
 						damage += 13;
 					}
 					//Gnoll Attack #4
 					else if (attack == 3) {
-						outputText("The hyena girl giggles and darts forward, teeth snapping.  Spittle flies everywhere, and the snapping teeth find purchase, drawing red lines across your body.", false);
+						outputText("The hyena girl giggles and darts forward, teeth snapping.  Spittle flies everywhere, and the snapping teeth find purchase, drawing red lines across your body.");
 						damage += 8;
 					}
 					//Gnoll Attack #5
 					else if (attack == 4) {
-						outputText("With a mocking laugh, the gnoll brings her club high and then down in a savage strike that catches you across the temple.", false);
+						outputText("With a mocking laugh, the gnoll brings her club high and then down in a savage strike that catches you across the temple.");
 						damage += 25;
 					}
 					//Gnoll Attack #6
 					else {
-						outputText("The gnoll waves her club threateningly, but it's her foot that snaps up from the dusty plain to connect with your gut.", false);
+						outputText("The gnoll waves her club threateningly, but it's her foot that snaps up from the dusty plain to connect with your gut.");
 					}
 					outputText(" ");
 					player.takeDamage(damage, true);
@@ -204,45 +204,45 @@ package classes.Scenes.Areas.Plains
 
 		override protected function performCombatAction():void
 		{
-			if (findStatusAffect(StatusAffects.Stunned) >= 0) {
-				if (plural) outputText("Your foes are too dazed from your last hit to strike back!", false);
-				else outputText("Your foe is too dazed from your last hit to strike back!", false);
-				removeStatusAffect(StatusAffects.Stunned);
+			if (hasStatusEffect(StatusEffects.Stunned)) {
+				if (plural) outputText("Your foes are too dazed from your last hit to strike back!");
+				else outputText("Your foe is too dazed from your last hit to strike back!");
+				removeStatusEffect(StatusEffects.Stunned);
 				combatRoundOver();
 			}
-			if (findStatusAffect(StatusAffects.Fear) >= 0) {
-				if (statusAffectv1(StatusAffects.Fear) == 0) {
+			if (hasStatusEffect(StatusEffects.Fear)) {
+				if (statusEffectv1(StatusEffects.Fear) == 0) {
 					if (plural) {
-						removeStatusAffect(StatusAffects.Fear);
-						outputText("Your foes shake free of their fear and ready themselves for battle.", false);
+						removeStatusEffect(StatusEffects.Fear);
+						outputText("Your foes shake free of their fear and ready themselves for battle.");
 					}
 					else {
-						removeStatusAffect(StatusAffects.Fear);
-						outputText("Your foe shakes free of its fear and readies itself for battle.", false);
+						removeStatusEffect(StatusEffects.Fear);
+						outputText("Your foe shakes free of its fear and readies itself for battle.");
 					}
 				}
 				else {
-					addStatusValue(StatusAffects.Fear, 1, -1);
-					if (plural) outputText(capitalA + short + " are too busy shivering with fear to fight.", false);
-					else outputText(capitalA + short + " is too busy shivering with fear to fight.", false);
+					addStatusValue(StatusEffects.Fear, 1, -1);
+					if (plural) outputText(capitalA + short + " are too busy shivering with fear to fight.");
+					else outputText(capitalA + short + " is too busy shivering with fear to fight.");
 				}
 				combatRoundOver();
 			}
 			var select:Number = 1;
 			var rando:Number = 1;
 //Exgartuan gets to do stuff!
-			if (player.findStatusAffect(StatusAffects.Exgartuan) >= 0 && player.statusAffectv2(StatusAffects.Exgartuan) == 0 && rand(3) == 0) {
+			if (player.hasStatusEffect(StatusEffects.Exgartuan) && player.statusEffectv2(StatusEffects.Exgartuan) == 0 && rand(3) == 0) {
 				game.exgartuan.exgartuanCombatUpdate();
-				outputText("\n\n", false);
+				outputText("\n\n");
 			}
-			if (findStatusAffect(StatusAffects.Constricted) >= 0) {
+			if (hasStatusEffect(StatusEffects.Constricted)) {
 				//Enemy struggles -
-				outputText("Your prey pushes at your tail, twisting and writhing in an effort to escape from your tail's tight bonds.", false);
-				if (statusAffectv1(StatusAffects.Constricted) <= 0) {
-					outputText("  " + capitalA + short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.", false);
-					removeStatusAffect(StatusAffects.Constricted);
+				outputText("Your prey pushes at your tail, twisting and writhing in an effort to escape from your tail's tight bonds.");
+				if (statusEffectv1(StatusEffects.Constricted) <= 0) {
+					outputText("  " + capitalA + short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.");
+					removeStatusEffect(StatusEffects.Constricted);
 				}
-				addStatusValue(StatusAffects.Constricted, 1, -1);
+				addStatusValue(StatusEffects.Constricted, 1, -1);
 				combatRoundOver();
 			}
 //If grappling...
@@ -253,12 +253,12 @@ package classes.Scenes.Areas.Plains
 				//1 - lust determines > 50 grapple
 				//2 - random
 				//3 - love grapples
-				//		if(temperment == 0) eGrappleRetreat();
+				//		if (temperment == 0) eGrappleRetreat();
 				if (temperment == 1) {
-					//			if(lust < 50) eGrappleRetreat();
+					//			if (lust < 50) eGrappleRetreat();
 					doNext(3);
 				}
-				outputText("Lust Placeholder!!", false);
+				outputText("Lust Placeholder!!");
 				doNext(3);
 			}
 */
@@ -267,30 +267,30 @@ package classes.Scenes.Areas.Plains
 				var damage:Number = 0;
 				var attack:Number = rand(6);
 //return to combat menu when finished
-				doNext(1);
+				doNext(game.playerMenu);
 //Blind dodge change
-				if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
-					outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
+				if (hasStatusEffect(StatusEffects.Blind) && rand(3) < 2) {
+					outputText(capitalA + short + " completely misses you with a blind attack!\n");
 				}
 				//Determine if dodged!
 				else if (player.spe - spe > 0 && int(Math.random() * (((player.spe - spe) / 4) + 80)) > 80) {
-					if (player.spe - spe < 8) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n", false);
-					else if (player.spe - spe >= 8 && player.spe - spe < 20) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n", false);
-					else if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n", false);
+					if (player.spe - spe < 8) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n");
+					else if (player.spe - spe >= 8 && player.spe - spe < 20) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n");
+					else if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n");
 				}
 				//Determine if evaded
 				else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
-					outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
+					outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n");
 				}
 				//("Misdirection"
 				else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
-					outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
+					outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n");
 				}
 				//Determine if cat'ed
 				else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
-					outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
-					if (plural) outputText("' attacks.\n", false);
-					else outputText("'s attack.\n", false);
+					outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "");
+					if (plural) outputText("' attacks.\n");
+					else outputText("'s attack.\n");
 				}
 				else {
 					//Determine damage - str modified by enemy toughness!
@@ -298,41 +298,41 @@ package classes.Scenes.Areas.Plains
 					if (damage <= 0) {
 						damage = 0;
 						//hapies have their own shit
-						if (short == "harpy") outputText("The harpy dives at you with her foot-talons, but you deflect the attack, grasp onto her leg, and swing her through the air, tossing her away from you before she has a chance to right herself.", false);
+						if (short == "harpy") outputText("The harpy dives at you with her foot-talons, but you deflect the attack, grasp onto her leg, and swing her through the air, tossing her away from you before she has a chance to right herself.");
 						//Due to toughness or amor...
-						else if (rand(player.armorDef + player.tou) < player.armorDef) outputText("Your " + player.armorName + " absorb and deflect every " + weaponVerb + " from " + a + short + ".", false);
-						else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you.", false);
+						else if (rand(player.armorDef + player.tou) < player.armorDef) outputText("Your " + player.armorName + " absorb and deflect every " + weaponVerb + " from " + a + short + ".");
+						else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you.");
 					}
 					//everyone else
 					else {
 						//Gnoll Attack #1
 						if (attack == 0) {
-							outputText("The gnoll leaps forward, her jaws slamming shut across your upper arm.  She twists away before you can touch her, laughing the entire time.", false);
+							outputText("The gnoll leaps forward, her jaws slamming shut across your upper arm.  She twists away before you can touch her, laughing the entire time.");
 							damage += 10;
 						}
 						//Gnoll Attack #2
 						else if (attack == 1) {
-							outputText("With a shudder and lurch, the gnoll barrels forward into your gut, the claws of her free hand raking across your belly.", false);
+							outputText("With a shudder and lurch, the gnoll barrels forward into your gut, the claws of her free hand raking across your belly.");
 							damage += 3;
 						}
 						//Gnoll Attack #3
 						else if (attack == 2) {
-							outputText("The gnoll tumbles to the ground, then comes up with a handful of sand.  The sand goes in your face; the club goes into your cheek.  Ow.", false);
+							outputText("The gnoll tumbles to the ground, then comes up with a handful of sand.  The sand goes in your face; the club goes into your cheek.  Ow.");
 							damage += 13;
 						}
 						//Gnoll Attack #4
 						else if (attack == 3) {
-							outputText("The hyena girl giggles and darts forward, teeth snapping.  Spittle flies everywhere, and the snapping teeth find purchase, drawing red lines across your body.", false);
+							outputText("The hyena girl giggles and darts forward, teeth snapping.  Spittle flies everywhere, and the snapping teeth find purchase, drawing red lines across your body.");
 							damage += 8;
 						}
 						//Gnoll Attack #5
 						else if (attack == 4) {
-							outputText("With a mocking laugh, the gnoll brings her club high and then down in a savage strike that catches you across the temple.", false);
+							outputText("With a mocking laugh, the gnoll brings her club high and then down in a savage strike that catches you across the temple.");
 							damage += 25;
 						}
 						//Gnoll Attack #6
 						else {
-							outputText("The gnoll waves her club threateningly, but it's her foot that snaps up from the dusty plain to connect with your gut.", false);
+							outputText("The gnoll waves her club threateningly, but it's her foot that snaps up from the dusty plain to connect with your gut.");
 						}
 						outputText(" ");
 						player.takeDamage(damage);
@@ -347,8 +347,8 @@ package classes.Scenes.Areas.Plains
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			if(findStatusAffect(StatusAffects.PhyllaFight) >= 0) {
-				removeStatusAffect(StatusAffects.PhyllaFight);
+			if (hasStatusEffect(StatusEffects.PhyllaFight)) {
+				removeStatusEffect(StatusEffects.PhyllaFight);
 				game.desert.antsScene.phyllaPCBeatsGnoll();
 				return;
 			}
@@ -357,12 +357,12 @@ package classes.Scenes.Areas.Plains
 
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
-			if(findStatusAffect(StatusAffects.PhyllaFight) >= 0) {
-				removeStatusAffect(StatusAffects.PhyllaFight);
+			if (hasStatusEffect(StatusEffects.PhyllaFight)) {
+				removeStatusEffect(StatusEffects.PhyllaFight);
 				game.desert.antsScene.phyllaGnollBeatsPC();
-			} else if(pcCameWorms) {
+			} else if (pcCameWorms) {
 				outputText("\n\nYour foe doesn't seem put off enough to leave...");
-				doNext(game.endLustLoss);
+				doNext(game.combat.endLustLoss);
 			} else {
 				game.plains.gnollScene.getRapedByGnoll();
 			}
@@ -379,7 +379,7 @@ package classes.Scenes.Areas.Plains
 			createBreastRow(Appearance.breastCupInverse("C"));
 			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
 			this.ass.analWetness = ANAL_WETNESS_DRY;
-			this.createStatusAffect(StatusAffects.BonusACapacity,25,0,0,0);
+			this.createStatusEffect(StatusEffects.BonusACapacity,25,0,0,0);
 			this.tallness = 6*12;
 			this.hipRating = HIP_RATING_AMPLE;
 			this.buttRating = BUTT_RATING_TIGHT;

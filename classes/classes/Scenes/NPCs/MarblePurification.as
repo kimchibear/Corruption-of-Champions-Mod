@@ -57,15 +57,15 @@ package classes.Scenes.NPCs {
 	public function BLUHBLUH():void {
 		clearOutput();
 	 	outputText("When you return to camp, you find Marble seated at the campfire, staring gloomily into the ashes. Curious, you approach your bovine lover and ask her what the matter is. She looks up at you, her ");
-		if(flags[kFLAGS.MARBLE_BOVA_LEVEL] <= 1) outputText("human");
+		if (flags[kFLAGS.MARBLE_BOVA_LEVEL] <= 1) outputText("human");
 		else outputText("bovine");
 	 	outputText(" head still in her hands, and sighs loudly. <i>\"I’m sorry, sweetie, I just... I’ve tried to ignore it, but I just don’t feel comfortable here.\"</i>");
 	 	outputText("\n\nYou ask her what’s wrong; doesn’t she like being with you?");
-		if(amilyScene.amilyFollower() && !amilyScene.amilyCorrupt() || followerKiha() || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00238] == 1)
+		if (amilyScene.amilyFollower() && !amilyScene.amilyCorrupt() || followerKiha() || flags[kFLAGS.IZMA_FOLLOWER_STATUS] == 1)
 		{
 		 	outputText("  ...Has she been fighting with ");
-			if(amilyScene.amilyFollower() && !amilyScene.amilyCorrupt()) outputText("Amily");
-			else if(followerKiha()) outputText("Kiha");
+			if (amilyScene.amilyFollower() && !amilyScene.amilyCorrupt()) outputText("Amily");
+			else if (followerKiha()) outputText("Kiha");
 			else outputText("Izma");
 		 	outputText("?");
 		}
@@ -74,8 +74,8 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nYou tell her that you appreciate how strong she’s being, and ask if there’s any way you can help her to get over this problem of hers.");
 	 	outputText("\n\nMarble hesitantly looks up at you, brows furrowed in thought. \"<i>Well, it’s the corruption that makes my milk addictive in the first place, so we need to find a way to purify me.  The most corrupted part of me is my milk, so that’s where we should start,</i>\" she suggests, rubbing her chin in thought.");
 	 	outputText("\n\nYou contemplate the possibilities, and make some suggestions on things that could reduce her corruption.");
-		if(player.hasItem(consumables.PURHONY)) outputText("  You then recall that bottle of honey the bee-girl gave you, and ask if maybe it might work?");
-		if(player.findStatusAffect(StatusAffects.PureCampJojo) >= 0) outputText("  You remember how Jojo helped you become pure, and suggest maybe his meditations could assist Marble?");
+		if (player.hasItem(consumables.PURHONY)) outputText("  You then recall that bottle of honey the bee-girl gave you, and ask if maybe it might work?");
+		if (player.hasStatusEffect(StatusEffects.PureCampJojo)) outputText("  You remember how Jojo helped you become pure, and suggest maybe his meditations could assist Marble?");
 
 	 	outputText("\n\nMarble shakes her head before continuing, \"<i>No, I think we should focus on something linked to my race.  Maybe we can use the LaBova stuff that my mother taught me to drink if I was ever turned into something else.  It’s probably corrupted in its raw form, but maybe there is some way it could be purified to counter the corrupt effects? I think you’d need an alchemist to purify it, though...</i>\" she trails off, musing at the possibility.");
 	 	outputText("\n\nYou point out that LaBova is very rare, and ask how you’d go about getting enough of it to help Marble.");
@@ -98,19 +98,19 @@ package classes.Scenes.NPCs {
 		player.consumeItem(consumables.P_LBOVA);
 	 	outputText("You tell Marble that you managed to get some LaBova alchemically purified, and you want her to drink some.");
 		//First time
-		if(flags[kFLAGS.TIMES_GIVEN_MARBLE_PURE_LABOVA] == 0)
+		if (flags[kFLAGS.TIMES_GIVEN_MARBLE_PURE_LABOVA] == 0)
 		{
 			//Marble’s corruption is reduced by 4
-			player.addStatusValue(StatusAffects.Marble, 4, -4);
+			player.addStatusValue(StatusEffects.Marble, 4, -4);
 			outputText("\n\nYour bovine lover meets your eyes calmly and nods, holding out her hand for the vial, which you hand over to her. She opens the bottle of creamy, milk-based fluid and chugs it down without hesitation.");
 		 	outputText("\n\nShe promptly drops the empty bottle on the ground, where it smashes, her hands going to her stomach and pressing themselves against it. She grimaces in pain, her stomach audibly gurgling as it rebels against the alien fluid she’s forced herself to drink. She arches her back and lets out a pained moan as her ");
-			if(player.statusAffectv2(StatusAffects.MarbleSpecials) == 4) outputText("eight");
+			if (player.statusEffectv2(StatusEffects.MarbleSpecials) == 4) outputText("eight");
 			else outputText("two");
-		 	outputText(" nipples suddenly discharge themselves, soaking her shirt and actually managing to spurt visible arcs of milk through the fabric. Minutes go past as the milk sprays everywhere, but then it stops as suddenly as it started. Marble sighs in relief and pats her belly. \"<i>That really didn’t feel very good... hope I don’t have to go through that too often.</i>\" She then realises her shirt is sopping wet. \"<i>Aw, no, my shirt! I haven’t milked myself since I was a little girl,</i>\" she complains, pulling the milk-sodden garment off of herself and eyeing it sadly. \"<i>I’ll need to hang this out to dry and wear one of my spares...</i>\" she mumbles, even as you politely leave her to take care of that.");
+		 	outputText(" nipples suddenly discharge themselves, soaking her shirt and actually managing to spurt visible arcs of milk through the fabric. Minutes go past as the milk sprays everywhere, but then it stops as suddenly as it started. Marble sighs in relief and pats her belly. \"<i>That really didn’t feel very good... hope I don’t have to go through that too often.</i>\" She then realizes her shirt is sopping wet. \"<i>Aw, no, my shirt! I haven’t milked myself since I was a little girl,</i>\" she complains, pulling the milk-sodden garment off of herself and eyeing it sadly. \"<i>I’ll need to hang this out to dry and wear one of my spares...</i>\" she mumbles, even as you politely leave her to take care of that.");
 		}
 		//P.Labova doesn’t work any more
 		//Play this scene automatically when PC gives Marble the first Labova after reaching her "quota"
-		else if(player.statusAffectv4(StatusAffects.MarbleSpecials) <= 30)
+		else if (player.statusEffectv4(StatusEffects.MarbleSpecials) <= 30)
 		{
 		 	outputText("\n\nWithout ceremony, you pass the bottle of purified LaBova to Marble, who chugs it down. You wait for the usual reaction, but, to your surprise, nothing happens. You ask the cowgirl if she feels all right.");
 		 	outputText("\n\n\"<i>I... don’t feel different in the slightest, sweetie,</i>\" Marble replies, looking as confused as you feel. \"<i>I guess this stuff just isn’t working any more - I must need something with more potency than that to fully purify myself,</i>\" she muses.");
@@ -122,12 +122,12 @@ package classes.Scenes.NPCs {
 		else
 		{
 			//Marble’s corruption is reduced by 4
-			player.addStatusValue(StatusAffects.Marble, 4, -4);
+			player.addStatusValue(StatusEffects.Marble, 4, -4);
 			outputText("\n\nYour bovine lover meets your eyes calmly and nods, holding out her hand for the vial, which you hand over to her. She opens the bottle of creamy, milk-based fluid and chugs it down without hesitation.");
 		 	outputText("\n\nShe quickly hurries to remove her shirt lest she stain it again, allowing her great, heavy");
-			if(flags[kFLAGS.MARBLE_BOVA_LEVEL] > 1) outputText(", fur covered");
+			if (flags[kFLAGS.MARBLE_BOVA_LEVEL] > 1) outputText(", fur covered");
 		 	outputText(" breasts to dangle freely. Stoically she bears the pain as her stomach loudly rumbles and groans, holding her breasts up proudly as her ");
-			if(player.statusAffectv2(StatusAffects.MarbleSpecials) == 4) outputText("eight");
+			if (player.statusEffectv2(StatusEffects.MarbleSpecials) == 4) outputText("eight");
 			else outputText("two");
 		 	outputText(" nipples begin spray milk everywhere - you have to take a step back to avoid being squirted yourself. Finally, Marble’s breasts stop their spraying, leaving the two of you standing in a milky puddle of mud. The cowgirl pulls her shirt back on over her body. \"<i>That stuff still tastes vile, but I guess it’s worth it. I just hope it finishes working soon.</i>\" she tells you. You assure her that you believe in her ability to get through this, and then head back to the main part of your camp.");
 		}
@@ -146,7 +146,7 @@ package classes.Scenes.NPCs {
 	{
 		clearOutput();
 		//if (Rathazul is not in camp)
-		if(player.findStatusAffect(StatusAffects.CampRathazul) < 0)
+		if (!player.hasStatusEffect(StatusEffects.CampRathazul))
 		{
 		 	outputText("You spot the elderly alchemist's camp on the lake once more.\n\n");
 		}
@@ -157,13 +157,13 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nYou smile and thank him for the information, then turn to return to Marble, promising to be back with some of her milk as fast as you can.");
 		//if (Rathazul is not in camp)
 		//the quest is written under the assumption that Rath is in your camp.  I recently found out it is possible to lock him out of being a follower, so I added in this section to ensure that he is.
-		if(player.findStatusAffect(StatusAffects.CampRathazul) < 0)
+		if (!player.hasStatusEffect(StatusEffects.CampRathazul))
 		{
 		 	outputText("\n\n\"<i>Whoa, hold on there, " + player.mf("boy","girl") + ",</i>\" Rathazul stops you, \"<i>Hearing about your quest for purification makes my heart feel warm again for the first time in years.  In exchange for helping you out in this endeavor, please allow me stay at your camp.  I'm sure you'd appreciate saving yourself the trouble of going back and forth for each little thing.</i>\"");
 		 	outputText("\n\nConsidering just how important his help has been in purifying Marble, you doubt that you'd be able to get any further without his help, and agree to let him stay in your camp.");
 		 	outputText("\n\n<i>\"Then let me gather my things, and you can show me your camp.\"</i>  This takes very little time, and in very short order the two of you have arrived in your camp.  \"<i>I'll set my stuff up while you go talk to your mate.</i>\"");
 			//Rathazul is set as a follower
-			player.createStatusAffect(StatusAffects.CampRathazul, 0, 0, 0, 0);
+			player.createStatusEffect(StatusEffects.CampRathazul, 0, 0, 0, 0);
 		}
 		//{Next}
 		menu();
@@ -190,7 +190,7 @@ package classes.Scenes.NPCs {
 		clearOutput();
 		flags[kFLAGS.MARBLE_RATHAZUL_COUNTER_1] = 0;
 	 	outputText("When you wake and join Marble ");
-		if(kGAMECLASS.camp.companionsCount() > 2) outputText("and your other followers ");
+		if (kGAMECLASS.camp.companionsCount() > 2) outputText("and your other followers ");
 	 	outputText("for breakfast this morning, you find a bleary-eyed Rathazul waiting at the campfire. Marble clucks her tongue and gives him a mug of something strong, which he accepts gratefully, noisily slurping down a mouthful. He takes a seat, staring into his mug, and then sighs softly.");
 	 	outputText("\n\n\"<i>I’m afraid I have some bad news... while that one sample you gave me was very useful and I do have a prototype formula finished, I’m not entirely sure it is safe for Marble to drink.  I’d like some milk from another lacta bovine, preferably one who hasn’t been purified the way you have, so I can complete my work.</i>\" he tells Marble, who looks thoughtful.");
 	 	outputText("\n\n\"<i>Hmm... I have two sisters; would milk from one of them work?</i>\" she asks.");
@@ -235,21 +235,21 @@ package classes.Scenes.NPCs {
 	{
 		clearOutput();
 		flags[kFLAGS.MARBLE_RATHAZUL_COUNTER_2] = 0;
-	 	outputText("As you get up, you hear the voices of two happy women chatting pleasantly to each other; you recognize one as Marble, but the other is a stranger to you. Whoever they are, they’re clearly getting along very well, and both sound quite excited.  <i>\"Morning sweetie!</i>\"  Marble excitedly exclaims at the sight of you coming out of your tent.  <i>\"Let me introduce you to my sister, Clara.</i>\"");
+	 	outputText("As you get up, you hear the voices of two happy women chatting pleasantly to each other; you recognize one as Marble, but the other is a stranger to you. Whoever they are, they’re clearly getting along very well, and both sound quite excited.  <i>\"Morning sweetie!</i>\"  Marble excitedly exclaims at the sight of you coming out of your " + camp.homeDesc() + ".  <i>\"Let me introduce you to my sister, Clara.</i>\"");
 	 	outputText("\n\nThe other woman, whom you presume is Clara, certainly does look like she is related to Marble.  She is obviously another Lacta Bovine, with many of the same features as ");
 		//[Marble has cow face or not]
-		if(flags[kFLAGS.MARBLE_BOVA_LEVEL] <= 1) outputText("your mate has");
+		if (flags[kFLAGS.MARBLE_BOVA_LEVEL] <= 1) outputText("your mate has");
 		else outputText("what your mate use to have");
 	 	outputText("; cow legs, ears, horns, and large breasts.  However, she doesn’t have Marble’s brown fur, instead having black and white blotched fur across her legs and ears and a mane of white hair atop her head.  She is wearing a one piece thick cloth dress, with a great deal of fancy embroidery decorating it.  You also guess that she’s a bit smaller than Marble, in both the chest and height departments.");
 
 	 	outputText("\n\nSeeming to have a fair idea of what you’re thinking, Clara chimes in sarcastically, \"<i>Thinking you might have picked the wrong girl, charmer?</i>\"  She waits a moment, giving you a serious look, before bursting out laughing and says, \"<i>No, I’m just messing with you.  Marble’s told me all about you two loovers, and I just had to meet you.</i>\"  Marble certainly doesn’t seem to mind the comment, and in fact seems to be enjoying the joke.");
 	 	outputText("\n\nYou can’t help but notice that Clara sometimes draws out the o’s, almost like moos, and wonder why she does that; Marble doesn’t, after all. Maybe it’s a speech impediment. You decide to be polite and ignore it, introducing yourself to Clara and telling her it’s nice to meet one of Marble’s family... though you have to say, as you turn to Marble and meet her eye with a knowing smirk, you kind of expected her to bring a bottle of milk back, not a whole cowgirl.");
 	 	outputText("\n\n\"<i>Like I said, I just had to meet you after Marble told me about the struggle you two went through to avoid getting addicted to her.</i>\"  She says cheerfully, looking you in the eye");
-		if(player.inte >= 60) outputText(" with a odd smile on her face");
+		if (player.inte >= 60) outputText(" with an odd smile on her face");
 	 	outputText(".  \"<i>It shows a lot about Marble that she respected your decision to not be hooked on moorning milk.  Just don't tell anyone else, you could start a moo-vement!</i>\"  Marble bursts out laughing at this, and you can’t help but give a chuckle as well.  \"<i>Now, who’s the alchemy genius that needs mooi?</i>\" she says, while making a small show of standing up.");
 	 	outputText("\n\nYou tell her that you’ll introduce her to him, and promptly begin leading Marble’s sister over to the part of camp where Rathazul keeps his personal sleeping roll and all of his equipment. The elderly rat-morph is awake and boiling a cup of something strong-smelling over one of his bunsen burners when you get there. He looks past you at Clara, and raises an eyebrow. \"<i>Marble’s sister, I presume?</i>\" he asks.");
 	 	outputText("\n\n\"<i>Uh, yeah,</i>\" Clara slowly intones, obviously taken aback by the elderly rat’s appearance.  You guess she was expecting something else.  \"<i>Good, could you please give me a bottle of your milk then?  I need it to make the formula,</i>\" Rathazul informs her.  She hesitates for a moment, then her eyes light up and she turns to you and says, \"<i>Would you do the honors of helping me get the milk our friend here needs?  Just don’t suck too hard!  We wouldn’t want you going down the fast path to another addiction, would we?</i>\"  She chuckles");
-		if(player.inte >= 60) outputText(" somewhat unconvincingly");
+		if (player.inte >= 60) outputText(" somewhat unconvincingly");
 	 	outputText(".");
 
 	 	outputText("\n\nBefore you have a chance to respond, Marble steps forward and puts her hand on Clara’s shoulder and somewhat curtly tells her sister that, \"<i>There is a farm nearby with milkers that we can use to get the milk that our friend needs.</i>\"");
@@ -277,12 +277,12 @@ package classes.Scenes.NPCs {
 		//Set a temp integer variable that will track the number of followers agreeing to come for tea.
 		//if (any of the following followers are in camp)
 		var teaDrinkers:int = 0;
-		if(kGAMECLASS.camp.companionsCount() >= 3)
+		if (kGAMECLASS.camp.companionsCount() >= 3)
 		{
 		 	outputText("\n\nMarble suggests that you should gather up the others while Clara is still making it, it shouldn’t take too long.  You nod, and head off, leaving Clara and Marble at the campfire.");
 			//Go to each of the followers you have in turn, and ask them if they want some morning tea.  All followers capable of fighting must agree to the tea, non-fighters can agree or refuse.  Remember that this scene cannot come up if the PC is very corrupted, and scenes for the very corrupt followers don’t necessarily need to be written.
 			//(Amily is in camp)
-			if(amilyScene.amilyFollower() && !amilyScene.amilyCorrupt())
+			if (amilyScene.amilyFollower() && !amilyScene.amilyCorrupt())
 			{
 				//Amily’s response to being asked to have tea
 			 	outputText("\n\nWhen you approach Amily about having tea with Clara, she smiles brightly. \"<i>I haven’t enjoyed something like that in ages... it kind of reminds me of the old days.</i>\" She trails off, looking a little sad, but then shakes it off. \"<i>Sure, I’m game.</i>\"");
@@ -291,7 +291,7 @@ package classes.Scenes.NPCs {
 			}
 			//if (Bimbo Sophie is in camp)
 			//Bimbo Sophie’s response to being asked to have tea
-			if(bimboSophie())
+			if (bimboSophie())
 			{
 			 	outputText("\n\nYou aren’t sure why you’re bothering, but you find Sophie off doing her thing and ask her if she wants to have some tea.  \"<i>Sure thing, sounds fun,</i>\" she giggles.  Well, you suppose that wasn’t exactly the response you were expecting, but you tell her where to go anyway and continue on.");
 				//temp follower variable ++
@@ -299,7 +299,7 @@ package classes.Scenes.NPCs {
 			}
 			//if (Helia is in camp)
 			//Helia’s response to being asked to have tea
-			if(followerHel())
+			if (followerHel())
 			{
 			 	outputText("\n\nYou walk over to Hel's hammock at the edge of camp and ask the fiery berserker if she'd like to join you for a cup of tea.  She cocks an eyebrow, \"<i>Don't you have something a little, uh, stronger somewhere?</i>\"  Still, with a little urging, she agrees to go to the campfire.");
 				//temp follower variable ++
@@ -323,14 +323,14 @@ package classes.Scenes.NPCs {
 			}
 			//if (Izma is in camp)
 			//Izma’s response to being asked to have tea
-			if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00238] == 1)
+			if (flags[kFLAGS.IZMA_FOLLOWER_STATUS] == 1)
 			{
 			 	outputText("\n\nYou take a short walk over to the stream that Izma likes to bathe in and call her over.  She asks you what’s up and you let her know what Clara’s got brewing.  The tigershark snorts. \"<i>No thank you; I don’t trust anything that might have milk in it from one of those damn cows,</i>\" she snaps, showing her teeth in a predatory expression of disdain. You try to argue that she’s being rude and distrustful of Marble’s sister, but the tigershark won’t listen, instead pointedly pushing away from the shore and diving into the depths - such as they are - of the stream.");
 			 	outputText("\n\nYou wait for several minutes, but she doesn’t resurface; deciding that there’s no point in asking any more, you leave her to sulk on the riverbed.");
 			}
 			//if (pure Jojo is in camp)
 			//pure Jojo’s response to being asked to have tea
-			if(player.findStatusAffect(StatusAffects.PureCampJojo) >= 0)
+			if (player.hasStatusEffect(StatusEffects.PureCampJojo))
 			{
 			 	outputText("\n\nWhen you get to Jojo’s meditation spot and ask him if he is interested in coming to the campfire for tea, the murine monk looks surprised, but nods his head. <i>\"Tea would be delightful, thank you. It’s been a long time since I was able to enjoy a civil activity such as that.\"</i>");
 				//temp follower variable ++
@@ -338,7 +338,7 @@ package classes.Scenes.NPCs {
 			}
 			//if (Kiha is in camp)
 			//Kiha’s response to being asked to have tea
-			if(followerKiha())
+			if (followerKiha())
 			{
 			 	outputText("\n\nKiha rolls her eyes. \"<i>Tea, doofus? Next you're going to be offering me crumpets and scones while we discuss economics. Shouldn't we be getting ready to battle Lethice instead?</i>\" Seeing the disappointment on your face, she relents. <i>\"Oh all right, I'll come along, but only because I'm feeling a little thirsty.</i>\"");
 				//temp follower variable ++
@@ -371,8 +371,8 @@ package classes.Scenes.NPCs {
 		//if (temp follower variable >=1) { She does ask your companions to wait to drink until everyone has a cup. }
 		//Run a check of the PC’s intelligence, and proceed to either the low/medium/high intelligence outcome based on what that level of intelligence is.
 		//new page
-		if(player.inte >= 60) addButton(0,"Next",highIntelligenceOutcomesVsCowCuntDrugs);
-		else if(player.inte >= 30) addButton(0,"Next",mediumIntelligenceReactsToDrugging);
+		if (player.inte >= 60) addButton(0,"Next",highIntelligenceOutcomesVsCowCuntDrugs);
+		else if (player.inte >= 30) addButton(0,"Next",mediumIntelligenceReactsToDrugging);
 		else addButton(0,"Next",lowIntelligenceGetsDruggedByCowSluts);
 	}
 	//Low Intelligence Outcome
@@ -406,26 +406,26 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nFinally you think of Marble’s face, then her chest, and realize that this feeling feels a lot like when you used to nurse her.  For some reason, this makes you feel anxious and worried.  Confused, you force yourself to focus, trying to get rid of the worry.  However, this only makes you feel more and more worried until your eyes fly open, and are met with a large cow-girl bust.  It isn’t the bust of the bovine you were imagining that you were staring at, but of a more recent acquaintance.");
 	 	outputText("\n\nNoticing your eyes open, Clara looks down at you and smiles, stopping the tune she was humming.  \"<i>Awake are we?  That’s okay, you’re almost done anyway,</i>\" she chuckles wickedly.  You try to ask her what she means, only for you to find your mouth is full of milk collected from the teat it was fastened too.  Slightly panicked, you push away from Marble’s sister and take stock of your situation.  The heifer isn’t expecting this response and doesn’t have a chance to react before you’re out of her arms.");
 	 	outputText("\n\nYou find yourself in an underground cellar, with Clara looking at you with a sick smile on her face.  No one else is in sight.  Putting your hand to your ");
-		if(flags[kFLAGS.MARBLE_BOVA_LEVEL] <= 1) outputText("face");
+		if (flags[kFLAGS.MARBLE_BOVA_LEVEL] <= 1) outputText("face");
 		else outputText("muzzle");
 	 	outputText(", you try to figure out what the heck is going on.  You remember meeting Marble’s sister, then getting tea, and then...  What did Clara say to Marble?  You groan slightly, your body feeling an odd old craving.");
 
 	 	outputText("\n\n\"<i>Wondering what’s happening?  Don’t you worry your pretty head about it.  You’re just being made ready to be my mate and slave for the rest of my life.  Come on back to my breast darling. I’ll get you good and addicted soon,</i>\" your kidnaper intones with an increasingly crazed look on her face.");
 	 	outputText("\n\nYour body desperately wants to do what she is saying; you can feel it.  You have no idea how long you’ve been drinking from her, but you’re definitely close to becoming completely dependent on Clara.  Due to your current location, it will be impossible to get away without getting past Clara, and that’s going to be really hard given your current condition.  With each moment your desire to submit to her only becomes stronger.  Still, if you want to escape this insane cow-girl, you’re going to need to fight her.  At least ");
 		//(if player is not using fists)
-		if(player.weaponName != "fists") outputText("your [weapon] is nearby, and ");
+		if (player.weaponName != "fists") outputText("your [weapon] is nearby, and ");
 	 	outputText(" you’re still wearing your [armor].");
 		//PC chooses fight or submit.
 		menu();
-		addButton(0,"Fight",eventParser,fightCowCuntAfterBeingTotesMcGoatsDrugged);
-		addButton(1,"Submit",eventParser,voluntarilyChooseCowCuntBadEndYouBad);	
+		addButton(0, "Fight", fightCowCuntAfterBeingTotesMcGoatsDrugged);
+		addButton(1, "Submit", voluntarilyChooseCowCuntBadEndYouBad);
 	}
 	
 	//Chose fight
 	public function fightCowCuntAfterBeingTotesMcGoatsDrugged():void {
 		clearOutput();
 	 	outputText("You steel yourself, ");
-		if(player.weaponName == "fists") outputText("raise your fists");
+		if (player.weaponName == "fists") outputText("raise your fists");
 		else outputText("grab your " + player.weaponName);
 	 	outputText(" and get ready to fight to free yourself from this mad milkmaid’s mammaries.  Realizing your intentions, Clara’s face turns from a crazed grin to an angry glare.  With barely contained fury, she screams at you, \"<i>Oh don’t you worry darling, I will <b>make</b> you love drinking my milk!</i>\" before standing up, hefting a nasty looking heavy mace, and charging at you.");
 		//go to Clara’s fight
@@ -436,8 +436,8 @@ package classes.Scenes.NPCs {
 	public function startCombatWithMarbleSister(inCamp:Boolean = true):void
 	{
 		startCombat(new Clara());
-		player.createStatusAffect(StatusAffects.NoFlee,0,0,0,0);
-		if(inCamp && player.findStatusAffect(StatusAffects.ClaraFoughtInCamp) < 0) player.createStatusAffect(StatusAffects.ClaraFoughtInCamp,0,0,0,0);
+		player.createStatusEffect(StatusEffects.NoFlee,0,0,0,0);
+		if (inCamp && !player.hasStatusEffect(StatusEffects.ClaraFoughtInCamp)) player.createStatusEffect(StatusEffects.ClaraFoughtInCamp,0,0,0,0);
 	}
 	//Chose submit
 	public function voluntarilyChooseCowCuntBadEndYouBad():void
@@ -472,7 +472,7 @@ package classes.Scenes.NPCs {
 		clearOutput();
 	 	outputText("You can’t shake the feeling that there is something wrong with this tea, and just consider it for a few moments.  \"<i>Uh, aren’t you going to drink your tea, charmer?  It is really goood,</i>\" your server says slowly, looking over at you with a nervous expression on her face.  You start to say something, but are interrupted when you hear Marble suddenly gasp and cry out, \"<i>Clara, what the hell did you put in this stuff?</i>\" before gasping for breath a few more times and falling over.");
 
-		if(kGAMECLASS.camp.companionsCount()) outputText("\n\nYou rush over to your fallen companion");
+		if (kGAMECLASS.camp.companionsCount()) outputText("\n\nYou rush over to your fallen companion");
 		else outputText("\n\nYou rush over to one of your fallen companions");
 	 	outputText(" to see what has happened, only to find that she has passed out.  Noticing the tea cup again, you turn around to face the person who prepared it.  Clara stands behind you with a disturbing smile on her face.  You demand to know what was in the tea, like Marble did before.");
 
@@ -509,7 +509,7 @@ package classes.Scenes.NPCs {
 		clearOutput();
 	 	outputText("It is obvious to you that Clara is up to something; she’s been behaving oddly every time she’s spoken to you, and this sharing of tea seems even odder.  You carefully watch as she counts up cups and starts pouring them out, then starts handing them out.  You also notice that her ingredients also included something from outside her tea kit.");
 	 	outputText("\n\nDecision time: are you going to call her out on her strange behavior in front of ");
-		if(teaDrinkers <= 1) outputText("Marble");
+		if (teaDrinkers <= 1) outputText("Marble");
 		else outputText("your followers");
 	 	outputText(", just not drink any tea yourself, or drink it anyway?");
 		//Player chooses to drink tea, not drink tea, or Call Clara Out.  Choosing to drink is the same as the low intelligence drinking, choosing not to drink is the same as the mid intelligence option.
@@ -530,31 +530,34 @@ package classes.Scenes.NPCs {
 
 		//Other fighters in camp
 		//if there are any other fighting companions in camp, they overwhelm Clara with the PC resulting in an auto-win.
-		if(camp.companionsCount() >= 3)
+		if (camp.companionsCount() >= 3)
 		{
 		 	outputText("\n\nClara starts to advance on you with her mace out, and eyes in rage, but hesitates when she realizes that other guests to the tea party have stood up as well, and readied their weapons.");
 			//if (Amily is in camp)
-			if(amilyScene.amilyFollower())
+			if (amilyScene.amilyFollower())
 			{
 			 	outputText("\n\nSnarling with a surprisingly savage expression for such a normally meek mouse, Amily whips out her familiar blowgun and loads it with a dart from somewhere about her person, falling back to ensure she is a safe distance for firing.");
 			}
 			//if (Helia is in camp)
-			if(followerHel())
+			if (followerHel())
 			{
 			 	outputText("\n\n\"<i>You bitch, you'll pay for that,</i>\" Hel growls, drawing the scimitar from her hip and leveling it right at the woman in defiant challenge.");
 			}
 			//if (Isabella is in camp)
-			if(isabellaFollower())
+			if (isabellaFollower())
 			{
 			 	outputText("\n\n\"<i>Little bitch!</i>\"  The cowgirl snarls, standing up to her full impressive height.  \"<i>I will teach you not to try something like this again.</i>\"  Isabella grabs her shield and brandishes it prominently, ready to use it for defense and to bludgeon.");
 			}
 			//if (Jojo is in camp)
-			if(player.findStatusAffect(StatusAffects.CampRathazul) >= 0)
+			if (player.hasStatusEffect(StatusEffects.PureCampJojo))
 			{
-			 	outputText("\n\n\"<i>I wouldn’t have done that if I were you,</i>\" Jojo says, rising off the ground and retrieving his staff.  Falling into a combat pose, his face contorts into an almost uncharacteristic visage of anger directed at the woman before you.");
+				if (flags[kFLAGS.JOJO_BIMBO_STATE] >= 3)
+					outputText("\n\n\"<i>Like, I wouldn’t have done that if I were you,</i>\" Joy says, rising off the ground and retrieving her staff.  Falling into a combat but suggestive pose, her face contorts into an almost uncharacteristic visage of anger directed at the woman before you.");
+				else
+					outputText("\n\n\"<i>I wouldn’t have done that if I were you,</i>\" Jojo says, rising off the ground and retrieving his staff.  Falling into a combat pose, his face contorts into an almost uncharacteristic visage of anger directed at the woman before you.");
 			}
 			//if (Kiha is in camp)
-			if(followerKiha())
+			if (followerKiha())
 			{
 			 	outputText("\n\nThe dragon-girl Kiha wastes no time; unceremoniously spitting flames and swinging her axe with murderously brutal intent, radiating threat even as she waits for the moment to spring into attack.");
 			}
@@ -579,9 +582,9 @@ package classes.Scenes.NPCs {
 	{
 		clearOutput();
 		//PC loses via health	
-		if(combat)
+		if (combat)
 		{
-			if(player.HP < 1) outputText("Your body gives out from the strain, and you fall to the ground.  The last thing you hear before you pass out, is Clara’s triumphant laughter.");
+			if (player.HP < 1) outputText("Your body gives out from the strain, and you fall to the ground.  The last thing you hear before you pass out, is Clara’s triumphant laughter.");
 			//proceed to loss scene
 			//PC loses via lust
 			else outputText("You just can’t fight it anymore, and desperately start to masturbate in front of Clara.  Laughing triumphantly, Clara walks up to you and forces a pill down your throat.  A moment later, you pass out.");
@@ -598,12 +601,12 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nWith great effort, you open your eyes.  You feel incredibly weak, and the desire to go back to sleep is almost overpowering.  It doesn’t help that your head is spinning like a top, but the adrenalin rush from your recent nightmare allows you to force back the lethargy and drag yourself up off the ground and take in your surroundings.");
 	 	outputText("\n\nIt looks like you’re in an enclosed building with stone walls, similar to a cellar.  Given the amount of dust around the walls, this place hasn’t been used in a long time.  There is one entrance to the room.  It's a hallway that turns a corner just outside the room and moves beyond your view.  You were lying down on a bedroll, ");
 		//(height check, <70/70-82/>82)
-		if(player.tallness < 70) outputText("much too big for you.");
-		else if(player.tallness <= 82) outputText("just your size.");
+		if (player.tallness < 70) outputText("much too big for you.");
+		else if (player.tallness <= 82) outputText("just your size.");
 		else outputText("way too small for your stature.");
 	 	outputText("  You also find that you aren’t wearing your " + player.armorName + ", and your " + player.weaponName + " is nowhere to be seen.  ");
 		//ifPC does not have: dick has more than 40 area, or breasts bigger then HHH cup, or centaur lower body, or naga lower body, or slime lower body, or drider lower body)
-		if((player.hasCock() && player.smallestCockArea() <= 40) && player.biggestTitSize() <= 25 && !player.isTaur() && !player.isNaga() && !player.isGoo() && !player.isDrider())
+		if ((player.hasCock() && player.smallestCockArea() <= 40) && player.biggestTitSize() <= 25 && !player.isTaur() && !player.isNaga() && !player.isGoo() && !player.isDrider())
 		 	outputText("Instead a plain but rather slim form fitting two piece garb adorns your body.  Whoever dressed you in that definitely wanted your bodily assets to be fully visible to anyone looking at you.");
 		else outputText("You’re completely naked.");
 		
@@ -614,11 +617,11 @@ package classes.Scenes.NPCs {
 	public function losingToCowCuntsPageII():void
 	{
 		clearOutput();
-	 	outputText("It is then that you realize with a shock that a familiar urge is welling up inside you.  No, it is much stronger then you remember it being before.  You want breastmilk.  You <i>need</i> breastmilk, and if you don’t get it, you’ll die.  To make matters worse, you know whose breastmilk it is too.  Clara, Marble’s younger sister, has fatally addicted you to her milk.");
+	 	outputText("It is then that you realize with a shock that a familiar urge is welling up inside you.  No, it is much stronger than you remember it being before.  You want breastmilk.  You <i>need</i> breastmilk, and if you don’t get it, you’ll die.  To make matters worse, you know whose breastmilk it is too.  Clara, Marble’s younger sister, has fatally addicted you to her milk.");
 	 	outputText("\n\nAlmost as if on cue, you feel her presence getting closer to you, and your captor steps inside the room.  \"<i>Ah, yoour awake then?</i>\" she coos, \"<i>Feeling up for some milk, I hope?</i>\"  You can’t help yourself, you need that milk, so you nod.  \"<i>Goood, keeping you asleep for a while loooks like it was the right chooice.</i>\"  She laughs uproariously.");
 	 	outputText("\n\n\"<i>Now, my milk slave, aren’t you going to come over here and get that milk?  Oh that’s right, you can’t without my permission, can you?</i>\" she laughs again at you, as you continue to stare at her.  ");
 		//if (PC said to Marble they wanted to get addicted)
-		if(player.statusAffectv3(StatusAffects.Marble) == 1)
+		if (player.statusEffectv3(StatusEffects.Marble) == 1)
 		{
 		 	outputText("\"<i>Oh?  Wondering how I know about that?  Marble told me when she was explaining about you breaking free of the addiction.  Unlike her, I’m going to make sure you behave yourself.</i>\"  ");
 		} 
@@ -629,7 +632,7 @@ package classes.Scenes.NPCs {
 	 	outputText("This woman is nothing like her sister, she loves the power she has over you, and loves to show you just how much she has.");
 
 	 	outputText("\n\nClara leans down and puts her face right in front of yours.  \"<i>I think that if you want to drink some of my milk, you’re going to have to do some things for me.</i>  Her voice is soft, but the meaning couldn’t be harder.  \"<i>From now on, you aren’t allowed to go anywhere without my say so, and I’m the only one you’re allowed to love.  Either emotionally or physically.  Understand?</i>\"  You shudder, and think of ");
-		if(kGAMECLASS.camp.loversCount() == 1) outputText("Marble");
+		if (kGAMECLASS.camp.loversCount() == 1) outputText("Marble");
 		else outputText("the others");
 	 	outputText(".  Then your eyes drop down to Clara’s chest, and you think of your need.");
 
@@ -654,9 +657,9 @@ package classes.Scenes.NPCs {
 	{
 		clearOutput();
 	 	outputText("Her gaze is not a pleasant one, to say the least.  \"<i>Aw, don’t be afraid,</i>\"  She coos in response to your expression.  \"<i>You’ve earned the right to drink my milk.  You should be happy!</i>\"  Still smiling, she reaches up and opens up her shirt.  The sight of her bountiful mammaries brings your need back to the top of your priorities, pushing fear out of the way.  You can’t help but lick your lips.  \"<i>Ooh, I like that face.  You’ll have to show it to me more often.  Now, come and drink your fill.</i>\"");
-	 	outputText("\n\nAs if the floodgates have been opened, you rush forward and latch onto one of her nipples, surprising both you and Clara.  It doesn’t take long for her to recover, and she pulls you into an embrace against her chest.  However, you hardly even care.  All that matters to you right now is the sweet honey that is flowing through your lips and down your throat.  There is nothing more wonderful in the world then the drug you’re gorging yourself on right now.  Not even Marble’s milk compares.");
+	 	outputText("\n\nAs if the floodgates have been opened, you rush forward and latch onto one of her nipples, surprising both you and Clara.  It doesn’t take long for her to recover, and she pulls you into an embrace against her chest.  However, you hardly even care.  All that matters to you right now is the sweet honey that is flowing through your lips and down your throat.  There is nothing more wonderful in the world than the drug you’re gorging yourself on right now.  Not even Marble’s milk compares.");
 	 	outputText("\n\n\"<i>Such enthusiasm!</i>\" a distant voice calls out above you, \"<i>Not even Oophelia talking about the latest adventures of Mighty Moo and Bovine Lass can compare to this!</i>\"  You feel fingers run ");
-		if(player.hairLength > 0) outputText("through your " + hairDescript());
+		if (player.hairLength > 0) outputText("through your " + player.hairDescript());
 		else outputText("across your scalp");
 	 	outputText(", then they suddenly grip down tight.  \"<i>Let’s see if you can pick up the pace.  Drink faster, my love slave!</i>\"  You do as the voice asks, and loud moans of pleasure follow.");
 
@@ -669,17 +672,17 @@ package classes.Scenes.NPCs {
 	public function cowCuntBadEndPartIV():void
 	{
 		clearOutput();
-	 	outputText("Now you get a chance to see a softer side to Clara.  The cow-girl gently takes your head and guides you to the other nipple.  She continues to hold you with one arm as you gently start drinking.  With her other hand, she caresses you.  She starts with your head, slowly cleaning up your " + hairDescript() + ".  Your feeder then delivers a small pinch to your cheek, and you hear her say, \"<i>You really are a damn sexy piece of woork.</i>\"");
+	 	outputText("Now you get a chance to see a softer side to Clara.  The cow-girl gently takes your head and guides you to the other nipple.  She continues to hold you with one arm as you gently start drinking.  With her other hand, she caresses you.  She starts with your head, slowly cleaning up your " + player.hairDescript() + ".  Your feeder then delivers a small pinch to your cheek, and you hear her say, \"<i>You really are a damn sexy piece of woork.</i>\"");
 	 	outputText("\n\nHer hand moves down your body, and finds itself on your [chest].  She toys a bit with the nipples, giggling at your reaction, then moves down to your stomach and pokes you.  Your reaction only promotes more laughter.  You guess that she wants to get a <i>feel</i> for her new toy, and your thoughts are confirmed when she grips your legs, continuing to test you for any places that might be suitable targets for tickling you.");
 	 	outputText("\n\nEventually the pokings and proddings wind down, and the young cow-girl becomes more interested in your naughty bits now.  ");
 		//if (player is male)
-		if(player.hasCock() && !player.hasVagina())
+		if (player.hasCock() && !player.hasVagina())
 		{
-		 	outputText("At this point your " + multiCockDescriptLight() + " is rock hard, and Clara gives it a few strokes.  She does seem to lose interest surprisingly quick though.");
+		 	outputText("At this point your " + player.multiCockDescriptLight() + " is rock hard, and Clara gives it a few strokes.  She does seem to lose interest surprisingly quick though.");
 		}
 		else if (player.hasVagina() && !player.hasCock())
 		{
-		 	outputText("You’ve become quite wet at this point, and Clara gives your " + vaginaDescript() + " a few rubs, before tugging on your " + clitDescript() + " once.");
+		 	outputText("You’ve become quite wet at this point, and Clara gives your " + player.vaginaDescript() + " a few rubs, before tugging on your " + player.clitDescript() + " once.");
 		}
 		else if (player.hasCock() && player.hasVagina())
 		{
@@ -690,13 +693,13 @@ package classes.Scenes.NPCs {
 		 	outputText("Or rather, your lack of thereof.  Clara doesn’t seem to mind too much; Marble must have told her about this part of you too.");
 		}
 		//Clara fingers the PC’s asshole
-	 	outputText("\n\nIt then becomes rather apparent exactly what Clara really wants to play with now, and you feel her fingers slip down and around your body.  She gets herself a handful of your " + buttDescript() + ", and then slips her fingers into your crevice.  That finger doesn't stop until it's pushed itself inside your " + assholeDescript() + " and triggered a response that makes Clara laugh with delight.  Feeling emboldened, the bovine girl thrusts another finger into your back entrance and starts wiggling them around.");
+	 	outputText("\n\nIt then becomes rather apparent exactly what Clara really wants to play with now, and you feel her fingers slip down and around your body.  She gets herself a handful of your " + player.buttDescript() + ", and then slips her fingers into your crevice.  That finger doesn't stop until it's pushed itself inside your " + player.assholeDescript() + " and triggered a response that makes Clara laugh with delight.  Feeling emboldened, the bovine girl thrusts another finger into your back entrance and starts wiggling them around.");
 	 	outputText("\n\nBy now you’re so over aroused from nursing that you cum on the spot from her playing with your ass.  The nipple that you’d been sucking on up until now slips out of your mouth, and the woman holding you lies you back on the ground, smiling.  Clearly your orgasm did not go unnoticed by her.  \"<i>I’m definitely going to have to find new ways to play with you after this,</i>\" she says, that crazed smile back on her face, \"<i>but for now, I think it is time for soome sex.</i>\"");
 
 		//Proceed to either the has fitted cock, no fitted cock, or has not cock variants.
 		menu();
-		if(!player.hasCock()) addButton(0,"Next",cocklessPCsGetAbusedByCowCunts);
-		else if(player.cockThatFits(20) < 0) addButton(0,"Next",cockTooBigForCowCuntageBadEndage);
+		if (!player.hasCock()) addButton(0,"Next",cocklessPCsGetAbusedByCowCunts);
+		else if (player.cockThatFits(20) < 0) addButton(0,"Next",cockTooBigForCowCuntageBadEndage);
 		else addButton(0,"Next",badEndDickThatFitsClara);
 	}
 
@@ -709,16 +712,16 @@ package classes.Scenes.NPCs {
 	{
 		clearOutput();
 		var x:int = player.cockThatFits(20);
-		if(x < 0) x = player.smallestCockIndex();
+		if (x < 0) x = player.smallestCockIndex();
 
 		//if (PC does not have: dick has more than 40 area, or breasts bigger then HHH cup, or centaur lower body, or naga lower body, or slime lower body, or drider lower body)
-		if((player.hasCock() && player.smallestCockArea() <= 40) && player.biggestTitSize() <= 25 && !player.isTaur() && !player.isNaga() && !player.isGoo() && !player.isDrider())
+		if ((player.hasCock() && player.smallestCockArea() <= 40) && player.biggestTitSize() <= 25 && !player.isTaur() && !player.isNaga() && !player.isGoo() && !player.isDrider())
 		{
 		 	outputText("In seconds she’s freed you of the form fitting garment that you woke up in.  ");
 		}
-	 	outputText("You’re still erect from the arousal that nursing from Clara gave you.  The young cow-girl straddles your calves and gives your " + cockDescript(x) + " a slight flick with her finger and continues to smile broadly at you.  \"<i>One thing that I was really worried about was that you woouldn’t have a penis that I could actually fit inside me.  Thankfully, that isn’t the case, and that pretty pecker is just my size!</i>\"  She pulls apart the lips of her womanhood before continuing, \"<i>This will be my first time ever putting anything in here, take note just how special of a slave you are to me!</i>\"");
+	 	outputText("You’re still erect from the arousal that nursing from Clara gave you.  The young cow-girl straddles your calves and gives your " + player.cockDescript(x) + " a slight flick with her finger and continues to smile broadly at you.  \"<i>One thing that I was really worried about was that you woouldn’t have a penis that I could actually fit inside me.  Thankfully, that isn’t the case, and that pretty pecker is just my size!</i>\"  She pulls apart the lips of her womanhood before continuing, \"<i>This will be my first time ever putting anything in here, take note just how special of a slave you are to me!</i>\"");
 
-	 	outputText("\n\nWell, she certainly isn’t wasting any time, as the very next instant she has lowered her opened labia onto the tip of your " + cockDescript(x) + ".  The passage is already wet and slick, thanks to her previous orgasm.  Immediately, an expression of both pain and pleasure crosses over the bovine woman’s face and she starts to pant.  You lift up your hands, bClara issues a sharp command that you aren’t to do anything at all while she has the sex she wants.  You can’t do much else but just lie back and take it.");
+	 	outputText("\n\nWell, she certainly isn’t wasting any time, as the very next instant she has lowered her opened labia onto the tip of your " + player.cockDescript(x) + ".  The passage is already wet and slick, thanks to her previous orgasm.  Immediately, an expression of both pain and pleasure crosses over the bovine woman’s face and she starts to pant.  You lift up your hands, bClara issues a sharp command that you aren’t to do anything at all while she has the sex she wants.  You can’t do much else but just lie back and take it.");
 	 	outputText("\n\nThe woman using you as a sex toy takes things almost agonizingly slowly.  For some time she only puts the tip in, and stirs it around her entrance with her fingers while panting in unfamiliar pleasure.  There isn’t much question that she is indeed a virgin; she quite clearly has no idea what she is doing.  Of course, any attempts to help her just get you an icy glare and you return to waiting for what she intends to do next.");
 	 	outputText("\n\nFinally, Clara stops teasing you, and lowers herself down.  She gives several cute sounding gasps and long oos before the whole of your length is inside her,  at which point she promptly creams herself and cries out, \"<i>Moo!</i>\"  Her orgasm is quite a wet one, liberally drenching your waist and crotch.");
 	 	outputText("\n\nAny fears that you’re going to be left wanting are quickly dispelled, as when the once virgin woman finishes her second orgasm, she starts to violently pump her body up and down.  The abrupt change in the kind of sex you’re having catches you off guard and blows your mind almost instantly.  Clara isn’t doing much better, as all that is coming out of her mouth at this point is just mindless pleasure-filled babbling.");
@@ -734,14 +737,14 @@ package classes.Scenes.NPCs {
 	{
 		clearOutput();
 	 	outputText("\"<i>Now, we do have one problem.  ");
-		if(player.cockTotal() > 1) 
+		if (player.cockTotal() > 1) 
 		{
 		 	outputText("All of your penises are");
 		}
 		else outputText("Your penis is");
 	 	outputText(" too big for a virgin like me to fit!  How the hell am I suppose to get that inside me?</i>\"  Clara stands up and starts stomping around the room.  ");
 		//if (PC has at least one dick that will fit inside Marble’s current capacity)
-		if(player.cockThatFits(marbleScene.marbleCuntCapacity()) >= 0)
+		if (player.cockThatFits(marbleScene.marbleCuntCapacity()) >= 0)
 		{
 		 	outputText("\"<i>‘It’s not a flaw, it’s a feature,’ she said, ‘This is why we train ourselves to take big endowments,’ she said!  Fuck you Marble!  I’m not sticking that stupid big thing inside me.</i>\"  ");
 		}
@@ -763,17 +766,17 @@ package classes.Scenes.NPCs {
 		clearOutput();
 	 	outputText("Clara straddles your head with her legs and looks down at you.  \"<i>Now you’re going to lick me until I’m satisfied.  Also, don’t you dare doo anything unless I tell you to, got it?</i>\"  She doesn’t wait for a response.  \"<i>Goood, now let's get started.</i>\"  The cow-girl promptly drops her snatch onto your face.");
 		//if (PC has a long tongue)
-		if(player.tongueType > 0)
+		if (player.tongueType > 0)
 		{
 			//PC tentatively probes Clara’s insides, and she is very surprised at just how much tongue they have.  She orders them to stop, and just use the tip to lick her labia and clit.
-		 	outputText("\n\n\"<i>Lick my hole, stick yourself way inside!</i>\" Clara orders.  You tentatively push your " + tongueDescript() + " into the entrance of the slit that has been roughly lowered onto your face.  You soon find your goal and begin the process of filling her with your great lengths of inhuman mouth muscle.  Clara gasps in surprise and quickly exclaims, \"<i>What are you dooing?!  What is that?  Stop!</i>\"  You do as requested and remove your appendage from her depths.  The cow-girl pants for a moment then speaks again, \"<i>Okay, that’s a bit much to start with.  Uh, I didn’t think your tongue would be that long!  Now, let’s try again.  Using just the tip of your tongue, lick me.</i>\"");
+		 	outputText("\n\n\"<i>Lick my hole, stick yourself way inside!</i>\" Clara orders.  You tentatively push your " + player.tongueDescript() + " into the entrance of the slit that has been roughly lowered onto your face.  You soon find your goal and begin the process of filling her with your great lengths of inhuman mouth muscle.  Clara gasps in surprise and quickly exclaims, \"<i>What are you dooing?!  What is that?  Stop!</i>\"  You do as requested and remove your appendage from her depths.  The cow-girl pants for a moment then speaks again, \"<i>Okay, that’s a bit much to start with.  Uh, I didn’t think your tongue would be that long!  Now, let’s try again.  Using just the tip of your tongue, lick me.</i>\"");
 			//Spend some time with the PC licking Clara while she gives orders and directions while the PC hears the results of their work.  Clara then orgasms.
 		 	outputText("\n\nYou start again, and using just the tip, you lick the sides of folds of the woman above you, prompting an encouraging groan of pleasure.  \"<i>Yes, keep doing that.</i>\" Clara instructs while sighing.  Thick drops of lubricant start to fill the folds that your tongue is probing, and you lap up her nectar while continuing to explore all parts of the labia that you can find.");
-		 	outputText("\n\n\"<i>Mhh, huh, ah, higher!</i>\"  You obey, and move up to Clara’s clit, and the hood around it.  She has already become heavily engorged, and the instant your " + tongueDescript() + " touches the bovine woman’s erect love button, she lets out a low shriek of pleasure!  \"<i>Woah!  Wah, mah, mooo!</i>\" she cries out as a torrent of fluid sprays from her womanhood and drenches your face.  Clara is unquestionably an inexperienced virgin, given her rapid and unexpected orgasm.  She spends several moments trying to catch her breath.");
+		 	outputText("\n\n\"<i>Mhh, huh, ah, higher!</i>\"  You obey, and move up to Clara’s clit, and the hood around it.  She has already become heavily engorged, and the instant your " + player.tongueDescript() + " touches the bovine woman’s erect love button, she lets out a low shriek of pleasure!  \"<i>Woah!  Wah, mah, mooo!</i>\" she cries out as a torrent of fluid sprays from her womanhood and drenches your face.  Clara is unquestionably an inexperienced virgin, given her rapid and unexpected orgasm.  She spends several moments trying to catch her breath.");
 			//Now feeling bolder, Clara has the PC use the full extent of their tongue to penetrate her.  Clara orgasms again fairly shortly thereafter.
 		 	outputText("\n\nFinally, she settles down and tells you, \"<i>Okay, I need more of that.  Use that strange tongue of yours.  Fill me!</i>\"  You do just that, and bring out the full length of your inhuman pussy licker.  In seconds, Clara starts to pant and squeal in pleasure as you fill her depths, and taste great amounts of her lubricant.  To make things as enjoyable for Clara as possible, you bring the base of your tongue to her clit, while you simultaneously pump yourself in and out of her depths.");
 		 	outputText("\n\nFor a while all you hear is the loud squelching of your licker in her womanhood, and the young cow-girl’s cries of pleasure above you.  Then you suddenly don’t hear anything at all, thanks to the hands that have been clamped down onto your ears.  Clara suddenly takes a much more active role in the oral you’re giving her and starts to roughly ride your face.  In response, you intensify your tongue teasing and spin your length about her interior.");
-		 	outputText("\n\nAbruptly, a large torrent of fluid comes rushing down the hole you’ve been pleasing.  Much to your dismay, the flood of fluid actually forces your " + tongueDescript() + " out of her passage before nearly drowning you in girl cum.  You cough and sputter for several seconds until air finally returns to your lungs.  What energy you had before now is now gone.");
+		 	outputText("\n\nAbruptly, a large torrent of fluid comes rushing down the hole you’ve been pleasing.  Much to your dismay, the flood of fluid actually forces your " + player.tongueDescript() + " out of her passage before nearly drowning you in girl cum.  You cough and sputter for several seconds until air finally returns to your lungs.  What energy you had before now is now gone.");
 			//Clara expresses her appreciation of this unexpected feature of her new slave, but does say that she has plans for them to offer her another means of pleasing her as well.
 		 	outputText("\n\nClara finally releases your head from her death grip, and lets you move around again.  \"<i>Wow, " + player.mf("lover-boy","lover-girl") + ".  I never imagined you’d be able to do that!  I guess the slave I got had an unexpected feature.  I’m still going to be changing you up to give me anoother kind of pleasure, but damn!  Look at what you made me doo!</i>\"  She indicates the large pool of vaginal fluids covering the floor.  The bedroll you woke up on is completely ruined.");
 		 	outputText("\n\n\"<i>I guess you’re going to need new sleeping arrangements noow,</i>\" the young bovine remarks, \"<i>Still, I think you earned a place in my bed.</i>\"  She reaches down and scoops up your exhausted form and takes you out of the room.  Just before you pass out in her arms, you hear her whisper in your ears, \"<i>I’ll never let you leave me, you’re mine forever and ever...</i>\" You aren’t sure if you should be happy or not at that prospect.");
@@ -784,9 +787,9 @@ package classes.Scenes.NPCs {
 		 	outputText("\n\n\"<i>Lick my hole!</i>\" Clara orders.  You tentatively do just that, and run your tongue around her mound a bit.  The taste of her previous orgasm is still in there.  She gives an approving moan, \"<i>Mhh, goood, keep doing that.</i>\"  You repeat the action a few more times to more moans and taste fresh cow-girl lubricant flow into your mouth.  \"<i>Yes, now, uh... lick deeper?</i>\"");
 		 	outputText("\n\nIt doesn’t sound like the woman above you is all that sure what she wants you to do; still, you’d better do what she told you to do.  You dig deeper around her folds and push your tongue into the entrance of her vagina.  Regardless of her earlier uncertainty, Clara does seem to like what you’re doing.  \"<i>Ahh, hmm, higher!</i>\" she commands, and you dedicate your full attention to her clitoris.  You run rings around the small, engorged button and dig deeply into the hood with your tongue.  \"<i>Mah, ha, mooo!</i>\" the bovine woman cries out, and a rush of fluids floods out of her womanhood, getting your chin and neck wet.");
 			//Clara has her first orgasm, and feels a bit emboldened.  She asks the PC to start probing deeper and faster.  She also starts to ride their face by actively grinding herself into them.
-		 	outputText("\n\nThe girl you just licked to her second orgams spends a moment panting above you, enjoying the afterglow.  She then pulls herself back so you can see her face.  She is smiling down at you, with that same unsettling glint as before.  \"<i>We aren’t done yet, not by a long shot.</i>\" she casually informs you, and moves back over your face.  She then promptly drops herself down onto your mouth rather forcefully and starts grinding herself across your face while commanding you to lick her once more.");
+		 	outputText("\n\nThe girl you just licked to her second orgasm spends a moment panting above you, enjoying the afterglow.  She then pulls herself back so you can see her face.  She is smiling down at you, with that same unsettling glint as before.  \"<i>We aren’t done yet, not by a long shot.</i>\" she casually informs you, and moves back over your face.  She then promptly drops herself down onto your mouth rather forcefully and starts grinding herself across your face while commanding you to lick her once more.");
 			//if (PC has a muzzle)
-			if(player.hasMuzzle())
+			if (player.hasMuzzle())
 			{
 				//the PC’s efforts to tongue Clara are quickly forgotten, as she simply starts to fuck herself on their muzzle.
 			 	outputText("\n\nYou try to do what you did to her before, but Clara’s movements make that rather difficult.  Your facial structure doesn’t do very many favors in that regard, especially when the cow-girl decides that she’d rather use your muzzle as a living dildo.  She doesn’t even bother to give you any commands anymore and simply starts bouncing up and down on your face, using it to penetrate herself.  Cries of pleasure fill your ears, along with loud squelching as your mouth and nose are trapped in her womanhood.  \"<i>Ooh, ha, yeah, more!</i>\"  You aren’t sure why she bothers, she isn’t even letting you do anything anyway.");
@@ -831,27 +834,27 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nFinally Clara turns to look at you.  Brimming with satisfaction, she opens up her dress and commands you to drink of her breast.  Satisfying your need goes much the same way it has every day.  <i>Milk, sweet delicious milk, need, need, need.  Must serve mistress.</i>  You can’t really control yourself, you <i>NEED!  Service, am I doing things right?  I will please you</i> damn slavedriver.  <i>Most wonderful lady!  Please forgive my insolent thoughts.  Need, need, NEED!</i>");
 	 	outputText("\n\nOnce you’ve finished drinking, mistress directs you to lie down on her bed.  She wants to use you for her pleasure.  As always, you’re happy to comply.  Just as things have been for so long, she mounts your custom prepared equipment: a kitty cock, 9 by 1.6 inches.  You are just happy that you can serve as her sex toy so well.  It fills you with such joy to watch the body of the most beautiful woman in the world bounce on top of yours, in that fine dress with her chest still exposed and tumbling around above you.");
 	 	outputText("\n\nThis is your life now.  Reduced to the milk addicted slave of a Lacta Bovine, you have abandoned your mission just to serve and be used for the rest of your life.");
-		doBadEnd();
 		//game over
+		getGame().gameOver();
 	}
 
 	//Win scenes against Clara
 	//PC defeats Clara outside camp
 	public function defeatClaraCuntInAFight(cheated:Boolean = false):void
 	{
-		if(cheated) clearOutput();
+		if (cheated) clearOutput();
 		else
 		{
 			//Clara is taken out by Marble
 			//If the camp fight lasts 10 rounds
-			if(player.statusAffectv1(StatusAffects.ClaraCombatRounds) >= 10 && player.findStatusAffect(StatusAffects.ClaraFoughtInCamp) >= 0)
+			if (player.statusEffectv1(StatusEffects.ClaraCombatRounds) >= 10 && player.hasStatusEffect(StatusEffects.ClaraFoughtInCamp))
 			{
 				clearOutput();
 			 	outputText("A loud boom reverberates through the air as Marble uses her hammer to strike Clara on the back of the head, returning the favor that took her out earlier.  Your assailant drops to the ground instantly, ending the fight right there.  You consider asking if the young bovine will be all right, but given that Marble seems to have picked herself back up in a hurry, that is unlikely to be a problem.  Instead you ask your mate to see how she is holding up.  Other than a bump on the head, Marble tells you she'll be fine.  Bovine fortitude is once again proven to be formidable as Clara stirs on the ground.  In less than a minute, you and Marble are standing over the defeated, but conscious, form of your lover's sister.");
 			}
 			//Continue to common camp victory
 			//PC drags Clara back to camp, was originally planning on putting more rapes here, but 7 with Marble are probably enough.
-			else if(player.findStatusAffect(StatusAffects.ClaraFoughtInCamp) < 0)
+			else if (!player.hasStatusEffect(StatusEffects.ClaraFoughtInCamp))
 			{
 			 	outputText("Worried about the others, you head out of the cellar and drag Clara and her things with you.  Thanks to the strange way that travel works in this world, it doesn't take you long to find your way back to camp.  You catch your followers there just before they head out to go looking for you and dump your would be kidnaper before them.  Marble steps up next to you and looks down at her sister.");
 				//continue to common victory
@@ -861,7 +864,7 @@ package classes.Scenes.NPCs {
 			else
 			{
 				//if (PC either stopped Clara from drugging everyone, or Marble was the only one drugged)
-				if(kGAMECLASS.camp.companionsCount() <= 2)
+				if (kGAMECLASS.camp.companionsCount() <= 2)
 				{
 				 	outputText("With Clara incapacitated for now, you go to check on Marble and make sure she is all right.  Thankfully she seems to be fine.  You don't plan on underestimating a bovine's fortitude again in the near future.  Since her sister won't be going anywhere soon, you wait for a while to let her recover.  This doesn't take too long, and soon you and your lover are standing over the defeated form of the young bovine.");
 				}
@@ -891,7 +894,7 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nYour cow-girl companion continues to shake in anger, but also fear and frustration.  \"<i>I, I, YES!  I want to addict " + player.short + " to my milk!  I want to so much!  I'm so afraid that " + player.mf("he","she") + " won't stay by my side, but I also feel so bottled up.  "); //no new paragraph
 
 		//if (PC has another lover in camp)
-		if(kGAMECLASS.camp.loversCount() > 1)
+		if (kGAMECLASS.camp.loversCount() > 1)
 		{
 		 	outputText("I'm not even " + player.short + "'s only mate.  " + player.mf("He","She") + " can satisfy their needs, but can't satisfy mine?  "); //no new paragraph
 		}
@@ -922,20 +925,20 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nClara doesn't stand a chance.  In a matter of moments, she's brought to the ground once more, tightly bound up in a thick rope.  \"<i>Time to teach you a lesson!</i>\"  Marble yells with a look of rage in her eyes.");
 	 	outputText("\n\nHow should you punish Clara?  You could let Marble spank Clara, ");
 		//(if PC either has a cock with an area under 20 or a vagina) 
-		if((player.hasCock() && player.cockThatFits(20) >= 0) || player.hasVagina()) outputText("use Marble's unstable state of mind to get her into a forceful threesome with Clara, ");
+		if ((player.hasCock() && player.cockThatFits(20) >= 0) || player.hasVagina()) outputText("use Marble's unstable state of mind to get her into a forceful threesome with Clara, ");
 		//(if PC either has a cock that will fit Marble, or has a vagina)
-		if((player.hasCock() && player.cockThatFits(marbleScene.marbleCuntCapacity()) >= 0) || player.hasVagina()) outputText("have sex in front of Clara so she can see what your love really is, ");
+		if ((player.hasCock() && player.cockThatFits(marbleScene.marbleCuntCapacity()) >= 0) || player.hasVagina()) outputText("have sex in front of Clara so she can see what your love really is, ");
 		//(if Marble is a futa)
-		if(flags[kFLAGS.MARBLE_DICK_TYPE] > 0) outputText("egg Marble into violating Clara with her cock, ");
+		if (flags[kFLAGS.MARBLE_DICK_TYPE] > 0) outputText("egg Marble into violating Clara with her cock, ");
 	 	outputText(" or try to calm Marble down so that she doesn't do anything to her sister.");
 
 		menu();
 		//PC chooses what kind of victory scene they want to do to Clara.
 		//options are: Spank (can always do), Threesome (if the PC has a cock that is under 20 area, or a vagina), "NTR" (if PC has a cock that will fit Marble, or a vagina), Marble cock (if Marble has a cock), and Calm down (always possible).
 		addButton(0,"Spank",murbleSpanksCowCunt);
-		if((player.hasCock() && player.cockThatFits(20) >= 0) || player.hasVagina()) addButton(1,"Threesome",pcAndMurbleDoubleTeamCowButt);
-		if((player.hasCock() && player.cockThatFits(marbleScene.marbleCuntCapacity()) >= 0) || player.hasVagina()) addButton(2,"NTR",NTRIsClearlyTheWorstFetishWhyWouldYouWriteThisOMG);
-		if(flags[kFLAGS.MARBLE_DICK_TYPE] > 0) addButton(3,"Marble Cock",futaMarbleIsAHugeCowToCowCuntAndStuffsCowCuntsCuntFullOfCowCock);
+		if ((player.hasCock() && player.cockThatFits(20) >= 0) || player.hasVagina()) addButton(1,"Threesome",pcAndMurbleDoubleTeamCowButt);
+		if ((player.hasCock() && player.cockThatFits(marbleScene.marbleCuntCapacity()) >= 0) || player.hasVagina()) addButton(2,"NTR",NTRIsClearlyTheWorstFetishWhyWouldYouWriteThisOMG);
+		if (flags[kFLAGS.MARBLE_DICK_TYPE] > 0) addButton(3,"Marble Cock",futaMarbleIsAHugeCowToCowCuntAndStuffsCowCuntsCuntFullOfCowCock);
 		addButton(4,"Calm Down",calmMurblesFatAssDown);
 	}
 	//Marble spanks Clara
@@ -972,61 +975,61 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nThat outburst from the younger sibling seems to have been enough to convince your lover to go along with it.  If it wasn't for her current mood, you doubt that she'd ever have agreed.");
 	 	outputText("\n\nThe two of you strip yourselves and the bound malefactor down.  Then, you both consider the naked tied-up girl, deciding how to go about this.  ");
 		//if (PC has a cock under 20 area, and Marble has a cock)
-		if((player.hasCock() && x >= 0) && flags[kFLAGS.MARBLE_DICK_TYPE] > 0)
+		if ((player.hasCock() && x >= 0) && flags[kFLAGS.MARBLE_DICK_TYPE] > 0)
 		{
 			//n is the index of the PC's biggest cock under 20 area.
 		 	outputText("Eventually you pull her up and sandwich her between your bodies.  Marble expresses an aversion to anal, so you take the backside while she takes the front.  \"<i>Hey, you can't do this to me!  I don't want to lose my virginity to my sister!</i>\" Clara cries out indignantly.");
 		 	outputText("\n\n\"<i>Well, are you saying you've learned your lesson?  Are you going to apologize for trying to take my sweetie away from me?</i>\"");
 		 	outputText("\n\n\"<i>What?  Fuck noo, your </i>sweetie<i> should be mine.</i>\"");
-		 	outputText("\n\nMarble looks to the side of her sister's head, and gives you a solemn nod.  You take that as an invitation to begin the violation and grab a good grip of Clara's expansive rear.  Then you prod your " + cockDescript(x) + " at the entrance to her anus, prompting a gasp and plea from the woman you're about to penetrate to stop.  Her sister doesn't heed her begging, and neither do you.");
+		 	outputText("\n\nMarble looks to the side of her sister's head, and gives you a solemn nod.  You take that as an invitation to begin the violation and grab a good grip of Clara's expansive rear.  Then you prod your " + player.cockDescript(x) + " at the entrance to her anus, prompting a gasp and plea from the woman you're about to penetrate to stop.  Her sister doesn't heed her begging, and neither do you.");
 		 	outputText("\n\nThere is a sharp gasp from the girls in front of you as you push into Clara's ass while Marble takes her vagina.  \"<i>Nooo,</i>\" comes a cross between a whimper and a moan in front of you, \"<i>It wasn't suppose to be this way....</i>\"  You ignore that and instead start to push and pull inside the young cow-girl's back entrance, while enjoying the feeling of Marble's member moving in an out of the other opening against your own.  It isn't often you get to double team someone like this.");
 		 	outputText("\n\nYou wipe a trickle of sweat off of your face and continue to revel in the feeling of filling up a cow-girl's wide bum, with dual stimulation from both her contractions against your member and the other shaft so close you can feel it sliding against you through the cow-girl.  At the same time, you can hear loud moaning coming from the two girls.  The familiar earthy 'ahhs' and subdued moos from Marble, along with the sharp gasps, 'oohs', and long loud moos from her younger sister.  Clara hasn't actually protested the situation for some time now, the dual penetration clearly too much for her virgin mind to endure.");
-		 	outputText("\n\nSuddenly Clara's anus clamps down sharply on your " + cockDescript(x) + " and she lets out a long, \"<i>Moooo!</i>\" in orgasm.  She certainly came fast from this; you've barely even begun to build up your own pleasure.  You look around her to see that Marble seems to be rather surprised about this as well.  \"<i>Should we continue?</i>\" she asks somewhat uncertainly, then considers her sister again with a frown.  You shrug your shoulders and suggest that a little longer is just what you both need and well within the bounds of a reasonable punishment.  Your partner agrees, and the fucking resumes.");
+		 	outputText("\n\nSuddenly Clara's anus clamps down sharply on your " + player.cockDescript(x) + " and she lets out a long, \"<i>Moooo!</i>\" in orgasm.  She certainly came fast from this; you've barely even begun to build up your own pleasure.  You look around her to see that Marble seems to be rather surprised about this as well.  \"<i>Should we continue?</i>\" she asks somewhat uncertainly, then considers her sister again with a frown.  You shrug your shoulders and suggest that a little longer is just what you both need and well within the bounds of a reasonable punishment.  Your partner agrees, and the fucking resumes.");
 		 	outputText("\n\nThis time Clara's anus is much more relaxed and accommodating to your violation.  It almost seems to invite you in when you push forward and try to keep there when you pull back.  Maybe the gangbang has brought out her natural skills at anal sex?  It's hard to say, but it's definitely enjoyable.  A quick check on the elder sister's face reveals that she is certainly enjoying this as well, but the sounds coming from the younger sister suggest that she is enjoying this the most.  Then again, it is hard to tell if that babbling is from pleasure or just from a complete mental breakdown.");
 		 	outputText("\n\nIt doesn't take much longer for you and Marble to rush to your peaks and fill up the cow-girl holes together.  Clara seems to have fallen just short of her peak when the two of you pull back, and she seems to suddenly regain her composure.  \"<i>Wait, what?  Noo!  You can't just, uh....  What am I saying?!</i>\"  It looks like she's having a bit of a crisis deciding if she wants to cum or is too bothered by the thought of what just happened to her.");
 		 	outputText("\n\n\"<i>Damn it all, why couldn't " + player.short + " have taken the front?  Now I'll never be able to experience it for the first time with my perfect mate!  You're evil, sister.</i>\"  Marble looks like she is about to blow up once more at that comment....");
 		} //else if (PC has a cock, Marble does not)
-		else if((player.hasCock() && x >= 0) && flags[kFLAGS.MARBLE_DICK_TYPE] == 0)
+		else if ((player.hasCock() && x >= 0) && flags[kFLAGS.MARBLE_DICK_TYPE] == 0)
 		{
 			//n is the index of the PC's biggest cock under 20 area.
 		 	outputText("\n\nEventually you push her down on all fours.  You stand behind her, while Marble stands in front of her sister's face.  \"<i>Wait, do you actually think I'll service yoou?</i>\" Clara asks indignantly.");
-		 	outputText("\n\n\"<i>You will if you don't want me to twist your ears,</i>\" comes the response.  You prod your " + cockDescript(x) + " up against her tight asshole and suggest that you might be taking a different entrance if she doesn't cooperate for her punishment.  \"<i>Of course, if you're sorry for what you tried to do to " + player.short + "...</i>\" Marble suggests.");
+		 	outputText("\n\n\"<i>You will if you don't want me to twist your ears,</i>\" comes the response.  You prod your " + player.cockDescript(x) + " up against her tight asshole and suggest that you might be taking a different entrance if she doesn't cooperate for her punishment.  \"<i>Of course, if you're sorry for what you tried to do to " + player.short + "...</i>\" Marble suggests.");
 		 	outputText("\n\n\"<i>What?  Why the hell would I be sorry for that?  Moop!</i>\"  In goes your length into her virginal pussy.  \"<i>Hey!  Yo-mmph,</i>\" and she is silenced as her face is forced into Marble's womanhood.  You give her a moment to get use to the sensation, then begin thrusting into her opening in earnest.  At the same time, Marble twists her sister's ears a bit and reminds her what to do before letting out a sigh of pleasure when Clara evidently complies.");
 		 	outputText("\n\nThere is no question that you're the first to claim this lady's most personal of places.  She is very tight, and the muscles contract and convulse against your intrusion reflexively and without direction.  Every thrust is met with a whole new adventure of contractions, relaxations, and unpracticed craziness.  Of course, it's quite obvious that Clara is enjoying things despite her earlier protests.  Her cunny is soaking wet.");
 		 	outputText("\n\nWhile continuing to savor the unpredictableness of Clara's interior, you turn your attention to how your partner in the punishment threesome is enjoying the experience.  Unfortunately, the younger sister's inexperience with pussy licking is showing.  Marble's expression is a mix of both enjoyment and exasperation.  Hoping to give your mate a little more of the former, you grab the cow-tail that's swishing around the bountiful rear you're connect to through your cunt claiming cock, and give it a tug.  You tell Clara that she needs to do a better job of pleasing your love.  She needs to work that cow-tongue, get all the way in there and pay special attention to... this.  With that last word, you give her clitoris a little rub.");
-		 	outputText("\n\nInstantly Marble's expression changes and she lets out a long low moan.  As a reward, you switch from quick thrusts to a slow rub against her entrance.  This proves to be quite a reward indeed as you feel a flood of Clara's juices spill out onto your groin from around the " + cockDescript(x) + " teasing her insides.  You, however, aren't finished yet.  You start a mix of both thrusting into her womanhood, and twisting your length around her innards.");
+		 	outputText("\n\nInstantly Marble's expression changes and she lets out a long low moan.  As a reward, you switch from quick thrusts to a slow rub against her entrance.  This proves to be quite a reward indeed as you feel a flood of Clara's juices spill out onto your groin from around the " + player.cockDescript(x) + " teasing her insides.  You, however, aren't finished yet.  You start a mix of both thrusting into her womanhood, and twisting your length around her innards.");
 		 	outputText("\n\nA muffled, but loud, moaning moo starts to rise out of the before you, somewhat complementing the quieter sighs and gasps you're more familiar with coming from your mate.  The whole situation is incredibly lewd, and you're loving every second of it.  It isn't often that you get to have three sweaty bodies slapping and slobbering on one another.  The fact that one of them is tied up might bother you a little, if she wasn't so clearly enjoying herself.");
 		 	outputText("\n\nIn fact, she is enjoying herself so much that she cums a second time before either you or Marble reach your peaks.  Still, you and Marble do manage to bring yourselves over the top just after that and ride out the afterglow together.  Clara stumbles to the ground, coughing and sputtering from the proof of Marble's orgasm while yours spills out of her lower hole.");
 		 	outputText("\n\n\"<i>Gah, sis, does your milk taste as bad as your pussy juices?  No wonder " + player.short + " didn't want yoou!</i>\"  Another shock of anger shoots through Marble's features.  Is she going to try and inflict more punishment on her sister?");
 		}
 		//else if (PC does not have a cock, Marble does)
-		else if(flags[kFLAGS.MARBLE_DICK_TYPE] > 0)
+		else if (flags[kFLAGS.MARBLE_DICK_TYPE] > 0)
 		{
 		 	outputText("\n\nEventually you push her down on all fours.  You stand in front of her while Marble stands behind her sister's backside.  \"<i>Hey, you can't do this to me!  I don't want to looose my virginity to my sister!</i>\" Clara cries out indignantly.");
 		 	outputText("\n\nYou grab ahold of her ears and give them a slight tug.  She'd better go along with her punishment like a good girl, or you'll be adding some extra pain onto her head.  \"<i>Of course, if you're sorry for what you tried to do to " + player.short + "...</i>\" Marble suggests.");
-		 	outputText("\n\n\"<i>What?  Why the hell would I be sorry for that?  Moop!</i>\"  There is a low slurp as your mate pushes her newly acquired seven inch shaft deep inside her sister's womanhood.  \"<i>Hey!  Yo-mmph,</i>\"  You silence her with your " + vaginaDescript() + ", roughly forcing it into her face.  You give a slight twist to the young bovine's ears to remind her what she should be doing, and right away her tongue comes out and starts giving you experimental licks.");
+		 	outputText("\n\n\"<i>What?  Why the hell would I be sorry for that?  Moop!</i>\"  There is a low slurp as your mate pushes her newly acquired seven inch shaft deep inside her sister's womanhood.  \"<i>Hey!  Yo-mmph,</i>\"  You silence her with your " + player.vaginaDescript() + ", roughly forcing it into her face.  You give a slight twist to the young bovine's ears to remind her what she should be doing, and right away her tongue comes out and starts giving you experimental licks.");
 		 	outputText("\n\nYou let out a sigh and see how Marble is doing.  The older cow-girl is certainly enjoying herself.  It isn't often she gets this into sex involving her cock, but the urgency of her thrusts, the blissful expression of her face, and the happy low groans and moans certainly suggest that she is enjoying herself immensely.");
 		 	outputText("\n\nFor your own sexual experience, you're rather underwhelmed so far.  The malefactor's skills at oral certainly leave something to be desired.  She's barely doing much more than just lightly licking the edges, barely even teasing you.  Sensing that you aren't having a good time, Marble grabs her sister's tail and gives it a good tug.  \"<i>Hey, 'sis', I see you aren't doing a good job up there.  You damn well better work that tongue deep inside " + player.mf("him","her") + ", or I'll be using your tail as a leash.  Put that length to work!</i>\"  That little display certainly seems to have gotten the message through as the real performance now begins.");
 		 	outputText("\n\nNow you feel the natural power of a cow-girl's tongue at giving pleasure to a woman's parts.  Her pussy-licker is at least twice as long as a normal human's, able to easily explore your folds and go deep inside your interior.  \"<i>Good girl, be sure to pay special attention to this little button here,</i>\" comes further instructions, accompanied by Marble reaching down under her sister's legs and fingering what must be the would-be-thief's clitoris.  You're sure that's what she just touched because it triggered a shudder through Clara's body and a loud cry of orgasm into your mound.");
-		 	outputText("\n\nYou express your disappointment to Marble at her sister's unfinished performance, so the fucking continues.  Thankfully, it seems that the bad bovine did get the message and has started to tease and suck on your " + clitDescript() + " as well as continuing with her teases of your folds and depths.  You'd almost feel bad for doing what you two are doing to her if she wasn't evidently enjoying it as much as she is.  Muffled but loud gasps and moos are constantly being uttered into your " + vaginaDescript() + " by the bound girl between you and your lover.  Her breath upon your womanhood only serves to make you feel even better.");
+		 	outputText("\n\nYou express your disappointment to Marble at her sister's unfinished performance, so the fucking continues.  Thankfully, it seems that the bad bovine did get the message and has started to tease and suck on your " + player.clitDescript() + " as well as continuing with her teases of your folds and depths.  You'd almost feel bad for doing what you two are doing to her if she wasn't evidently enjoying it as much as she is.  Muffled but loud gasps and moos are constantly being uttered into your " + player.vaginaDescript() + " by the bound girl between you and your lover.  Her breath upon your womanhood only serves to make you feel even better.");
 		 	outputText("\n\nShe is enjoying herself so much that she cums a second time before either you or Marble reach your peaks.  Still, you and Marble do manage to bring yourselves over the top just after that and ride out the afterglow together.  Clara stumbles to the ground, coughing and sputtering from the proof of your orgasm while Marble's spills out of her lower hole.");
 		 	outputText("\n\n“<i>Damn it all, why did you have to do that?  Now I'll never be able to experience it for the first time with my perfect mate!  You're evil, sister.</i>\"  Marble looks like she is about to blow up once more at that comment...");
 		}
 		else 
 		//PC and Marble only have their vaginas
 		{
-		 	outputText("\n\nEventually you roll her onto her back.  Then Marble sits down on her sister's face while you put your mouth to Clara's womanhood and raise your " + buttDescript() + " up into the air so that your mate can reach your own " + vaginaDescript() + ".");
+		 	outputText("\n\nEventually you roll her onto her back.  Then Marble sits down on her sister's face while you put your mouth to Clara's womanhood and raise your " + player.buttDescript() + " up into the air so that your mate can reach your own " + player.vaginaDescript() + ".");
 		 	outputText("\n\nThis little triangle is about all you can think of doing since there isn't a whole lot three girls can do to one another if one of them is tied up, that is if you're looking for everyone to get pleasure out of the experience.  \"<i>Okay, what the hell is this?  Doo you really think I'm going to actually service -mmph!</i>\"  The naughty girl is interrupted when her elder sister smothers her face in cow-girl pussy.");
 		 	outputText("\n\n\"<i>If you don't do a good job of pleasing me....  Well, I can just grind myself all over your face,</i>\" your mate responds.  You offer up that you won't be letting Clara reach her peak if she does a poor job either.  To make your point clear, you give a small lick to the rim of the malefactor's mound and assure her that you'll be driving her to the edge but never let her cross over.");
 		 	outputText("\n\nMarble then lifts herself slightly off her sister's face and suggests, \"<i>You know, you could get out of this whole situation if you just admit you did something wrong and say you're sorry...</i>\"");
 		 	outputText("\n\n\"<i>Haven't I already told you that I was dooing the right thing?  Why would I -mmph!</i>\"  Once again she is silenced by a mouth full of another girl's snatch.  It looks like the punishment is on, and you start to mercilessly tease the cow-girl mound in front of your face.  Instantly she starts to squirm under your ministrations, desperately trying to get you to actually penetrate her or touch her emerging clitoris.  You don't give her that mercy, not yet.");
-		 	outputText("\n\nNow you get to experience the pleasure of Marble's tongue starting to tease your " + vaginaDescript() + " with her bovine tongue.  It's easily twice the length of a human's and quite adept at pleasuring a woman's passages.  Your mate is certainly quite willing to put it to that very use, using it to plunge deep inside your depths and also expertly explore and pleasure your " + clitDescript() + ".");
+		 	outputText("\n\nNow you get to experience the pleasure of Marble's tongue starting to tease your " + player.vaginaDescript() + " with her bovine tongue.  It's easily twice the length of a human's and quite adept at pleasuring a woman's passages.  Your mate is certainly quite willing to put it to that very use, using it to plunge deep inside your depths and also expertly explore and pleasure your " + player.clitDescript() + ".");
 		 	outputText("\n\nMeanwhile, the young cow-girl under your care continues to squirm and struggle more and more urgently.  You take a short break to suggest to her that all she needs to do is properly please Marble if she wants relief.  Finally, you hear an approving moan from your mate and take that as your cue to dive deep into Clara's needy nethers.  Almost instantly, a muffled but clearly audible moan of pleasure rises out of the woman.");
 		 	outputText("\n\nYou let out your own moan of pleasure, the elder bovine's ministrations of your lower lips have driven you close to the edge of orgasm.  She expertly knows how to use that pussy licker of hers, grasps just what places to tease and just when to switch to what part.  Then she sucks on your love button, pushing you over the edge.");
 		 	outputText("\n\nIt's around the same time that the girl under you cries out a long loud moo through Marble's womanhood, signalling her surrender to your lips.  You pull back and see your mate regard her sister with disappointment, you poke the bad bound girl in the belly and tell her to finish the job.  She gasps and returns to licking cow-girl snatch enough to bring out a nice low moan and moo from your mate's body.");
 		 	outputText("\n\nYour hot and sweaty bodies separate from one another, each face bearing the fluids of one another's orgasms.  Clara is coughing and sputtering, \"<i>Gah, sis, does your milk taste as bad as your pussy juices?  No woonder " + player.short + " didn't want you!</i>\"  Another shock of anger shoots through Marble's features.  Is she going to try and inflict more punishment on her sister?");
 		}
-		player.orgasm();
+		player.orgasm('Dick');
 		//proceed to calm Marble down
 		menu();
 		addButton(0,"Next",calmMurblesFatAssDown);
@@ -1043,19 +1046,19 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nAfter a little more rack riding, Marble decides that it is time to get onto the main event.  She uncharacteristically violently forces you into a sitting position and tears the rest of your garments off.  You don't even get a chance to pull off her skirt before ");
 		//if (PC has a cock that fits)
 		var x:int = player.cockThatFits(marbleScene.marbleCuntCapacity());
-		if(player.hasCock() && x >= 0)
+		if (player.hasCock() && x >= 0)
 		{
-		 	outputText("she drops herself onto your " + cockDescript(x) + ".  Since your bovine mate isn't in the habit of wearing any form of undergarments, her skirt doesn't really do much to get in the way of penetration.  A shriek of dismay accompanies this act.");
+		 	outputText("she drops herself onto your " + player.cockDescript(x) + ".  Since your bovine mate isn't in the habit of wearing any form of undergarments, her skirt doesn't really do much to get in the way of penetration.  A shriek of dismay accompanies this act.");
 		 	outputText("\n\nThere is no hesitation after you've been mounted.  Instantly you're being roughly ridden by a beast that has been awakened in Marble, and there is nothing that can stop it.  A loud slapping sound fills the air with each drop of her hips, then they rise up again and drop once more.  What is essentially a hollow jackhammer seems to be running on your lap right now, and its operator's hands are holding firm to your shoulders to make sure you stay in place.");
 		}
 		//else if (PC has a vagina and Marble has a cock)
-		else if(player.hasVagina() && flags[kFLAGS.MARBLE_DICK_TYPE] > 0)
+		else if (player.hasVagina() && flags[kFLAGS.MARBLE_DICK_TYPE] > 0)
 		{
 		 	outputText("she drops herself onto the ground next to you.  Abruptly, she lifts you up and drops your womanhood onto the member you gave her.  Since your bovine mate isn't in the habit of wearing any form of undergarments, her skirt doesn't really do much to get in the way of penetration.  A shriek of dismay accompanies this act.");
-		 	outputText("\n\nThere is no hesitation after you've been invaded, instantly you're being roughly lifted and dropped by a beast that has been awakened in Marble, and there is nothing that can stop it.  A loud slapping sound fills the air with each drop of your hips, only for them to be lifted up and dropped once more.  Your " + hipDescript() + " have been essentially turned into a jackhammer right now, and its operator shows no signs allowing you to stray from your place on her lap.");
+		 	outputText("\n\nThere is no hesitation after you've been invaded, instantly you're being roughly lifted and dropped by a beast that has been awakened in Marble, and there is nothing that can stop it.  A loud slapping sound fills the air with each drop of your hips, only for them to be lifted up and dropped once more.  Your " + player.hipDescript() + " have been essentially turned into a jackhammer right now, and its operator shows no signs allowing you to stray from your place on her lap.");
 		}
 		//else if (PC has a vagina and Marble does not have a cock)
-		else if(player.hasVagina())
+		else if (player.hasVagina())
 		{
 		 	outputText("she drops herself onto your legs, and grabs one of them.  Instantly, your two womanhoods are being grinded against one another with great force and urgency.  Since your bovine mate isn't in the habit of wearing any form of undergarments, her skirt doesn't really do much to get in the way of tribadism.  A shriek of dismay accompanies this act.");
 		 	outputText("\n\nThere has been a beast awakened in Marble, and there is nothing that can stop it.  Loud squelching noises can be heard coming from your combined pussies as she roughly scissors you.  What is essentially a high speed vibrator seems to be running on your [legs] right now, and its operator's hands are firmly holding your them to make sure you stay in place.");
@@ -1063,7 +1066,7 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nRough sex has a tendency to be rather short but eventful.  In this aspect, this particular escapade is no different.  What sets it apart is an incessant chorus of furious shouting and insults from an extremely jealous cow-girl.  It barely takes a minute before a sharp orgasm passes through your bodies, and in almost an instant, it is over.  Your sweaty bodies separate, and you get a chance to see Marble's face once more.  She's crying.");
 	 	outputText("\n\nThe cause of this sadness is rather likely to be from the extreme verbal abuse that a woman red with rage has been heaping at her.  \"<i>What the fuck is wroong with you!?  Having sex like that with my mate right in froont of me while I'm tied up!  You deserve to be locked away, </i>sister<i>.</i>\"  That last word is essentially spat out.  Evidently Clara didn't enjoy the display, nor did Marble particularly care for her response.  The elder sister rises up, and steps towards her sister, fists clenched in furry.");
 		//set lust to 0
-		player.orgasm();
+		player.orgasm('Generic');
 		//Proceed to calm Marble down
 		menu();
 		addButton(0,"Next",calmMurblesFatAssDown);
@@ -1082,7 +1085,7 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\n\"<i>Wha, maa, no please!</i>\"  Evidently, her wishes are not going to be met, despite her renewed and furious struggle against her bonds.  The younger sister's punishment will continue so long as she refuses to change her tune, and that tune seems to be quite difficult to change.  Even so, it sounds like her body is really enjoying the treatment, much to her dismay.  Each of the powerful thrusts into Clara's openings are making her moan in pleasure while, at the same time, she continues to weep at the shame of it all.");
 	 	outputText("\n\nFor her part, Marble seems to be enjoying this on several levels.  She is definitely eager to punish her sister, and at the same time, the still unfamiliar pleasure of having a dick rubbing and sliding around inside a pussy is making her give her own song of ecstasy.  You put a good effort into watching and making sure the punishment is done properly, at least that's what you tell yourself.  You're not exactly the most attentive to the sex, but the swaying and bouncing of their massive mammaries with each movement is mesmerising.");
 	 	outputText("\n\nYour mate's carefully paced thrusts are becoming more and more frantic, bringing out louder and louder moans from the younger cow-girl.  \"<i>Maa, what, ooo, haa.</i>\"  She can't even raise her voice in protest anymore.  The first-timer is far too blown away from the feeling of the sex.  She still struggles against her bonds, but you think that she's more likely trying to play with her wildly bouncing breasts.  Loud squelching accompanies the sexual sounds coming off the two sweaty girls, one tied up and the other humping.  Both are making similar sounds at this point, but it isn't too hard to tell them apart.  The younger sister's have a much stronger cow blend to them, while Marble's are much quieter.");
-	 	outputText("\n\nA loud, \"<i>MOOOO!</i>\" abruptly rises in crescendo out of the random moans, gasps, and gibbering mess that use to be Clara.  However, her sister doesn't stop with that orgasm and continues to pound away, bringing back the babbling wreck for a few more moments.  Then, Marble's own orgam rises out in her characteristic gasp and long low moan.  A much more subdued moo then the younger sister's.");
+	 	outputText("\n\nA loud, \"<i>MOOOO!</i>\" abruptly rises in crescendo out of the random moans, gasps, and gibbering mess that use to be Clara.  However, her sister doesn't stop with that orgasm and continues to pound away, bringing back the babbling wreck for a few more moments.  Then, Marble's own orgasm rises out in her characteristic gasp and long low moan.  A much more subdued moo then the younger sister's.");
 	 	outputText("\n\nThe futa in this equation pants for a few moments, then asks, \"<i>Have... you, ha... learned your lesson now?</i>\"  When the answer comes in an incoherent moan, it looks like Marble might be about to start round two!");
 	 	dynStats("lus",20);
 		//proceed to Calm Marble down
@@ -1096,12 +1099,12 @@ package classes.Scenes.NPCs {
 		clearOutput();
 	 	outputText("That's enough.  You put your hand on Marble's shoulder and she turns to you in surprise.  Her body is still shaking with barely controlled rage, eyes filled with pain and anger mixed together, the flood of tears is just barely kept at bay.  You tell her to calm down and take a deep breath while wrapping your arms tightly around her body.  Instantly her body freezes in place for several moments, then she bursts into tears and ");
 		//if ((PC taller than 6'8" and Marble not cow-morph) or (PC taller than 7'2" and Marble cow-morph))
-		if((player.tallness >= 80 && flags[kFLAGS.MARBLE_BOVA_LEVEL] < 2) || (player.tallness >= 86 && flags[kFLAGS.MARBLE_BOVA_LEVEL] >= 2))
+		if ((player.tallness >= 80 && flags[kFLAGS.MARBLE_BOVA_LEVEL] < 2) || (player.tallness >= 86 && flags[kFLAGS.MARBLE_BOVA_LEVEL] >= 2))
 		{
 		 	outputText("tightly hugs herself against your body.  Gently stroking her hair, you're happy to be a shoulder for her to cry on, given both your affection for the gentle girl and the awareness that you're able to help her feel better.");
 		} 
 		//else if (PC taller than 5 feet)
-		else if(player.tallness >= 60)
+		else if (player.tallness >= 60)
 		{
 		 	outputText("returns the hug.  Rocking back and forth against one another, you're happy to be here for her, given both your affection for the lovely lady and the warm feeling of being so close to one you care so much for.");
 		}
@@ -1124,10 +1127,10 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\n\"<i>So does that mean it is ready?</i>\" your mate asks.");
 	 	outputText("\n\n\"<i>No, not quite yet.  The process should be done in about half an hour.  ");
 		//if (PC has kids with Marble)
-		if(flags[kFLAGS.MARBLE_KIDS] > 0)
+		if (flags[kFLAGS.MARBLE_KIDS] > 0)
 		{
 		 	outputText("Then we'll be ready to purify you and your child");
-			if(flags[kFLAGS.MARBLE_KIDS] > 0) outputText("ren");
+			if (flags[kFLAGS.MARBLE_KIDS] > 0) outputText("ren");
 		 	outputText(".  ");
 		}
 	 	outputText("So come back a little later.</i>\"  The rodent returns to his reactions.");
@@ -1156,7 +1159,7 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\n\"<i>The day when I met you, I felt that you were just one of the cutest things that I've ever seen.  I immediately took a liking to you after you helped me out with my breasts.  You spent time with me, talked to me, worked alongside me, and every day my affection for you grew stronger.  I didn't think it was love at first, but everyday I looked forward to a visit from you.</i>\"  You give a warm smile hearing those words from her, happy to know your feelings were mutual as your relationship advanced.  \"<i>I was so happy when you agreed to drink the milk directly from my breasts.  It made me so happy to nurse someone like that again and remember the utter bliss I felt from that.</i>\"");
 	 	outputText("\n\n<i>\"Unfortunately that time didn't last long and before I knew it I had addicted you.  ");
 		//if (PC said they wanted to be addicted)
-		if(player.statusAffectv3(StatusAffects.Marble) == 1)
+		if (player.statusEffectv3(StatusEffects.Marble) == 1)
 		{
 		 	outputText("When you said that you wanted to rely on my milk, it felt like you'd just given me the world.  Then, the power I suddenly held over you made my instincts kick in, and I started to turn into something like my mom.  When you resisted, it felt like a betrayal, but my love for you proved stronger than that.  The day you stopped me from slipping away for good, when you revealed your feelings for me, that you cared more about me than my milk, I felt wonderful, and my love for you blossomed full bloom that day.  ");
 		}
@@ -1200,30 +1203,30 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\n\"<i>Then good news!  The experiment was a success!</i>\" Rathazul suddenly cries out, interrupting your heart to heart.  Ah well, there wasn't much else to say anyway.");
 
 		//if (PC has had kids with Marble)
-		if(flags[kFLAGS.MARBLE_KIDS] > 0)
+		if (flags[kFLAGS.MARBLE_KIDS] > 0)
 		{
 			//Purifying kids
 		 	outputText("\n\n\"<i>Now that we know it works, we should purify your child");
-			if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText("ren");
+			if (flags[kFLAGS.MARBLE_KIDS] > 1) outputText("ren");
 		 	outputText(" right away.  Give ");
-			if(flags[kFLAGS.MARBLE_KIDS] == 1) outputText("her");
+			if (flags[kFLAGS.MARBLE_KIDS] == 1) outputText("her");
 			else outputText("each");
 		 	outputText(" a two drop dose,</i>\" the alchemist instructs you and hands over the bottle of his formula.");
 
 		 	outputText("\n\nYou and Marble waste no time in heading over to the nursery and feed ");
-			if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText("each of ");
+			if (flags[kFLAGS.MARBLE_KIDS] > 1) outputText("each of ");
 		 	outputText("your child");
-			if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText("ren");
+			if (flags[kFLAGS.MARBLE_KIDS] > 1) outputText("ren");
 		 	outputText(" two drops of the formula.  ");
-			if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText("They ");
+			if (flags[kFLAGS.MARBLE_KIDS] > 1) outputText("They ");
 			else outputText("She ");
 		 	outputText("take");
-			if(flags[kFLAGS.MARBLE_KIDS] == 1) outputText("s");
+			if (flags[kFLAGS.MARBLE_KIDS] == 1) outputText("s");
 		 	outputText(" it easily enough, and while there are no outward effects, ");
-			if(flags[kFLAGS.MARBLE_KIDS] == 1) outputText("your ");
+			if (flags[kFLAGS.MARBLE_KIDS] == 1) outputText("your ");
 			else outputText("each ");
 		 	outputText("child does report feeling like something was lifted from ");
-			if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText("their");
+			if (flags[kFLAGS.MARBLE_KIDS] > 1) outputText("their");
 			else outputText("her");
 		 	outputText(" mind.");
 
@@ -1279,7 +1282,7 @@ package classes.Scenes.NPCs {
 	public function cageDatCowCunt():void
 	{
 		clearOutput();
-	 	outputText("You say that you're going to be keeping Clara a prisoner in the camp.  She deserves to be imprisoned so she'll no longer be a threat to anyone anymore.  Marble looks uncertain at you and asks if you're sure she needs to be locked up now that she's been purified.  You say you're certain, and your mate nods to you and says that she trusts your judgement on this matter.");
+	 	outputText("You say that you're going to be keeping Clara a prisoner in the camp.  She deserves to be imprisoned so she'll no longer be a threat to anyone anymore.  Marble looks uncertain at you and asks if you're sure she needs to be locked up now that she's been purified.  You say you're certain, and your mate nods to you and says that she trusts your judgment on this matter.");
 	 	outputText("\n\nIt takes you and Marble about an hour to fashion a cage out of logs from the forest thanks to her excellent carpentry skills.  You then untie Clara from her bonds and put her into her new home.  She'll be in there for some time, but at least you know she won't be able to hurt anyone that way.  The purified cow-girl offers no resistance this whole time, and is eerily silent once inside her cell.  You do occasionally catch her angrily staring at you.");
 	 	flags[kFLAGS.CLARA_IMPRISONED] = 1;
 		//Clara is marked as having been purified and caged in camp.
@@ -1316,7 +1319,7 @@ package classes.Scenes.NPCs {
 	public function stickUnpurifiedClaraInACage():void
 	{
 		clearOutput();
-	 	outputText("You say that you're going to be keeping Clara a prisoner in the camp.  She deserves to be imprisoned so she'll be no threat to anyone anymore.  Marble nods to you and says that she trusts your judgement on this matter.");
+	 	outputText("You say that you're going to be keeping Clara a prisoner in the camp.  She deserves to be imprisoned so she'll be no threat to anyone anymore.  Marble nods to you and says that she trusts your judgment on this matter.");
 	 	outputText("\n\n\"<i>So that's it then.  You're just going to lock me up in a cage?  You can't do that!  I'm fucking Clara, daughter of Hana!  You can't just throw me in a damn cage!</i>\"  Despite her protests, she can't offer any real resistance, bound as she is.");
 	 	outputText("\n\nIt takes you and Marble about an hour to fashion a cage out of logs from the forest thanks to her excellent carpentry skills.  You then untie Clara from her bonds and put her into her new home.  She'll be in there for some time, but at least you know she won't be able to hurt anyone that way.  The bars certainly don't do much to cut out the noise of her taunts and demands, unfortunately.");
 		//Clara is marked as having not been purified and caged in camp
@@ -1330,7 +1333,7 @@ package classes.Scenes.NPCs {
 	public function letCorruptCowCuntGo():void
 	{
 		clearOutput();
-	 	outputText("You say that you're going to let Clara go, but she has to promise to never return, bother you or anyone in your camp ever again.  Marble gives you a look of shock and asks if you're absolutely certain you want to do that.  When you give her the affirmative, she sighs and says that she'll trust your judgement on this matter.");
+	 	outputText("You say that you're going to let Clara go, but she has to promise to never return, bother you or anyone in your camp ever again.  Marble gives you a look of shock and asks if you're absolutely certain you want to do that.  When you give her the affirmative, she sighs and says that she'll trust your judgment on this matter.");
 	 	outputText("\n\n\"<i>Really?  After all that, you're just going to let me go?  Fine.  I promise to never return or bother any of you ever again.</i>\"");
 	 	outputText("\n\nYou release her from her bonds, give her her things, and escort her from the camp.  She gives you a wicked smile, then steps out of the camp and warps away.  You hope that wasn't a mistake.");
 		//Clara is marked as having not been purified and released
@@ -1350,9 +1353,9 @@ package classes.Scenes.NPCs {
 		//Marble corruption is set to 10
 		flags[kFLAGS.MARBLE_PURIFICATION_STAGE] = 5;
 		flags[kFLAGS.MARBLE_PURIFIED] = 1;
-		player.changeStatusValue(StatusAffects.Marble,4,10);
+		player.changeStatusValue(StatusEffects.Marble,4,10);
 		getGame().inCombat = false;
-		player.clearStatuses(false);
+		player.clearStatuses();
 		//Marble's breast size is set to 0 (integer, 0=DD cups, 1=G cups, 2=HH, 3=J)
 		//advance time of day by 4 hours
 		//end event
@@ -1376,19 +1379,19 @@ package classes.Scenes.NPCs {
 		clearOutput();
 	 	outputText("You offer Marble a bottle of purified succubus milk and tell her that you'd like her to make her bust bigger.");
 		//if (Marble's breast size < 3)
-		if(flags[kFLAGS.MARBLE_BREAST_SIZE] < 3)
+		if (flags[kFLAGS.MARBLE_BREAST_SIZE] < 3)
 		{
 		 	outputText("\n\n\"<i>Alright, if you say so.</i>\"  Marble lifts the bottle to her mouth, and drinks the substance down.  She lets out a soft sigh and starts massaging her bouncy tit flesh as it expands outwards.  Through her shirt, you can see her " + kGAMECLASS.marbleScene.marbleBreastSize() + " breasts balloon into ");
 			//increase Marble's breast size by 1
 			flags[kFLAGS.MARBLE_BREAST_SIZE]++;
 			outputText(kGAMECLASS.marbleScene.marbleBreastSize() + " melons!");
 			//if (Marble's breast size == 1)
-			if(flags[kFLAGS.MARBLE_BREAST_SIZE] == 1)
+			if (flags[kFLAGS.MARBLE_BREAST_SIZE] == 1)
 			{
 			 	outputText("\n\nYour mate examines her now larger bust, and gets a feel for it.  \"<i>Hmm, not quite what I'm used too, but it's better than those tiny things that I used to have.  Thank you sweetie!</i>\"");
 			}
 			//else if (Marble's breast size == 2)
-			else if(flags[kFLAGS.MARBLE_BREAST_SIZE] == 2)
+			else if (flags[kFLAGS.MARBLE_BREAST_SIZE] == 2)
 			{
 			 	outputText("\n\nYour mate gives her chest a shake, then smiles happily.  \"<i>Thank you so much sweetie!  Now this feels much better, a good balance, nice weight, and just think of what I could do to you with these girls.</i>\"");
 			}
@@ -1400,7 +1403,7 @@ package classes.Scenes.NPCs {
 			player.consumeItem(consumables.P_S_MLK);
 			//increase Marble's lust by 5
 			flags[kFLAGS.MARBLE_LUST] += 5;
-			if(flags[kFLAGS.MARBLE_LUST] > 100) flags[kFLAGS.MARBLE_LUST] = 100;
+			if (flags[kFLAGS.MARBLE_LUST] > 100) flags[kFLAGS.MARBLE_LUST] = 100;
 		}
 		else
 		{
@@ -1432,12 +1435,12 @@ package classes.Scenes.NPCs {
 			//decrease Marble's breast size by 1
 			flags[kFLAGS.MARBLE_BREAST_SIZE]--;
 			outputText(kGAMECLASS.marbleScene.marbleBreastSize() + " sized breasts.");
-			if(flags[kFLAGS.MARBLE_BREAST_SIZE] == 0)
+			if (flags[kFLAGS.MARBLE_BREAST_SIZE] == 0)
 			{
 			 	outputText("\n\nYour mate grips one of her sizable DDs, and gives an exaggerated sigh.  \"<i>This is just so tiny.  Remember that I'm only doing this because I care about you sweetie.  I'm not going to shrink them any further.</i>\"");
 			}
 			//else if (Marble's breast size ==1)
-			else if(flags[kFLAGS.MARBLE_BREAST_SIZE] == 1)
+			else if (flags[kFLAGS.MARBLE_BREAST_SIZE] == 1)
 			{
 			 	outputText("\n\nYour mate gives an experimental bounce of her now reduced chest, \"<i>Hmm, I guess this isn't too bad, do you like the new me, sweetie?</i>\"");
 			}
@@ -1449,7 +1452,7 @@ package classes.Scenes.NPCs {
 			player.consumeItem(consumables.REDUCTO);
 			//decrease Marble's lust by 5
 			flags[kFLAGS.MARBLE_LUST] -= 5;
-			if(flags[kFLAGS.MARBLE_LUST] < 0) flags[kFLAGS.MARBLE_LUST] = 0;
+			if (flags[kFLAGS.MARBLE_LUST] < 0) flags[kFLAGS.MARBLE_LUST] = 0;
 		}
 		else 
 		{
@@ -1468,7 +1471,7 @@ package classes.Scenes.NPCs {
 		flags[kFLAGS.MARBLE_TIME_SINCE_NURSED_IN_HOURS] += 10;
 		//increase Marble's lust by 20
 		flags[kFLAGS.MARBLE_LUST] += 20;
-		if(flags[kFLAGS.MARBLE_LUST] < 0) flags[kFLAGS.MARBLE_LUST] = 0;
+		if (flags[kFLAGS.MARBLE_LUST] < 0) flags[kFLAGS.MARBLE_LUST] = 0;
 		player.consumeItem(consumables.LACTAID);
 		doNext(marbleScene.giveItem);
 	}
@@ -1477,8 +1480,8 @@ package classes.Scenes.NPCs {
 	public function nursingFromPureMarble():void
 	{
 		clearOutput();
-		//if(time since last nursing is < 4 hours)
-		if(flags[kFLAGS.MARBLE_TIME_SINCE_NURSED_IN_HOURS] < 4)
+		//if (time since last nursing is < 4 hours)
+		if (flags[kFLAGS.MARBLE_TIME_SINCE_NURSED_IN_HOURS] < 4)
 		{
 		 	outputText("Feeling a bit thirsty, you ask Marble if there’s any chance she has some milk for you.  She gives you a sad look and informs you that no, she hasn't yet built up enough milk for you to have more.  Purifying her has made it take a bit longer for her to produce milk.");
 			doNext(marbleScene.interactWithMarbleAtCamp);
@@ -1510,13 +1513,13 @@ package classes.Scenes.NPCs {
 			//Restore 20% of PC's health
 			HPChange(Math.round(player.maxHP()*.2),false);
 			//Restore 30 fatigue
-			fatigue(-30);
+			player.changeFatigue(-30);
 			//increase lust by 15
-			kGAMECLASS.stats(0,0,0,0,0,0,15,0);
+			dynStats("lus",15);
 			//increase Marble lust by 10
 			flags[kFLAGS.MARBLE_LUST] += 10;
 			flags[kFLAGS.MARBLE_TIME_SINCE_NURSED_IN_HOURS] = 0;
-			if(flags[kFLAGS.MARBLE_LUST] > 0) flags[kFLAGS.MARBLE_LUST] = 100;
+			if (flags[kFLAGS.MARBLE_LUST] > 0) flags[kFLAGS.MARBLE_LUST] = 100;
 			doNext(camp.returnToCampUseOneHour);
 		}
 	}
@@ -1532,7 +1535,7 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nShe runs off, not looking back.  You get the impression that she really doesn't like what she just said, and she's desperately trying to avoid letting what's happening to you bother her.  Should you really care though?");
 	 	flags[kFLAGS.MARBLE_WARNED_ABOUT_CORRUPTION] = 1;
 		//end event
-		doNext(1);
+		doNext(playerMenu);
 	}
 	//Leaving from corruption
 	//PC's corruption is now too high.
@@ -1541,12 +1544,12 @@ package classes.Scenes.NPCs {
 		clearOutput();
 	 	outputText("Marble approaches you with a somber expression on her face, her things strapped to a pack on her back");
 		//if (PC has more than one child with Marble)
-		if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText(" , and with her children in tow");
+		if (flags[kFLAGS.MARBLE_KIDS] > 1) outputText(" , and with her children in tow");
 		//else if (PC has one child with Marble)
-		else if(flags[kFLAGS.MARBLE_KIDS] == 1) outputText(", and holding her child's hand");
+		else if (flags[kFLAGS.MARBLE_KIDS] == 1) outputText(", and holding her child's hand");
 	 	outputText(".  \"<i>I'm sorry sweetie.  I tried to warn you, but-</i>\" she stops for a moment and takes a deep breath to steady herself.  ");
 		//if (PC has at least one child with Marble)
-		if(flags[kFLAGS.MARBLE_KIDS] > 0)
+		if (flags[kFLAGS.MARBLE_KIDS] > 0)
 		{
 		 	outputText("\"<i>Mommy, what's wrong?</i>\"  The young one holding Marble's hand asks nervously.\"<i>Hush now, little one.  We have to go away for awhile,</i>\" the bovine mother responds and turns back to you.  ");
 		}
@@ -1554,7 +1557,7 @@ package classes.Scenes.NPCs {
 	 	outputText("\n\nSo, the woman whom you helped escape from the grip of corruption, leaves you behind, driven away thanks to your own fall to the very same force from which you freed her.");
 		//Marble and her kids (if any) are removed from the farm and camp, she will only return once the PC's corruption is below 40, and Vapula, Holi, Corrupted Jojo, and Corrupted Amily are not in camp.
 		flags[kFLAGS.MARBLE_LEFT_OVER_CORRUPTION] = 1;
-		player.removeStatusAffect(StatusAffects.CampMarble);
+		player.removeStatusEffect(StatusEffects.CampMarble);
 		doNext(camp.returnToCampUseOneHour);
 	}
 	//Marble comes back after your corruption drops below 40
@@ -1564,14 +1567,14 @@ package classes.Scenes.NPCs {
 		clearOutput();
 	 	outputText("While checking your traps to ensure that they're still working, you hear a voice call out from outside the camp, \"<i>Sweetie!</i>\"  You look up and see the smiling face of Marble");
 		//if (PC has at least one child with Marble)
-		if(flags[kFLAGS.MARBLE_KIDS] > 0) outputText(" and that of your child");
+		if (flags[kFLAGS.MARBLE_KIDS] > 0) outputText(" and that of your child");
 		//if (PC has two or more children with Marble) 
-		if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText("ren");
+		if (flags[kFLAGS.MARBLE_KIDS] > 1) outputText("ren");
 	 	outputText(" just outside the camp.  She must have somehow found out about your purification.");
 
 	 	outputText("\n\nShe excitedly runs up to you and gives you a big hug, holding you very tightly to her chest.  After several moment of embracing you, Marble gently whispers in your ear, \"<i>I'm so glad you managed to free yourself from the worst of the taint.</i>\"  She pulls back from you and asks if you mind if she moves back into the camp.  How could you say no to her?");
 		//re-add Marble and her kids to the camp and farm
-		player.createStatusAffect(StatusAffects.CampMarble,0,0,0,0);
+		player.createStatusEffect(StatusEffects.CampMarble,0,0,0,0);
 		flags[kFLAGS.MARBLE_LEFT_OVER_CORRUPTION] = 0;
 		flags[kFLAGS.MARBLE_WARNED_ABOUT_CORRUPTION] = 0;
 		flags[kFLAGS.FOLLOWER_AT_FARM_MARBLE] = 0;
@@ -1581,17 +1584,17 @@ package classes.Scenes.NPCs {
 	//displayed in the camp description if Clara was imprisoned in camp.
 	public function claraCampAddition():void
 	{
-		outputText("  Nearby the portal sits a large wooden cage for keeping Marble's sister Clara prisoner.  It is tall enough for her to stand in and long enough for her to lie down completely.  ");
+		outputText("Nearby the portal sits a large wooden cage for keeping Marble's sister Clara prisoner.  It is tall enough for her to stand in and long enough for her to lie down completely.  ");
 		//if (Clara was purified)
-		if(flags[kFLAGS.CLARA_PURIFIED] > 0)
+		if (flags[kFLAGS.CLARA_PURIFIED] > 0)
 		{
-			if(rand(10)==0) outputText("You catch Clara staring at you for a moment, then her gaze once again returns to some distant mountain top.  She has not taken her purification well.");
+			if (rand(10)==0) outputText("You catch Clara staring at you for a moment, then her gaze once again returns to some distant mountain top.  She has not taken her purification well.");
 			else outputText("As always, Clara sits within, staring off into the distance.  She has not taken her purification well.");
 		}
 		else
 		{
 			//if (time of day <= 7 OR >= 20)
-			if(kGAMECLASS.time.hours <= 7 || kGAMECLASS.time.hours >= 20) outputText("Clara is laying sprawled out on the ground of her cage, snoring loudly.");
+			if (kGAMECLASS.time.hours <= 7 || kGAMECLASS.time.hours >= 20) outputText("Clara is laying sprawled out on the ground of her cage, snoring loudly.");
 			else
 			{
 				temp = rand(4);
@@ -1612,6 +1615,7 @@ package classes.Scenes.NPCs {
 				}
 			}
 		}
+		outputText("  ");
 	}
 }
 }

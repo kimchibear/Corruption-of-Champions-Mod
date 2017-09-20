@@ -8,8 +8,10 @@ package classes.Scenes.Dungeons
 	import classes.Items.Armor;
 	import classes.BaseContent;
 	import classes.Scenes.Dungeons.DungeonAbstractContent;
-	import classes.Scenes.Dungeons.DungeonEngine;
+	import classes.Scenes.Dungeons.DungeonCore;
 	import classes.Scenes.Dungeons.HelDungeon.*;
+	import classes.display.SpriteDb;
+	import classes.internals.*;
 	
 	import classes.Scenes.NPCs.*;
 	
@@ -19,10 +21,15 @@ package classes.Scenes.Dungeons
 	
 	public class HelDungeon extends DungeonAbstractContent
 	{
-		public function HelDungeon() 
-		{
-			
-		}
+		/*
+		private static const DUNGEON_HEL_GUARD_HALL:int		= 17;
+		private static const DUNGEON_HEL_WINE_CELLAR:int	= 18;
+		private static const DUNGEON_HEL_STAIR_WELL:int		= 19;
+		private static const DUNGEON_HEL_DUNGEON:int		= 20;
+		private static const DUNGEON_HEL_MEZZANINE:int		= 21;
+		private static const DUNGEON_HEL_THRONE_ROOM:int	= 22;
+		*/
+		public function HelDungeon() {}
 		
 		//EVENTS
 		//-HelAffection -- A score measuring Hel's general fondness for the Player Character, measured on a scale of 0 - 100, with \"<i>0</i>\" being immediately after achieving \"<i>Fuckbuddy</i>\" status. Increases by 5 each time you fuck (not Corrupt!Rape) Hel, and 10 each time you engage in one of her threesomes. When HelAffection equals 70 points, the number freezes and Expansion 2 content triggers.
@@ -58,10 +65,10 @@ package classes.Scenes.Dungeons
 			outputText("Before bedding down for the night, you make one last check of your camp's perimeter, making sure all your traps and defenses are still in place and primed in the event of a surprise nighttime assault.  As you come to the outermost parts of your makeshift camp, you notice a cloaked stranger approaching out of the evening darkness.  You're about to ready your [weapon], but you recognize the shapely figure of Hel the salamander walking towards you, hips a-sway underneath her loose traveling cloak.");
 
 			//(If Hel has never been to camp before (ie, no Isabella threesome at camp)
-			if(flags[kFLAGS.HEL_ISABELLA_THREESOME_ENABLED] == 0) {
+			if (flags[kFLAGS.HEL_ISABELLA_THREESOME_ENABLED] == 0) {
 				outputText("\n\n\"<i>[name]!</i>\" the salamander shouts, waving emphatically as she approaches.  \"<i>Shit, do you have any idea how hard you are to track down? I've been looking for you everywhere!</i>\"  You ");
 				//[(pussy)
-				if(player.cor < 50) outputText("quickly rush over and stop Hel before she loses a leg to one of your traps");
+				if (player.cor < 50) outputText("quickly rush over and stop Hel before she loses a leg to one of your traps");
 				//(dick)
 				else outputText("lazily point out your traps to the not-quite-intruder");
 				outputText(", and guide her over to the camp proper.");
@@ -73,7 +80,7 @@ package classes.Scenes.Dungeons
 			//(Resume All)
 			outputText("\n\nYou sit the salamander down near your campfire and ask her what brought her all the way from the plains to your humble abode.  She shrugs lightly and says, \"<i>Maybe I just wanted some company tonight.</i>\"");
 			//[If not Centaur: 
-			if(!player.isTaur()) outputText("  Her hand slides over to rest on your thigh.");
+			if (!player.isTaur()) outputText("  Her hand slides over to rest on your thigh.");
 			else outputText("  \"<i>She gives your flank a slow, affectionate stroke.</i>\"");
 			outputText("  You ask her if that's true. With a little wink, she answers, \"<i>Well, it's not entirely untrue...</i>\"");
 
@@ -106,7 +113,7 @@ package classes.Scenes.Dungeons
 			flags[kFLAGS.HEL_FUCKBUDDY] = 0;
 			flags[kFLAGS.HEL_AFFECTION] = 0;
 			kGAMECLASS.helFollower.helAffection(-70);
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Intro Scene -- Yes
@@ -115,32 +122,32 @@ package classes.Scenes.Dungeons
 			outputText("You mull the salamander's proposition over and eventually agree to assist her.  Not only will you be stopping a new race of monsters from spawning into the mountains, but you'll be getting into the lovely Helia's good graces - a win-win if ever there was one.");
 			outputText("\n\nHel breaks out into a great big smile and leaps at you, pulling you into a hug and squeezing until you damn near choke.  You return her tight embrace, and are eventually rewarded by Hel relaxing in your arms");
 			//[if has lap: 
-			if(!player.isTaur()) outputText(" and cuddling up in your lap");
+			if (!player.isTaur()) outputText(" and cuddling up in your lap");
 			outputText(".  She nuzzles your neck and whispers, \"<i>Thanks, Champ. It means a lot to know I can count on you to... watch my back.</i>\"");
 			outputText("\n\nYou run a hand through Hel's hair and tell her that you've got her back no matter what.  You give her muscular ass a playful little grope; and she immediately wraps her tail around you, pinning your arms to your chest.  Doesn't look like you're going anywhere now.  With a little smirk, the salamander whispers, \"<i>Let's stay like this 'till morning - what do you say?</i>\"");
 			outputText("\n\nResigned to your fate, you curl up with Helia; who throws her cloak over the two of you.");
 			
 			//[If Marble is in camp:]
-			if(player.findStatusAffect(StatusAffects.CampMarble) >= 0 && silly()) {
+			if (player.hasStatusEffect(StatusEffects.CampMarble) && silly()) {
 				outputText("\n\nJust as you and Hel start to get intimate, you hear a familiar clopping of hooves. You poke your head out of the blanket, rather alarmed to see Marble standing over you.");
 				outputText("\n\n\"<i>S-Sweetie?</i>\" Marble says, aghast at Hel's presence in your arms.  \"<i>What... just what do you think you're doing!?</i>\"");
 				outputText("\n\nThis could be ba--");
 				outputText("\n\n\"<i>Back off, cow-slut!</i>\" Hel growls, baring her talons at the bovine girl. \"<i>[name]'s mine tonight. GOT IT!?</i>\"");
 				//(IF SILLYMODE:)
-				if(silly()) outputText("\n\nMarble stammers and starts, struggling to find a rebuke against the salamander.  Before she can, though, Hel leaps to her feet and rushes her!  You don't even have a chance to intervene before Marble goes flying with a kick right to her cow-cunt, sending her hurtling toward the swamp.  As Hel settles back into your arms, you're almost certain you hear a rather draconic scream of rage in the distance.");
+				if (silly()) outputText("\n\nMarble stammers and starts, struggling to find a rebuke against the salamander.  Before she can, though, Hel leaps to her feet and rushes her!  You don't even have a chance to intervene before Marble goes flying with a kick right to her cow-cunt, sending her hurtling toward the swamp.  As Hel settles back into your arms, you're almost certain you hear a rather draconic scream of rage in the distance.");
 			}
 			//PROC NEXT FUNCTION AT 6AM.  OVERRIDES OTHER SHIIIIITE
 			flags[kFLAGS.HEL_FOLLOWER_LEVEL] = -1;
 			
-			doNext(1);
+			doNext(playerMenu);
 			//(Decrease Player Lust to minimum, increase HP to maximum, etc. etc. You're sleeping, but also fucking. Figure it out.)
-			if (flags[kFLAGS.TIMES_ORGASMED] > 0) player.orgasm(); //Never calls if you never orgasmed before.
+			if (flags[kFLAGS.TIMES_ORGASMED] > 0) player.orgasm('Generic'); //Never calls if you never orgasmed before.
 		}
 			
 		public function morningAfterHeliaDungeonAgreements():void {
 			outputText("\nWhen your eyes flicker open at the crack of dawn, you're pleased to see Helia is lying on your chest, ");
 			//[If PC has >C Cups, \"<i>
-			if(player.biggestTitSize() > 3) outputText("her head nestled between your soft tits and ");
+			if (player.biggestTitSize() > 3) outputText("her head nestled between your soft tits and ");
 			outputText("snoring boorishly.  The air around you smells like hot booze" + (flags[kFLAGS.TIMES_ORGASMED] > 0 ? " and sex": "") + ", yet you awaken feeling as spirited and lively as you ever have.  You give Hel a little shake, waking her.");
 
 			outputText("\n\n\"<i>Huh, wha?</i>\" she groans, rubbing her head.  \"<i>Oh, hey there, lover mine,</i>\" she adds after a moment, giving you a long kiss on the lips.  The two of you untangle yourselves, giving each other the occasional tease and playful slap on the ass, flirting shamelessly as you dress and ready yourselves for the coming day.");
@@ -150,7 +157,7 @@ package classes.Scenes.Dungeons
 			//(Display: 
 			outputText("\n\n(<b>Helia can now be found under the Lovers tab! (For Now!)</b>)");
 			flags[kFLAGS.HEL_FOLLOWER_LEVEL] = 1;
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 
@@ -158,7 +165,7 @@ package classes.Scenes.Dungeons
 		public function notYet():void {
 			clearOutput();
 			outputText("You tell Hel you were only checking on her, and that you've still got some things to do.  She sighs and quietly asks you to hurry.");
-			doNext(1);
+			doNext(playerMenu);
 		}
 		//Introduction -- Dungeon
 		public function goToHeliaDungeon():void {
@@ -169,6 +176,7 @@ package classes.Scenes.Dungeons
 		}
 		public function goToHeliaDungeon2():void {
 			clearOutput();
+			outputText(images.showImage("dungeon-entrance-phoenixtower"));
 			outputText("Within the hour, you and Helia are hiking up the narrow ledges and crevices of the high mountains, slowly but steadily climbing toward a snow-capped peak.  Hel certainly seems to know where she's going - she blazes a certain and steady trail, as if she knew every path and shortcut up the mountain.  By the time you near the peak, you're convinced she's been up here before - many times, even.");
 			outputText("\n\nEventually, you see the crest of a squat, thick stone tower on the mountainside.  Hel easily guides you toward it, giving you a helping hand over an unusually wide gorge that would have kept most stray minotaurs well away from the solitary spire.  As you scramble onto the tower's plateau, Hel grabs your shoulders and pins you to the ground - just in time to avoid the gaze of a low-flying harpy.");
 			outputText("\n\n\"<i>Quiet,</i>\" she hisses, lying atop you so that you can't jump up and expose your position.  \"<i>We can't take them all at once out in the open... This is going to be a sneaking mission, got it?</i>\"");
@@ -176,9 +184,9 @@ package classes.Scenes.Dungeons
 			outputText("\n\nNow safe from the watchful eyes of flying harpies and their sentries, Hel whispers, \"<i>Okay, so here's the plan.  I'm going to climb up the tower and hit them from the top; you go in through the main gates here,</i>\" she says, pointing to a rotting wooden door that seems to have been in disuse for a decade.  \"<i>Divide and conquer, right?  There are three floors, so... meet in the second, as soon as we can.  Yeah?</i>\"");
 			outputText("\n\nYou nod again, and give Helia a little boost as she starts to scale the high walls of the aging tower.  You, however, steel yourself and make your way through an opening in the main gates."); 
 			//(NEXT)
-			kGAMECLASS.dungeonLoc = 17;
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_GUARD_HALL;
 			kGAMECLASS.inDungeon = true;
-			doNext(1);
+			doNext(playerMenu);
 		}
 		
 		public function retryDungeonFromBadEndPrompt():void {
@@ -187,7 +195,8 @@ package classes.Scenes.Dungeons
 			doYesNo(reallyRetry, declineRetry);
 		}
 		public function reallyRetry():void {
-			dynStats("lus", -100, "resisted", false);
+			dynStats("lus", -100, "scale", false);
+			player.fatigue = 0;
 			player.HP = player.maxHP();
 			statScreenRefresh();
 			//Restart dungeon, resets all encounters.
@@ -202,25 +211,27 @@ package classes.Scenes.Dungeons
 		}
 		public function declineRetry():void {
 			clearOutput();
-			doBadEnd();
+			outputText("Load your latest save-file. You can always try again later.");
+			getGame().gameOver();
 			removeButton(1);
 		}
 		
 		//For when you want to visit the tower again.
 		public function returnToHeliaDungeon():void {
-			clearOutput()
-			outputText("You make your way back to the high mountains. You hike up the narrow ledges and crevices of the high mountains, slowly but steadily climbing toward a snow-capped peak.");
+			clearOutput();
+			outputText(images.showImage("dungeon-entrance-phoenixtower"));
+			outputText("You make your way back to the high mountains. Next, you hike up the narrow ledges and crevices of the high mountains, slowly but steadily climbing toward a snow-capped peak.");
 			outputText("\n\nYou remember where the tower is. You make your way back to the tower.");
-			kGAMECLASS.dungeonLoc = 17;
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_GUARD_HALL;
 			kGAMECLASS.inDungeon = true;
-			doNext(1);
+			doNext(playerMenu);
 		}
 		public function exitHelTower():void {
 			clearOutput()
 			outputText("You slip out the door, leaving the tower behind. You make your way back to your camp.");
 			kGAMECLASS.dungeonLoc = -1;
 			kGAMECLASS.inDungeon = false;
-			doNext(13);			
+			doNext(camp.returnToCampUseOneHour);			
 		}
 		
 		public function takeGodMead():void {
@@ -244,64 +255,66 @@ package classes.Scenes.Dungeons
 			clearOutput();
 			outputText("You approach the armor rack.  A suit of heavy plated armor sits upon it, overlaying a flexible chain vest.  Contrasting against the rotting room, the armor seems to be in pristine condition, even shining.  Perhaps someone uses this heavy equipment - but surely not a harpy? You suppose you could take it.");
 			//(Display Options: [Take Armor] [Back])
-			simpleChoices("Take Armor",takeGooArmor4Realz,"",0,"",0,"",0,"Back",1);
+			menu();
+			addButton(0, "Take Armor", takeGooArmor4Realz, null, null, null, "Take the armor for sure. It can come in handy." + (player.inte >= 70 ? " You have a feeling that there might be something living inside the armor." : ""));
+			addButton(4, "Back", playerMenu);
 			//(Back takes you back to Room 1 menu)
 		}
 
 		//[Armor] -> [Take]:
 		public function takeGooArmor4Realz():void {
 			clearOutput();
-			spriteSelect(79);
+			spriteSelect(SpriteDb.s_valeria);
 			outputText("You reach out to grab the armor, but as soon as your finger brushes the shiny surface, a human-like face appears in the helm!  You recoil as a daintily feminine and bright blue face takes shape out of nowhere, staring at you with eyes afire with rage.  More of the gooey substance that makes up the girl's face fills out the armor, yanking it off the racks on feet made of goop.");
 			outputText("\n\nQuietly, the armored goo-girl growls, \"<i>You dare to disturb my rest, mortal? Prepare yourself for my vengeance!</i>\"");
 			outputText("\n\nWhat the fuck!? Oh well, looks like she wants a fight!");
 			startCombat(new GooArmor());
-			doNext(1);
+			doNext(playerMenu);
 		}
 		
 		//Goo Armor -- PC Defeated (PC has Gender)
 		public function gooArmorBeatsUpPC():void {
-			spriteSelect(79);
+			spriteSelect(SpriteDb.s_valeria);
 			outputText("\n\nYou collapse, unable to resist the goo-armor's onslaught.  Laughing, she slithers out from underneath her armor, completely encasing you before you can do anything more than scream.  Laughing maniacally, the goo looms over you, hands on her hips.  \"<i>Tsk, tsk, tsk.  Not so eager to steal my armor now, are you?  Well... what am I to do with you, hmm?</i>\"  You struggle, but wrapped snugly in her goo, you can do little more than wiggle your hips and chest, accidentally moving yourself seductively.");
 			outputText("\n\nAs you realize your mistake, a little smile spreads on her face.  \"<i>Ah, I know... I haven't had my precious fluids in so very long...</i>\"");
 			//(PC has Vagina)
-			if(player.hasVagina() && !player.hasCock()) {
+			if (player.hasVagina() && !player.hasCock()) {
 				outputText("\n\nShe begins to use her goo to peel back your [armor], soon revealing your defenseless [vagina], and makes a show of licking her lips as tendrils of goo seep into your cunt, filling you utterly.  You writhe and struggle against your gooey bonds, but your efforts are futile.  The goo-girl inside the armor only shakes her head at you, and withdraws herself from your [vagina].");
 				outputText("\n\nYou have only a moment to figure out what's coming before her goo -- now perfectly shaped like the inside of your cunt -- slams back into you like a stiff cock. You can't help yourself as a moan escapes your lips, barely audible through the goop covering your mouth."); 
 				outputText("\n\n\"<i>Oh, you like that do you?</i>\" the armor-goo asks, smiling evilly.  \"<i>Well, maybe this can be mutually... beneficial.</i>\"  Still grinning, she begins to hammer her cock-like appendage into your pussy, fucking you fast and hard with her goo-dildo.");
 				player.cuntChange(25,true,true,false);
 				//[If PC has breasts > A-cups: 
-				if(player.biggestTitSize() > 1) {
+				if (player.biggestTitSize() > 1) {
 					outputText("  As she hammers your cunny, bits of her goo swirl around your [chest], squeezing and massaging your tits.  You squirm as she roughly teases your boobs, pinching at your nipples and squeezing your tender flesh roughly.");
 					//[if PC is lactating: \"<i>
-					if(player.lactationQ() > 0) outputText("  To her delight, a spray of warm milk jets out of your sore nipples, milky white mixing into blue goo like oil in water. \"<i>Mmm, tasty!</i>\" she teases, massaging more and more from you.</i>\"");
+					if (player.lactationQ() > 0) outputText("  To her delight, a spray of warm milk jets out of your sore nipples, milky white mixing into blue goo like oil in water. \"<i>Mmm, tasty!</i>\" she teases, massaging more and more from you.</i>\"");
 				}
 				outputText("\n\nShe continues to pound your cunt mercilessly, her grin spreading to inhuman width as your juices begin to flow around and into her gooey penetration.  She soaks your fem-lube up greedily, enjoying the meal, but her fucking is relentless until you feel orgasm approaching.  \"<i>Aw, ");
 				//[if height is less than 6': 
-				if(player.tallness < 70) outputText("little");
+				if (player.tallness < 70) outputText("little");
 				else outputText("big");
 				outputText(" girl ready to cum?  Well, go on then. Feed me!</i>\"");
 
 				outputText("\n\nYou erupt, femspunk gushing out of your [vagina] and into the goo-cock.  Laughing, the goo-girl absorbs your cum, growing larger and larger as you feed her, until she towers over you, her massive cock now wide enough to painfully stretch your walls.  \"<i>Oh, that's good.  Good, girl, good.  Yes, let it all out, just like that... just like that,</i>\" she coos, soaking your juices up until your orgasm finally passes.  Sated, she withdraws from inside you, leaving a decidedly empty feeling in your gut as she allows you to stand."); 
 
 				outputText("\n\n\"<i>Mmm, that was fun,</i>\" the goo-girl says, patting her full belly.  You can see a bit of your cum ");
-				if(player.biggestTitSize() > 1 && player.lactationQ() > 0) outputText("and milk ");
+				if (player.biggestTitSize() > 1 && player.lactationQ() > 0) outputText("and milk ");
 				outputText("swirling around inside her.  \"<i>Well, I suppose since you fed me so well, I'll let you go.  This time! See you around, tasty!</i>\"");
 
 				outputText("\n\nBefore you can recover enough to say a word, the goo-girl saunters off out the door.  To your surprise, you feel rather invigorated after the battle, and rolling your shoulders, you turn your attention back to the dungeon ahead.");
 			}
 			//(PC has Dick)
-			else if(player.hasCock()) {
+			else if (player.hasCock()) {
 				outputText("She begins to use her goo to peel back your armor, soon revealing your defenseless, half-erect cock");
-				if(player.cockTotal() > 1) outputText("s");
+				if (player.cockTotal() > 1) outputText("s");
 				outputText(".  She makes a show of licking her lips as tendrils of goo wrap tightly around [eachCock] like a warm, wet onahole. You writhe and struggle against your gooey bonds, but your efforts are futile.  The goo-girl inside the armor only shakes her head at you, and squeezes [eachCock] tighter.");
-				outputText("\n\nYou gasp with pleasure as she starts to stroke your " + multiCockDescriptLight() + ", jerking you off as she looms over you, grinning wickedly.  \"<i>Oh, you like that do you?</i>\" the armor-goo asks.  \"<i>Well, maybe this can be mutually... beneficial.</i>\"  She starts to increase her tempo, making you squirm and writhe as she wanks your " + multiCockDescriptLight() + ", licking her lips as little bubbles of pre-cum form.  Helpless, you can only submit and try to enjoy yourself as the armored goo-girl continues to milk you.");
+				outputText("\n\nYou gasp with pleasure as she starts to stroke your " + player.multiCockDescriptLight() + ", jerking you off as she looms over you, grinning wickedly.  \"<i>Oh, you like that do you?</i>\" the armor-goo asks.  \"<i>Well, maybe this can be mutually... beneficial.</i>\"  She starts to increase her tempo, making you squirm and writhe as she wanks your " + player.multiCockDescriptLight() + ", licking her lips as little bubbles of pre-cum form.  Helpless, you can only submit and try to enjoy yourself as the armored goo-girl continues to milk you.");
 				outputText("\n\nShe continues to jerk you off mercilessly, her grin spreading to inhuman width as your pre begins to flow around and into her gooey 'hands'.  She soaks you up greedily, enjoying the meal, but her fucking is relentless until you feel orgasm approaching.  \"<i>Aw, ");
-				if(player.tallness < 70) outputText("little");
+				if (player.tallness < 70) outputText("little");
 				else outputText("big");
 				outputText(" " + player.mf("boy","girl") + " ready to cum? Well, go on then. Feed me!</i>\"");
 				
-				outputText("\n\nYou climax, ropes of thick, white jizz shooting out of [eachCock] and into the goo's waiting body.  Laughing, the goo-girl absorbs your cum, growing larger and larger as you feed her until she towers over you, her expanding breasts and belly now hanging over you. \"<i>Oh, that's good. Good, " + player.mf("boy","girl") + ", good.  Yes, let it all out, just like that... Just like that,</i>\" she coos, soaking your cum up until your orgasm finally passes.  Sated, she withdraws from around you, leaving your " + multiCockDescriptLight() + " decidedly empty and sore.");
+				outputText("\n\nYou climax, ropes of thick, white jizz shooting out of [eachCock] and into the goo's waiting body.  Laughing, the goo-girl absorbs your cum, growing larger and larger as you feed her until she towers over you, her expanding breasts and belly now hanging over you. \"<i>Oh, that's good. Good, " + player.mf("boy","girl") + ", good.  Yes, let it all out, just like that... Just like that,</i>\" she coos, soaking your cum up until your orgasm finally passes.  Sated, she withdraws from around you, leaving your " + player.multiCockDescriptLight() + " decidedly empty and sore.");
 
 				outputText("\n\n\"<i>Mmm, that was fun,</i>\" the goo-girl says, patting her full belly.  You can see a bit of your cum swirling around inside her.  \"<i>Well, I suppose since you fed me so well, I'll let you go.  This time!  See you around, tasty!</i>\"");
 				
@@ -325,19 +338,19 @@ package classes.Scenes.Dungeons
 			}
 			//(PC regains HP)
 			HPChange(1000,false);
-			player.orgasm();
+			player.orgasm('Generic');
 			dynStats("lib", 1, "sen", 3);
-			cleanupAfterCombat();
-			doNext(1);
+			combat.cleanupAfterCombat();
+			doNext(playerMenu);
 			flags[kFLAGS.LOST_GOO_ARMOR_FIGHT] = 1;
 		}
 
 		//Goo Armor -- PC is Victorious (Intro)
 		public function beatUpGooArmor():void {
-			spriteSelect(79);
+			spriteSelect(SpriteDb.s_valeria);
 			clearOutput();
 			outputText("Succumbing to your ");
-			if(monster.lust > 99) outputText("erotic abilities");
+			if (monster.lust >= monster.maxLust()) outputText("erotic abilities");
 			else outputText("skill in battle");
 			outputText(", the armored goo slumps backwards against the wall, unable to stand.  You loom over her, grinning as you contemplate what to do with your helpless opponent.");
 
@@ -351,34 +364,37 @@ package classes.Scenes.Dungeons
 
 			outputText("\n\nWell, that's certainly an interesting offer. Do you take the goo-girl armor with you?");
 			//(Display Options: [Take Her] [Refuse Her])
-			simpleChoices("Take Her", takeGooArmorAndWearIt, "Refuse Her", refuseGooArmorOffer, "Refuse Polite", refuseGooArmorOfferPolitely, "", 0, "", 0);
+			menu();
+			addButton(0, "Take Her", takeGooArmorAndWearIt, null, null, null, armors.GOOARMR.description);
+			addButton(1, "Refuse Her", refuseGooArmorOffer, null, null, null, "Refuse the goo armor offer. You don't want her after all! However, you might not be able to get her for some time.");
+			addButton(2, "Refuse Polite", refuseGooArmorOfferPolitely, null, null, null, "Politely decline the goo armor offer. You don't want her for now.");
 			flags[kFLAGS.WON_GOO_ARMOR_FIGHT] = 1;
 		}
 		//[Refuse Her]
 		public function refuseGooArmorOffer():void {
-			spriteSelect(79);
+			spriteSelect(SpriteDb.s_valeria);
 			clearOutput();
 			//In Tower of the Phoenix
 			if (flags[kFLAGS.VALERIA_FOUND_IN_GLACIAL_RIFT] == 0) {
 				outputText("You tell her to fuck off -- you don't need armor that might try to kill or rape you at night.");
 				outputText("\n\nShe huffs indignantly and scrambles to her feet.  \"<i>Well fine, and fuck you anyway.  I hope you get raped by harpies, " + player.mf("sir","madam") + ".</i>\"  After a moment, she hesitantly adds, \"<i>But if you change your mind later... Well, we'll see if you live through this place without me!</i>\"  Before you can stop her, she ducks out the front door and off to... Wherever goo-armor-girl-things would go, you guess.  Still, to your surprise, you feel rather invigorated after the battle, and rolling your shoulders, you turn your attention back to the dungeon ahead.");
 				HPChange(1000,false);
-				cleanupAfterCombat();
-				doNext(1);
+				combat.cleanupAfterCombat();
+				doNext(playerMenu);
 			}
 			//In Glacial Rift
 			else {
 				outputText("You tell her to fuck off -- you don't need armor that might try to kill or rape you at night.");
 				outputText("\n\nShe huffs indignantly and scrambles to her feet.  \"<i>Well fine, and fuck you anyway.  I hope you get raped by jotuns, " + player.mf("sir","madam") + ".</i>\"  After a moment, she hesitantly adds, \"<i>But if you change your mind later... Well, I guess I’ll be around here!</i>\"  Before you can stop her, she huffs off to... wherever goo-armor-girl-things would go, you guess.  You make your way back to your camp.");
 				HPChange(player.maxHP(),false);
-				cleanupAfterCombat();
-				doNext(13);
+				combat.cleanupAfterCombat();
+				doNext(camp.returnToCampUseOneHour);
 			}
 			
 		}		
 		//[Refuse Polite]
 		public function refuseGooArmorOfferPolitely():void {
-			spriteSelect(79);
+			spriteSelect(SpriteDb.s_valeria);
 			clearOutput();
 			//In Tower of the Phoenix
 			if (flags[kFLAGS.VALERIA_FOUND_IN_GLACIAL_RIFT] == 0) {
@@ -391,17 +407,17 @@ package classes.Scenes.Dungeons
 				outputText("\n\nShe huffs indignantly and scrambles to her feet.  \"<i>Well fine, maybe you can take me later, " + player.mf("sir", "madam") + "?</i>\"  After a moment, she hesitantly adds, \"<i>But if you change your mind later... You know where to find me, right?</i>\"  You give her a nod as you make your way back to your camp.");
 			}
 			HPChange(player.maxHP(),false);
-			cleanupAfterCombat();
-			doNext(1);
+			combat.cleanupAfterCombat();
+			doNext(playerMenu);
 		}
 		//[Take Her]
 		public function takeGooArmorAndWearIt():void {
-			spriteSelect(79);
+			spriteSelect(SpriteDb.s_valeria);
 			clearOutput();
 			armors.GOOARMR.useText();
 			player.armor.removeText();
 			//(\"<i>You gained ValeriaArmor!</i>\")
-			cleanupAfterCombat();
+			combat.cleanupAfterCombat();
 			//(\"<i>You put a (previous armorName) in your X pouch)
 			outputText("\n\nTo your surprise, you feel rather invigorated after the battle, thanks to Valeria's strange healing properties, and with a smirk, you turn your attention back to the " + (getGame().dungeons.checkPhoenixTowerClear() ? "adventures": "dungeon") + " ahead.\n\n");
 			//Set flags
@@ -425,7 +441,7 @@ package classes.Scenes.Dungeons
 		//Harpy Horde -- PC is Defeated (MAYBE BAD END!!!)
 		public function pcLosesToHarpyHorde():void {
 			outputText("\n\nUnable to withstand the ");
-			if(player.HP < 1) outputText("brutal assault");
+			if (player.HP < 1) outputText("brutal assault");
 			else outputText("raw sexuality");
 			outputText(", you collapse, utterly at the harpies' mercy.  The group looms over you, lusty, evil grins all around, but to your surprise, one of them shouts a harsh command, making the swarm of feathery bitches back off.  A particularly slight harpy with a shock of bright-orange hair waves the brood off, astonishingly commanding for the runt of the litter.  The other harpies hiss and growl at her, but still she speaks, \"<i>Hold it!  We can't have the intruder yet.  Mother will want to talk to " + player.mf("him","her") + " first.</i>\"");
 			outputText("\n\nThe brood grumbles, but you are hauled off your feet and dragged upstairs...");
@@ -446,15 +462,15 @@ package classes.Scenes.Dungeons
 			outputText("\n\n\"<i>Uh, well, I'm the one who told her about this place. You could say I'm her informant, I guess,</i>\" she shrugs and slips her hands behind her inhumanly wide hips.  Cocking an eyebrow, you notice the girl is actually quite pretty - her wings and hair are an orange as bright as the sun, and she has deliciously curvaceous thighs and hips, not to mention cute perky breasts.  Noticing your lusty glances, she makes a little giggle and bites her lower lip.");
 
 			outputText("\n\n\"<i>Anyway, Miss Helia asked me to help you any way I can, so... I guess, just ask me if you need anything.</i>\"");
-			cleanupAfterCombat();
+			combat.cleanupAfterCombat();
 		}
 		
 		//Kiri Interactions
 		public function kiriInteraction():void {
 			menu()
-			addButton(0, "Talk", talkToKiri);
-			addButton(1, "Sex", kiriSexIntro);
-			addButton(4, "Back", roomStairwell);
+			addButton(0, "Talk", talkToKiri, null, null, null, "Have some talk with Kiri.");
+			addButton(1, "Sex", kiriSexIntro, null, null, null, "Use Kiri to sate your lusts. After all, your lust can make a difference between your success and failure.");
+			addButton(4, "Back", playerMenu);
 		}
 		
 		//Kiri -- [Talk]
@@ -463,7 +479,12 @@ package classes.Scenes.Dungeons
 			outputText("You ask Kiri if she wouldn't mind sharing a bit of information with you.");
 			outputText("\n\n\"<i>Of course,</i>\" she says pleasantly, \"<i>that's what I'm here for!  What do you want to know?</i>\"");
 			//(Display Options: [Hel] [Harpies] [Salamander] [Kiri])
-			simpleChoices("Hel",askKirkAboutHel,"Harpies",askKiriAboutHarpies,"Salamander",askKiriAboutSalamander,"Kiri",askKiriAboutKiri,"Nevermind",1);
+			menu();
+			addButton(0, "Hel", askKirkAboutHel, null, null, null, "Ask Kiri how she knows Helia.");
+			addButton(1, "Harpies", askKiriAboutHarpies, null, null, null, "Ask Kiri about the harpies in the tower.");
+			addButton(2, "Salamander", askKiriAboutSalamander, null, null, null, "Ask Kiri about the salamander prisoner.");
+			addButton(3, "Kiri", askKiriAboutKiri, null, null, null, "Ask Kiri if she can tell you a bit about herself.");
+			addButton(4, "Nevermind", playerMenu);
 		}
 
 		//Kiri -- [Talk] -- [Hel]
@@ -523,90 +544,91 @@ package classes.Scenes.Dungeons
 			//If Male: [Anal]
 			//If Female [Get Licked]
 			//If Genderless: \"<i>Unfortunately, there's not much she can do for you...</i>\"
-			if(player.gender == 0) outputText("Unfortunately, there's not much she can do for you...");
-			if (player.hasCock()) addButton(0, "Anal", kiriSexAnal);
-			if(player.hasVagina()) addButton(1, "Get Licked", kiriSexGetLicked);
-			addButton(4, "Back", eventParser, 1);
+			if (player.gender == 0) outputText("Unfortunately, there's not much she can do for you...");
+			if (player.hasCock()) addButton(0, "Anal", kiriSexAnal, null, null, null, "Put your [cock] into Kiri's ass!");
+			if (player.hasVagina()) addButton(1, "Get Licked", kiriSexGetLicked, null, null, null, "Have Kiri lick your [pussy].");
+			addButton(4, "Back", playerMenu);
 		}
 
 		//Kiri -- [Sex] -- [Anal]
 		public function kiriSexAnal():void {
 			clearOutput();
 			var x:Number = player.cockThatFits(60);
-			if(x < 0) x = player.smallestCockIndex();
+			if (x < 0) x = player.smallestCockIndex();
 			var y:Number = x+1;
 			outputText("You whip your [cock " + (y) + "] out of your [armor] and tell Kiri to get on all fours.  She grimaces, but does as you ask.  You hike up her shift to reveal her large, egg-laying pussy and her tight little pucker.");
 			outputText("\n\n\"<i>Just make sure you pull out, all right? I don't wanna get pregnant - EEEP!</i>\" she shrieks as your [cock " + y + "] pokes against her backdoor.  Her wings beat furiously around you, nearly lifting you both off the ground.  You give her a swat on the ass to help her get a grip as you take hold of her inhumanly wide hips.  She wriggles around for a bit before finally calming down and trying to relax as best she can.");
 			outputText("\n\nIt takes some doing, but you eventually manage to push your prick in past her tight sphincter.  With a relieved sigh, you start to push into her ass, slowly but steadily feeding her inches of your [cock " + y + "] until ");
-			if(player.cockArea(x) > 60) outputText("you can fit no more in");
+			if (player.cockArea(x) > 60) outputText("you can fit no more in");
 			else outputText("you are buried to the hilt");
 			outputText(".  Beneath you, Kiri writhes and groans in pained pleasure as you stuff her ass full of your cock.  When you've finally buried yourself as far as you'll go, you give her lush ass cheeks a little squeeze and start to rock your hips.  Kiri gasps, suddenly feeling empty as you withdraw from inside her - and screams when you slam yourself back in.");
 			outputText("\n\nSinking your hands into her soft, plush butt, you start to hammer her asshole, fucking her hard and fast until you're both moaning like whores.  Your combined pre-cum and juices are staining the floor and her inner walls.  To your surprise, Kiri lifts herself off the ground and presses her back to your chest, letting her wings wrap around you.  Grinning, you grope her perky breasts as you continue to ream her ass.  She puts her hands on yours, pinching her nipples and guiding you to all her most sensitive spots.");
 			outputText("\n\nYou cum quickly, grunting into her ear and ramming yourself until you're ");
-			if(player.cockArea(x) > 60) outputText("as far in as you can manage");
+			if (player.cockArea(x) > 60) outputText("as far in as you can manage");
 			else outputText("filling her completely");
 			outputText(".  Your cock squirts a thick load inside her, shooting creamy ropes of jizz deep into her bowels ");
 			//[if High Cum Production: 
-			if(player.cumQ() > 500) outputText("until your cream squelches back out around your cock and onto the floor");
+			if (player.cumQ() > 500) outputText("until your cream squelches back out around your cock and onto the floor");
 			outputText(".  With a scream of delight, Kiri clamps down on your [cock " + y + "] and climaxes too, leaking a pool of fem-spunk onto the ground.  She starts to bounce on your cock, riding out her anal orgasm until she's exhausted and you're deflated inside her.");
 
 			outputText("\n\nYou pull out with a POP, letting a stream of cum leak out her butt.  You clean your cock off and stick it back in your [armor].");
-			player.orgasm();
+			player.orgasm('Dick');
 			cheatTime(1/3, true);
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Kiri -- [Sex] -- [Get Licked]
 		public function kiriSexGetLicked():void {
 			clearOutput();
 			outputText("You ask Kiri to eat you out. She grimaces but drops to her knees and undoes the bottom of your [armor], revealing your lusty [vagina]");
-			if(player.hasCock()) outputText(" and " + multiCockDescriptLight());
+			if (player.hasCock()) outputText(" and " + player.multiCockDescriptLight());
 			outputText(".  With a word of encouragement from you, she leans forward and presses her face into your groin, letting her tongue loose to explore your lower lips.");
 			outputText("\n\nThe girl's tongue is surprisingly skilled.  She quickly teases it across your clitty, making you moan with unexpected pleasure.  She begins to tease and play with your pleasure buzzer, using the flat of her tongue to tickle the sensitive flesh around it; you urge her on with little pats of the head and shoulders, even reaching down to cup one of her perky breasts beneath her loose shift or stroke one of her great orange wings.");
 			outputText("\n\nShe finally slips her tongue in and starts to caress the walls of your [vagina], running her soft, warm tongue along your innermost depths with delightful speed and gentleness.  You smile and run your hands through her short orange hair, stroking her as she grips your hips and buries her face in your twat.");
 			outputText("\n\nYou begin to grind your slit into her face as she eats you out, rubbing your cunt along her nose and forehead to the beat of her tongue's skillful ministrations.  She makes a slow, steady progression inward, slipping her long tongue further and further into your cunny until you can feel her flicking around your cervix.");
 			outputText("\n\nYou cannot resist her skillful tongue-fuck for long.  Grabbing Kiri's head, you force her face into your crotch, getting every last bit of her tongue inside you as you can as you climax, spraying your fem-cum all across her face.");
 			outputText("\n\nUtterly satisfied, you stagger back from Kiri, letting her whip her head around to flick off your fem-cum.  You clean yourself off and suit up again.");
-			player.orgasm();
+			player.orgasm('Generic');
 			cheatTime(1/3, true);
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//[Valeria]
 		public function talkToValeria():void {
 			clearOutput();
-			spriteSelect(79);
+			spriteSelect(SpriteDb.s_valeria);
 			outputText("Now that you have a few moments to catch your breath, you ask your goo-armor what she thinks about the situation.");
 			outputText("\n\n\"<i>Oh, hi,</i>\" she laughs.  She pours half-way out of your armor, forming her face a few inches from yours.  Kiri leaps in shock, wide-eyed as your armor becomes a new person before you.");
 			outputText("\n\n\"<i>Well hey there, cutie,</i>\" Valeria says, giving Kiri a little wink.  The harpy shudders slightly and shakes the surprise off.");
 			outputText("\n\nYou clear your throat and repeat your question.");
 			//[If Broodmother hasn't been defeated]
-			if(flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] == 0) outputText("\n\n\"<i>Oh, right. Well, that harpy broodmother is serious business. She's a powerful mage, and a heavy-hitter besides.  Careful with her, or you're liable to end up drugged out of your mind and used as breeding stock 'till you die.  I've seen it happen to other adventurers coming through.</i>\"");
+			if (flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] == 0) outputText("\n\n\"<i>Oh, right. Well, that harpy broodmother is serious business. She's a powerful mage, and a heavy-hitter besides.  Careful with her, or you're liable to end up drugged out of your mind and used as breeding stock 'till you die.  I've seen it happen to other adventurers coming through.</i>\"");
 			//[If Jailer hasn't been defeated]
-			if(flags[kFLAGS.HEL_BRIGID_DEFEATED] == 0) outputText("\n\n\"<i>Brigid the Jailer is a big girl, probably the meanest harpy here. The others give her plenty of space, from what I've seen.  She uses a hot poker as her weapon, too.  Watch out unless you wanna get burned!</i>\"");
+			if (flags[kFLAGS.HEL_BRIGID_DEFEATED] == 0) outputText("\n\n\"<i>Brigid the Jailer is a big girl, probably the meanest harpy here. The others give her plenty of space, from what I've seen.  She uses a hot poker as her weapon, too.  Watch out unless you wanna get burned!</i>\"");
 			//[If phoenixes haven't been defeated]
-			if(flags[kFLAGS.HEL_PHOENIXES_DEFEATED] == 0) outputText("\n\n\"<i>There's some freaky-ass half-breed harpy things upstairs that I've seen around a bit.  Phoenixes, I guess they're called.  They breathe fire, so watch your ass.  I can absorb some of the heat, but... Don't get roasted, okay?</i>\"");
-			doNext(1);
+			if (flags[kFLAGS.HEL_PHOENIXES_DEFEATED] == 0) outputText("\n\n\"<i>There's some freaky-ass half-breed harpy things upstairs that I've seen around a bit.  Phoenixes, I guess they're called.  They breathe fire, so watch your ass.  I can absorb some of the heat, but... Don't get roasted, okay?</i>\"");
+			doNext(playerMenu);
 		}
 
 
 		//[Torture Gear]
 		public function tortureGear():void {
+			clearOutput();
 			menu();
-			outputText("You walk up to the torture rack.  ", true);
-			if(flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0 || flags[kFLAGS.HEL_DUNGEON_TAKEN_STRAPS] == 0 || flags[kFLAGS.HEL_DUNGEON_TAKEN_DAGGER] == 0) {
+			outputText("You walk up to the torture rack.  ");
+			if (flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0 || flags[kFLAGS.HEL_DUNGEON_TAKEN_STRAPS] == 0 || flags[kFLAGS.HEL_DUNGEON_TAKEN_DAGGER] == 0) {
 				outputText("The rack contains: ");
-				if(flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0) {
+				if (flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0) {
 					outputText("A whip");
 					addButton(0, "SucWhip", takeWhip);
 				}
-				if(flags[kFLAGS.HEL_DUNGEON_TAKEN_STRAPS] == 0) {
-					if(flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0) outputText(", ");
+				if (flags[kFLAGS.HEL_DUNGEON_TAKEN_STRAPS] == 0) {
+					if (flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0) outputText(", ");
 					outputText("some leather straps");
 					addButton(1, "BonStrp", takeStraps);
 				}
-				if(flags[kFLAGS.HEL_DUNGEON_TAKEN_DAGGER] == 0) {
-					if(flags[kFLAGS.HEL_DUNGEON_TAKEN_STRAPS] == 0 || flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0) outputText(", ");
+				if (flags[kFLAGS.HEL_DUNGEON_TAKEN_DAGGER] == 0) {
+					if (flags[kFLAGS.HEL_DUNGEON_TAKEN_STRAPS] == 0 || flags[kFLAGS.HEL_DUNGEON_TAKEN_WHIP] == 0) outputText(", ");
 					outputText("a lust-draft coated dagger");
 					addButton(2, "L.Daggr", takeDagger);
 				}
@@ -614,13 +636,13 @@ package classes.Scenes.Dungeons
 			}
 			else outputText("The rack is empty.");
 			//(PC can take a Succubus Whip, Bondage Straps, and a Lust Dagger)
-			addButton(4, "Back", eventParser, 1);
+			addButton(4, "Back", playerMenu);
 		}
 		
 		//[Prisoner] (First Time)
 		public function helDungeonPrisonerTalk():void {
 			clearOutput();
-			if(flags[kFLAGS.HEL_PC_TALKED_WITH_HAKON] == 0) {
+			if (flags[kFLAGS.HEL_PC_TALKED_WITH_HAKON] == 0) {
 				outputText("You approach the Salamander strapped to the table.  He looks at you with his one good eye, warily gauging you as you approach.");
 				outputText("\n\n\"<i>Well, aren't you a sight for sore eyes,</i>\" he laughs, his voice little more than a rasp.  \"<i>About time somebody put a boot up that punk bitch's ass.  Ha!  Hey, the name's Hakon.  I'd shake your hand, but, uh, I'm a bit tied up at the moment as it were.  So, what brings an outsider all the way up here?</i>\"");
 				outputText("\n\nYou tell him that you're here to rescue him as it happens.");
@@ -643,14 +665,14 @@ package classes.Scenes.Dungeons
 			else {
 				outputText("You approach Hakon the Salamander.  He strains against his bonds, yelling at you to get Hel and get out before it's too late.  You roll your eyes and carry on.");
 			}
-			doNext(1);
+			doNext(playerMenu);
 		}
 		
 		//Phoenix Platoon -- PC is Defeated
 		public function phoenixPlatoonMurdersPC():void {
 			clearOutput();
 			outputText("You collapse, too ");
-			if(player.lust >= player.maxLust()) outputText("turned on");
+			if (player.lust >= player.maxLust()) outputText("turned on");
 			else outputText("badly injured");
 			outputText(" to continue the fight.  The platoon of heavy infantry breaks their formation, circling around you with shields still raised, keeping you from making any kind of last-ditch attack.  One prods you with the flat of her blade.  \"<i>Is " + player.mf("he","she") + " down?</i>\"");
 
@@ -664,7 +686,7 @@ package classes.Scenes.Dungeons
 			clearOutput();
 			outputText("With one final grunt, the last of the phoenixes collapses onto the pile of defeated warriors you've left in your wake.  The once-mighty platoon of soldiers has been reduced to a bruised, lusty heap of flesh, scales and feathers.  Seeing that the battle is won, you lower your [weapon] and take a look around.");
 			flags[kFLAGS.HEL_PHOENIXES_DEFEATED]++;
-			cleanupAfterCombat();
+			combat.cleanupAfterCombat();
 		}
 
 		//[Phoenixes]
@@ -672,28 +694,28 @@ package classes.Scenes.Dungeons
 			clearOutput();
 			menu();
 			outputText("You loom over the defeated heavy infantry, marveling at them.  The half-breeds were probably the most organized and efficient fighting unit you've ever come across here in Mareth, and though you defeated them, you know most denizens of the region wouldn't have stood a chance.");
-			if(player.lust > 33) {
+			if (player.lust > 33) {
 				outputText("\n\nYou suppose you could use one of them to get yourself off.");
 				//(Display Options:
 				//If Male: [Missionary] [Get Wanked] [Ride Anal] (Capacity: 80)
-				if(player.hasCock()) {
-					if (player.cockThatFits(80) >= 0) addButton(0, "Missionary", phoenixMissionary);
+				if (player.hasCock()) {
+					if (player.cockThatFits(80) >= 0) addButton(0, "Missionary", phoenixMissionary, null, null, null, "Fuck one of the phoenixes with your penis.");
 					else outputText("\n\nYou're too big to fuck one of them properly.");
-					addButton(1, "Get Wanked", phoenixWanking);
+					addButton(1, "Get Wanked", phoenixWanking, null, null, null, "Force one of the phoenixes to jerk you off.");
 				}
-				if(player.hasVagina()) addButton(2, "Ride Vaginal", phoenixAginal);
+				if (player.hasVagina()) addButton(2, "Ride Vaginal", phoenixAginal, null, null, null, "Ride one of the phoenixes' cocks vaginally.");
 				//If Female: [Ride Vaginal] [Ride Anal]
 				//If Genderless: [Ride Anal]
-				addButton(3, "Ride Anal", gitButtRoadPhoenix);
+				addButton(3, "Ride Anal", gitButtRoadPhoenix, null, null, null, "Ride one of the phoenixes' cocks anally.");
 			}
-			addButton(4, "Back", eventParser, 1);
+			addButton(4, "Back", playerMenu);
 		}
 
 		//Phoenixes -- [Missionary]
 		public function phoenixMissionary():void {
 			clearOutput();
 			var x:Number = player.cockThatFits(80);
-			if(x < 0) x = player.smallestCockIndex();
+			if (x < 0) x = player.smallestCockIndex();
 			var y:Number = x + 1;
 			outputText("You grab the healthiest looking phoenix off the top of the pile and throw the hermaphrodite on her back a few feet from her sisters.  She grunts, looking up at you with grim, fierce eyes.  \"<i>I'll never submit!  I am a proud warrior, not some-</i>\" Yeah, whatever.  You rip her chain shirt open, revealing the large, soft globes of her D-cups beneath.  The phoenix gasps at the sudden exposure and turns her head away, fixing her expression in place like chiseled marble, determined not to look you in the eye as you take your pleasure.");
 
@@ -708,42 +730,42 @@ package classes.Scenes.Dungeons
 			outputText("\n\n\"<i>I... well... maybe...</i>\" she admits, and you nod as her once-struggling legs go a bit limp.");
 
 			outputText("\n\nYou return your attention to between her legs.  Getting her fully erect reptilian cock out of the way, you expose your prize - her sodden cunt");
-			if(player.cockTotal() > 1) outputText(" and the tight ring of her pucker");
+			if (player.cockTotal() > 1) outputText(" and the tight ring of her pucker");
 			outputText(".  You grasp her wide flanks and, lining your [cock " + y + "]");
-			if(player.cockTotal() > 1) outputText(" and extra boner up with her holes");
+			if (player.cockTotal() > 1) outputText(" and extra boner up with her holes");
 			else outputText(" up with her hole");
 			outputText(", push in, penetrating her cunt");
-			if(player.cockTotal() > 1) outputText(" and ass");
+			if (player.cockTotal() > 1) outputText(" and ass");
 			outputText(" and sliding into her warm, wet channel");
-			if(player.cockTotal() > 1) outputText("s");
+			if (player.cockTotal() > 1) outputText("s");
 			outputText("."); 
 
 			outputText("\n\nThe phoenix squirms as you push into her depths, groaning as more and more of your cockmeat pierces her until you finally hilt her.  Gritting her teeth, the phoenix reaches up and grabs your shoulders, holding onto you as your cock");
-			if(player.cockTotal() > 1) outputText("s drive");
+			if (player.cockTotal() > 1) outputText("s drive");
 			else outputText(" drives");
 			outputText(" into her; you roll your hips back and forth for short but powerful strokes into her blazing hot innards.  As the pace picks up, you pull the phoenix-girl into a long, tender kiss.  The kiss soon turns into her moaning into your mouth as you fuck her cunt ");
-			if(player.cockTotal() > 1) outputText("and ass ");
+			if (player.cockTotal() > 1) outputText("and ass ");
 			outputText("hard, slamming your hips into hers.");
 
 			outputText("\n\nShe cums first");
-			if(player.cockTotal() > 1) outputText(", your double penetration too much for her to handle");
+			if (player.cockTotal() > 1) outputText(", your double penetration too much for her to handle");
 			outputText(".  The phoenix grips your shoulders tight enough for her claws to cut into you as her tight pussy ");
-			if(player.cockTotal() > 1) outputText("and tighter sphincter spasm");
+			if (player.cockTotal() > 1) outputText("and tighter sphincter spasm");
 			else outputText("spasms");
 			outputText(" around your dick");
-			if(player.cockTotal() > 1) outputText("s");
+			if (player.cockTotal() > 1) outputText("s");
 			outputText(".  With her squirming in your embrace and squeezing down so hard, you can't help but blow your load.  You press your lips hard into hers and cum, pumping thick ropes of steaming jizz into her wet box");
-			if(player.cockTotal() > 1) outputText(" and hot asshole");
+			if (player.cockTotal() > 1) outputText(" and hot asshole");
 			outputText(".  As you cum into her, you feel her reptile prick shoot off, squirting a long white rope onto her chest and yours until her tits are soaked with her spunk.");
 
 			outputText("\n\nYou release the phoenix from your embrace, and are pleased to see she's passed out from the overwhelming pleasure.  Grinning, you pull your cock");
-			if(player.cockTotal() > 1) outputText("s");
+			if (player.cockTotal() > 1) outputText("s");
 			outputText(" out of her ravaged hole");
-			if(player.cockTotal() > 1) outputText("s");
+			if (player.cockTotal() > 1) outputText("s");
 			outputText(" and gather your gear.");
 			//(Return to Mezzanine main menu)
-			player.orgasm();
-			doNext(1);
+			player.orgasm('Dick');
+			doNext(playerMenu);
 		}
 
 		//Phoenixes -- [Get Wanked]
@@ -762,8 +784,8 @@ package classes.Scenes.Dungeons
 
 			outputText("\n\nYour [cock " + y + "] explodes, pumping a thick load into the shocked phoenix's mouth.  She gags on your cum, finally swallowing it as the last of your sperm drips into her mouth.  With a grin, you tell her what a good job she did as you withdraw your [cock " + y + "]  from her grip.  With little rivulets of cum dripping down her face, the half-breed collapses onto her back, rapidly fingering herself.");
 			//(Return to Mezzanine main menu)
-			player.orgasm();
-			doNext(1);
+			player.orgasm('Dick');
+			doNext(playerMenu);
 		}
 			
 		//Phoenixes -- [Git Butt-rode]
@@ -792,8 +814,8 @@ package classes.Scenes.Dungeons
 
 			outputText("\n\nWhen you come to your senses a few minutes later, the phoenix-girl is asleep, still holding you tight.  You pull her deflated lizard dick out of your ass and shudder as a torrent of her sizzling hot spunk dribbles out onto her thighs and hips.  You wriggle out of her tight embrace and give her a little kiss on the cheek before collecting your [armor] and heading out.");
 			//(Return to Mezzanine main menu)
-			player.orgasm();
-			doNext(1);
+			player.orgasm('Anal');
+			doNext(playerMenu);
 		}
 
 		//Phoenix -- [Ride Vaginal]
@@ -809,7 +831,7 @@ package classes.Scenes.Dungeons
 
 			outputText("\n\n");
 			//[If Broodmother, not pregnant: 
-			if(player.findPerk(PerkLib.BroodMother) >= 0) outputText("You assure her she will be soon");
+			if (player.findPerk(PerkLib.BroodMother) >= 0) outputText("You assure her she will be soon");
 			else outputText("You grin at her");
 			outputText(" and strip out of your [armor]. The phoenix, a bit more dominant than you might have liked, roughly grabs your [chest], pinching your nipples as she takes over wringing her cock from you. Oh well. You decide to roll with it and slide a hand down to your [vagina], stroking your pussy as your lover warms up.");
 
@@ -827,10 +849,10 @@ package classes.Scenes.Dungeons
 			//v1 = egg type.
 			//v2 = size - 0 for normal, 1 for large
 			//v3 = quantity
-			player.createStatusAffect(StatusAffects.Eggs,rand(6),0,(5+rand(3)),0);
+			player.createStatusEffect(StatusEffects.Eggs,rand(6),0,(5+rand(3)),0);
 			//(Return to Mezzanine main menu)
-			player.orgasm();
-			doNext(1);
+			player.orgasm('Vaginal');
+			doNext(playerMenu);
 		}
 
 		//HARPY QUEEN -- PC DEFEATED
@@ -844,12 +866,12 @@ package classes.Scenes.Dungeons
 			outputText("\n\n\"<i>Mother!</i>\" a harpy calls, stepping up to the throne. Behind her come another dozen sisters, struggling to keep Hel bound between them.  The salamander screams and curses and cries, but it is useless - she cannot escape, any more than you can.  Hel is pushed down onto her knees beside you, still defiant, but, at seeing you already captured... the fight goes completely out of her eyes.");
 			outputText("\n\n\"<i>Ah, another salamander?  Well well, what a coincidence.  I don't believe our other specimen is going to last much longer.  You seem a healthy girl; with a bit of... modification... you'd make a fine replacement.</i>\"");
 			outputText("\n\n\"<i>And you,</i>\" the queen says, looking back to you.  \"<i>I could always use another ");
-			if(player.hasCock()) outputText("sperm bank");
+			if (player.hasCock()) outputText("sperm bank");
 			else outputText("incubator");
 			outputText(" in my harem.  Yes, you'll do nicely...</i>\"");
 			outputText("\n\n<b>SIX MONTHS LATER...</b>\n");
 			outputText("You groan, your wrists chafing in the manacles hanging overhead.  The harpy slut riding your huge, engorged dick crosses her eyes, screams, and cums.  Another wave of seed lurches out of your cripplingly-large balls, so massive that they drag on the floor between your [legs].  You shudder slightly, but the act of ejaculation has lost all meaning");
-			if(!player.hasCock()) outputText(", even if the sudden new sensations nearly broke your mind when the harpies used their magics to grow these huge male implements on your body");
+			if (!player.hasCock()) outputText(", even if the sudden new sensations nearly broke your mind when the harpies used their magics to grow these huge male implements on your body");
 			outputText(".  Indeed, as soon as that slut's gotten her fill, one of her sisters pushes her roughly off your shaft and mounts you, bending over and backing into your massive schlong.  A little shudder of pleasure courses up your body as the twenty-ninth slut you've serviced today starts to milk you for your magically-enhanced seed.  The tubes pumping enchanted drugs directly into the flesh of your testes goes into overtime, flooding your system with lust and the strange concoction that creates the Phoenixes.");
 			outputText("\n\nYou slump as another orgasm plows through you, swelling the harpy's womb until she looks nine months pregnant.  You barely feel it, though your skin flushes hotly as the woman plants a lust-stick kiss on your lips in thanks... Another salamander male was what the Queen needed; you weren't it, but with Hel and the captive that turned out to be her father around, she found use for you, too: breeding harpies to continue her bloodline while the phoenixes go off to war against the demons.");
 			outputText("\n\nYou gaze across the subterranean breeding chamber, over tables and toys covered in gallons of spent semen, to where Helia and Hakon the salamanders are chained.  Hakon has long since passed out, his age and years of abuse weakening him to the point where he can only function a small part of the day.  Beside him, though, Hel is awake and kicking, struggling futilely under the huge girth of the Harpy Queen's hips which pin her to the wall in place of chains.");
@@ -857,7 +879,7 @@ package classes.Scenes.Dungeons
 			outputText("\n\nThe Harpy Queen stretches her wings wide as she steps away from Hel, now already being mounted by one of the Queen's daughters, and saunters over to you, salamander seed still freely leaking from her gaping egg-hole. She cups your cheek, sliding her long fingers across your sensitive, thoroughly drugged skin. Your entire body tingles as she smiles upon you, barely aware of the half-dozen sluts slurping at your spent seed as one of her daughters forces herself onto your enhanced member.");
 			outputText("\n\n\"<i>You've been a good stud since you came to me, [name],</i>\" the Queen laughs airily, patting your swollen nuts.  \"<i>The size of my brood has quadrupled since you and Hel 'volunteered' to help us.  Mmm, a free Mareth will surely have you to thank for the army that will liberate it from the demons.  You might even be something of a hero, if you want. The Champion of Free Mareth, if you will.  That wouldn't be so bad, would it?  After all, that's why you came here...</i>\"");
 			outputText("\n\nBefore you can respond, another orgasm washes over you, and a huge load of seed explodes into the thirty-first slut to claim your seed today.  And over her shoulders, you can see dozens more harpies, half of them your own spawn, waiting their turn.");
-			doBadEnd();
+			getGame().gameOver();
 			if (flags[kFLAGS.HARDCORE_MODE] <= 0) addButton(1, "Retry", retryDungeonFromBadEndPrompt);
 		}
 
@@ -870,7 +892,7 @@ package classes.Scenes.Dungeons
 			player.createKeyItem("Harpy Key B",0,0,0,0);
 			flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] = 1;
 			//(PC moves to Throne Room Main Menu:)
-			cleanupAfterCombat();
+			combat.cleanupAfterCombat();
 		}
 
 		//Throne Room -- [Helia]
@@ -884,10 +906,10 @@ package classes.Scenes.Dungeons
 
 			outputText("\n\nShe grins.  \"<i>So, what's the plan, lover mine?  Teach this bitch a lesson she'll never forget?</i>\"");
 			//(Display Options: [Hakon](if PC knows this) [Kiri] [Queen](If not dead/gone))
-			if (flags[kFLAGS.HEL_PC_TALKED_WITH_HAKON] > 0) addButton(0, "Hakon", heliaHakonTalk);
-			addButton(1, "Kiri", heliaKiriTalk);
-			if (flags[kFLAGS.HARPY_QUEEN_EXECUTED] == 0) addButton(2, "Queen", heliaQueenTalk);
-			addButton(4, "Back", eventParser, 1);
+			if (flags[kFLAGS.HEL_PC_TALKED_WITH_HAKON] > 0) addButton(0, "Hakon", heliaHakonTalk, null, null, null, "Ask Helia about Hakon, the salamander you've found in the dungeon.");
+			addButton(1, "Kiri", heliaKiriTalk, null, null, null, "Ask Helia about Kiri, the half-breed girl.");
+			if (flags[kFLAGS.HARPY_QUEEN_EXECUTED] == 0) addButton(2, "Queen", heliaQueenTalk, null, null, null, "Ask Helia about the Harpy Queen.");
+			addButton(4, "Back", playerMenu);
 			}
 		//Throne Room -- [Helia] -- [Hakon]
 		public function heliaHakonTalk():void {
@@ -896,9 +918,9 @@ package classes.Scenes.Dungeons
 			outputText("\n\n\"<i>Wha... what. No, that's not... It can't be...</i>\"");
 			outputText("\n\nYou assure her that it's true. The salamander she came here to rescue is none other than father, Hakon.");
 			outputText("\n\n\"<i>I don't believe it,</i>\" Hel says, rubbing at the corners of her eyes.  \"<i>I thought all these years... I was sure he was dead.  How... No.  It doesn't matter,</i>\" she says, turning to the broodmother beneath her.");
-			if(flags[kFLAGS.HARPY_QUEEN_EXECUTED] == 0) outputText("  \"<i>You're going to pay for what you did to my father, you bitch.  I promise you that.</i>\"");
+			if (flags[kFLAGS.HARPY_QUEEN_EXECUTED] == 0) outputText("  \"<i>You're going to pay for what you did to my father, you bitch.  I promise you that.</i>\"");
 			flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] = 1;
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Throne Room -- [Helia] -- [Kiri]
@@ -912,7 +934,7 @@ package classes.Scenes.Dungeons
 			outputText("\n\nWith a knowing look, you ask if they're more than just friends.");
 			outputText("\n\n\"<i>" + player.mf("Dude","Babe") + ", come on, you know me.  Give me SOME credit, will ya?  I'm not letting an ass like that go to waste.</i>\"");
 			outputText("\n\nYou roll your eyes and laugh with her.");
-			doNext(1);
+			doNext(playerMenu);
 		}
 		//Throne Room -- [Helia] -- [Queen]
 		public function heliaQueenTalk():void {
@@ -921,8 +943,8 @@ package classes.Scenes.Dungeons
 			outputText("\n\nYou ask Hel exactly what she thinks you ought to do with the 'queen cunt.'");
 			outputText("\n\n\"<i>Well, we can start by me shoving my tail so far up her twat that she'll never have kids again.  That's a goddamn start.</i>\"");
 			//[If PC has already told her about Hakon: 
-			if(flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("  \"<i>Maybe snap her neck afterwards.</i>\"");
-			doNext(1);
+			if (flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("  \"<i>Maybe snap her neck afterwards.</i>\"");
+			doNext(playerMenu);
 		}
 
 		//Throne Room -- [Harpy Queen]
@@ -933,8 +955,12 @@ package classes.Scenes.Dungeons
 			outputText("\n\n\"<i>Fool!</i>\" she spits.  \"<i>Kill me and be done with it! I'll not be used by the likes of you, demon-lover!</i>\"");
 			outputText("\n\nWhat.");
 			//(Display Options: [Fuck Her] [Interrogate] [Kill Her] [Let Her Go])
-			simpleChoices("", 0, "Interrogate", harpyQueenInterrogate, "Kill Her", killHarpyQueen, "Let Her Go", letHarpyQueenGo, "Back", 1);
-			if (player.lust > 33 && player.hasCock()) addButton(0, "Fuck Her", fuckHarpyQueen);
+			menu();
+			if (player.lust > 33 && player.hasCock()) addButton(0, "Fuck Her", fuckHarpyQueen, null, null, null, "Fuck the Harpy Queen with your penis. You're sure Helia can join you as well.");
+			addButton(1, "Interrogate", harpyQueenInterrogate, null, null, null, "Ask the Harpy Queen why she kidnapped a salamander.");
+			addButton(2, "Kill Her", killHarpyQueen, null, null, null, "Finish the Harpy Queen off for once." + (silly() ? " Give her the Bad End!" : ""));
+			addButton(3, "Let Her Go", letHarpyQueenGo, null, null, null, "Let the Harpy Queen go.");
+			addButton(4, "Back", playerMenu);
 		}
 
 		//Throne Room -- [Harpy Queen] -- [Let Her Go]
@@ -950,22 +976,24 @@ package classes.Scenes.Dungeons
 			outputText("\n\nYou nod for Hel to get off.  She does so grudgingly, letting the Harpy Queen stand and roll her shoulders, spreading her great wings wide.");
 			outputText("\n\n\"<i>Hmm. You're a fool, Champion,</i>\" she says, \"<i>But perhaps I was wrong about you.  Come, my children!  We are leaving this place!</i>\"");
 			//[If you told Hel about Hakon:]
-			if(flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) {
+			if (flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) {
 				outputText("\n\nThe harpies beat their wings and croon happily, eager to be away from you.  As the Harpy Queen is ready to take off, she gives you an appreciative nod, with what might have even been a smile.  It looks as though you've made a friend tod-- OH FUCK!");
 				outputText("\n\nYou try and yell out, but too late. Hel has lunged forward and, grabbing the broodmother by the neck, spins around.  The sound of neck bones snapping echoes through the tower as the queen falls, hitting the floor with a wet thump.");
 				outputText("\n\n\"<i>Bullshit,</i>\" Hel snaps, wringing the dead queen's neck under her arm.  The other harpies around you shriek in outrage, pain, and fear.  \"<i>Do you have ANY IDEA what this bitch did?  To my father--to me?  There was no fucking way I was going to just let her walk off.  No, [name]. No way.</i>\"");
 				awardAchievement("Accomplice", kACHIEVEMENTS.DUNGEON_ACCOMPLICE, true, true);
 				//(Display Options: [Forgive] [Berate])
-				simpleChoices("Forgive", harpyQueenLetHerGoForgive, "Berate", harpyQueenLetHerGoBerate, "", 0, "", 0, "", 0);
+				menu();
+				addButton(0, "Forgive", harpyQueenLetHerGoForgive, null, null, null, "Forgive Helia for slaying the Harpy Queen.");
+				addButton(1, "Berate", harpyQueenLetHerGoBerate, null, null, null, "What the hell? You want to let the Harpy Queen go but Helia killed her! Berate Helia for her deeds.");
 				flags[kFLAGS.HARPY_QUEEN_EXECUTED] = 1;
 			}
 			//[Else; did not tell about Hakon]
 			else {
-				outputText("\n\nYou stand aside and watch the harpies beat their wings and croon happily, eager to be away from you.   As the Harpy Queen is ready to take off, she gives you an appreciative nod, with what might have even been a smile.  It looks as though you might have made a friend - or at least, lost an enemy.  With a wave, the Harpy Queen commands her children to fly!");
+				outputText("\n\nYou stand aside and watch the harpies beat their wings and croon happily, eager to be away from you.  As the Harpy Queen is ready to take off, she gives you an appreciative nod, with what might have even been a smile.  It looks as though you might have made a friend - or at least, lost an enemy.  With a wave, the Harpy Queen commands her children to fly!");
 				outputText("\n\nShe turns to you, and says, \"<i>For better or worse, [name], we will meet again.</i>\"");
 				outputText("\n\nWith that, the harpies take flight.");
 				//(Return PC to Room Menu)
-				doNext(1);
+				doNext(playerMenu);
 				flags[kFLAGS.HARPY_QUEEN_EXECUTED] = -1;
 			}
 			dynStats("cor", -5);
@@ -981,12 +1009,12 @@ package classes.Scenes.Dungeons
 			outputText("\n\nShe stands up from the body and wraps you in a tight hug. \"<i>...Thank you.</i>\"");
 			outputText("\n\nYou pat Helia on the head and with a shout, tell the harpies to get lost.  They do so reluctantly, too afraid to fight you, but still outraged at the murder.  They take flight, hurtling out the hole in the ceiling crying curses and epitaphs behind them.");
 			outputText("\n\n\"<i>Alright. You've got the key, so go break ");
-			if(flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("Dad ");
+			if (flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("Dad ");
 			else outputText("that poor salamander ");
 			outputText("out of the dungeon.  I'll make sure the phoenixes and harpies don't give you two trouble on the way out.</i>\"");
 			outputText("\n\nWith that, Hel trots out the door and down the stairs, leaving you alone in the room. You notice that the queen's staff has fallen beside her body.");
 			//(Return to Room Menu)
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Throne Room -- [Harpy Queen] -- [Let Her Go] -- [Berate]
@@ -999,7 +1027,7 @@ package classes.Scenes.Dungeons
 			outputText("\n\nYou notice the queen's staff has fallen beside her body.");
 			//(Remove all options but [Go Downstairs]; add [Take Staff]); (Remove Kiri from Stairwell)
 			flags[kFLAGS.FOUGHT_WITH_HEL_IN_DUNGEON] = 1;
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Throne Room -- [Harpy Queen] -- [Kill Her]
@@ -1011,13 +1039,13 @@ package classes.Scenes.Dungeons
 			outputText("\n\n\"<i>Well then. I guess that's that, then,</i>\" Hel says, swinging her sword over her shoulder into its sheath.");
 			outputText("\n\nYou nod your agreement.");
 			outputText("\n\n\"<i>Alright. You've got the key, so go break ");
-			if(flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("Dad ");
+			if (flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("Dad ");
 			else outputText("that poor salamander ");
 			outputText("out of the dungeon.  I'll make sure the phoenixes and harpies don't give you two trouble on the way out.</i>\"");
 			outputText("\n\nWith that, Hel trots out the door and down the stairs, leaving you alone in the room. You notice that the queen's staff has fallen beside her body.");
 			flags[kFLAGS.HARPY_QUEEN_EXECUTED] = 1;
 			//(Remove all options but [Go Downstairs]; add [Take Staff]) (Remove Kiri from Stairwell)
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Throne Room -- [Take Staff]
@@ -1051,61 +1079,61 @@ package classes.Scenes.Dungeons
 				addButton(1, "Anal", harpyQueenSexAnal);
 				addButton(2, "Vaginal", vaginalHarpyQueenSex);
 			}
-			addButton(4, "Back", eventParser, 1);
+			addButton(4, "Back", playerMenu);
 		}
 		//Harpy Queen Sex -- [Dick in Anal]
 		public function harpyQueenSexAnal():void {
 			clearOutput();
-			outputText("Hel grabs the queen bitch by the shoulders and roughly tosses her onto the floor.  The gathered crowd of harpies gasp as Hel shoves the queen onto all fours for you.  You disrobe, tossing your [armor] aside and stroking your " + cockDescript(0) + " to full hardness.  You kneel down behind the Harpy Queen's massive flanks, so wide that you feel you could stuff your torso between her cheeks.  With great effort, you peel her jiggling ass apart, revealing the tight ring of her pucker and her loose, gaping cunt.");
-			outputText("\n\nAs you position yourself behind the broodmother, Hel strips out of her skimpy bikini-mail and, grabbing the bitch by her hair, shoves her slick pussy into the harpy's face.  The queen struggles against Hel's grasp, making her inhuman hips and ass shake and jiggle seductively.  Your cock goes rock hard with the display before you, and you roughly push it into the harpy's buttcheeks.  You let her ass go, and shudder as the queen's soft flesh wraps around your " + cockDescript(0) + ", as tight as a virgin pussy, but at the same time so soft and giving..."); 
+			outputText("Hel grabs the queen bitch by the shoulders and roughly tosses her onto the floor.  The gathered crowd of harpies gasp as Hel shoves the queen onto all fours for you.  You disrobe, tossing your [armor] aside and stroking your " + player.cockDescript(0) + " to full hardness.  You kneel down behind the Harpy Queen's massive flanks, so wide that you feel you could stuff your torso between her cheeks.  With great effort, you peel her jiggling ass apart, revealing the tight ring of her pucker and her loose, gaping cunt.");
+			outputText("\n\nAs you position yourself behind the broodmother, Hel strips out of her skimpy bikini-mail and, grabbing the bitch by her hair, shoves her slick pussy into the harpy's face.  The queen struggles against Hel's grasp, making her inhuman hips and ass shake and jiggle seductively.  Your cock goes rock hard with the display before you, and you roughly push it into the harpy's buttcheeks.  You let her ass go, and shudder as the queen's soft flesh wraps around your " + player.cockDescript(0) + ", as tight as a virgin pussy, but at the same time so soft and giving..."); 
 			outputText("\n\nYou wrap your arms around her broodmotherly hips and start to thrust into her crack, hotdogging the harpy bitch.  Your dick sinks in and out of her squishy flesh, seeming to swallow your length like quicksand; you feel yourself drawn inexorably inwards, your shaft brushing against her slick pussy and tightly clenched ass.");
-			outputText("\n\nYou give Hel a little wink, and though occupied by forcing the harpy to eat her out, she just manages to return it.  With that, you press the head of your " + cockDescript(0) + " against the harpie's sphincter.  Though much of your length is eaten up by her tremendous ass cheeks, her anus still clenches frightfully at your insistent prodding.  Scowling, you rear your hand back and give the harpy bitch a forceful slap on the butt.");
+			outputText("\n\nYou give Hel a little wink, and though occupied by forcing the harpy to eat her out, she just manages to return it.  With that, you press the head of your " + player.cockDescript(0) + " against the harpie's sphincter.  Though much of your length is eaten up by her tremendous ass cheeks, her anus still clenches frightfully at your insistent prodding.  Scowling, you rear your hand back and give the harpy bitch a forceful slap on the butt.");
 			outputText("\n\nThough her pillowy cheeks absorb much of the blow, she still lets out a pitiful yelp into Hel's pussy, and loosens up for a split second.  You plunge your shaft in, grunting at the incredible tightness of her anal passage.  She must have been a virgin back here before you took her; she screeches and writhes as your force your cock into her immensely tight bumhole, fighting for every inch you can stuff her with.");
 			outputText("\n\nYou swat the harpy again to shut her up, but all that does is make her vice-like ass squeeze on your cock, painfully compressing the head.  You growl in pain, and in revenge slam yourself into her ");
-			if(player.cockArea(0) < 100) outputText("until your hips sink into her pillowy ass");
-			else outputText("until your massive " + cockDescript(0) + " can go no further inside her");
-			outputText(".  Sunk in as far as you'll go, you leave your cock where it is and instead give the broodmother a hard slap.  She screeches and clamps down, wringing your " + cockDescript(0) + " hard.  But it's more pleasurable this time, now that she's nice and stretched by your anal intruder.");
-			outputText("\n\nYou give her another swat, and another, spanking the harpy bitch until she's outright milking your " + cockDescript(0) + " inside her.  Laughing, Hel starts telling the queen what a good slut she is, taking your " + cockDescript(0) + " up her ass and squeezing it like a whore as she tongue-fucks another woman.  The queen tries to protest, but you give her another hard slap to teach her some manners.");
+			if (player.cockArea(0) < 100) outputText("until your hips sink into her pillowy ass");
+			else outputText("until your massive " + player.cockDescript(0) + " can go no further inside her");
+			outputText(".  Sunk in as far as you'll go, you leave your cock where it is and instead give the broodmother a hard slap.  She screeches and clamps down, wringing your " + player.cockDescript(0) + " hard.  But it's more pleasurable this time, now that she's nice and stretched by your anal intruder.");
+			outputText("\n\nYou give her another swat, and another, spanking the harpy bitch until she's outright milking your " + player.cockDescript(0) + " inside her.  Laughing, Hel starts telling the queen what a good slut she is, taking your " + player.cockDescript(0) + " up her ass and squeezing it like a whore as she tongue-fucks another woman.  The queen tries to protest, but you give her another hard slap to teach her some manners.");
 			outputText("\n\nShe squeezes down so hard on your cock you feel like it's ready to burst.  Instead, though, you feel a sudden surge in your loins.  You have only enough time to sink your hands into the queen's cheeks and let out a powerful roar of pleasure as you cum, shooting a great big rope of hot cum right up her ass.  The queen screeches as you unload inside her, and the sudden motion of the queen's mouth sets Hel right off.  The salamander grabs the queen's head and crushes it against her hips, burying the harpy's nose inside her snatch as she cums over the bitch's face.");
 			outputText("\n\nSpent, you pull out of the broodmother's now-gaping asshole.  Her huge asscheeks, however, bottle up your load inside her, preventing it from pooling out.  Laughing, you squeeze her squishy ass one last time before Hel rolls her over and pins her again.");
 			//(Return to normal room menu)
-			player.orgasm();
+			player.orgasm('Dick');
 			cheatTime(1/3, true);
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Harpy Queen Sex -- [Vaginal]
 		public function vaginalHarpyQueenSex():void {
 			clearOutput();
-			outputText("You roughly toss the harpy queen to the floor and, grinning, tell her that since you're wrecking her plans to breed phoenixes, you'll just give her a brood of champion-spawn instead.  She gapes at you, wide-eyed in confusion and fear. Hel keeps her pinned down for you as you toss your [armor] aside, revealing your " + cockDescript(0) + ".");
+			outputText("You roughly toss the harpy queen to the floor and, grinning, tell her that since you're wrecking her plans to breed phoenixes, you'll just give her a brood of champion-spawn instead.  She gapes at you, wide-eyed in confusion and fear. Hel keeps her pinned down for you as you toss your [armor] aside, revealing your " + player.cockDescript(0) + ".");
 
 			outputText("\n\nHel swings her leg around, planting herself firmly over the Harpy Queen's face. She crouches down, planting her cunt just an inch above the queen's nose, her long fiery tail swishing just above her cunt.  \"<i>You should feel honored, whore,</i>\" Hel growls, grabbing the queen by the hair.  \"<i>One egg fathered by my friend's seed is worth a thousand of your weakling sluts. Go on, thank " + player.mf("him","her") + "!</i>\"");
 			outputText("\n\nThe harpy struggles against Hel's firm grasp, until she gets a good slap from the salamander.  \"<i>Gah! Thank you!  Thank you for the honor of bearing your eggs!</i>\" she pleads, still squirming.  You laugh and grab her massive thighs, pulling them apart to reveal your prize.  Her cunt is a voluminous gash between her legs, gaping and drooling lubricant, stretched beyond human possibility by the dozens - hundreds, even - of eggs she's birthed over her long life."); 
 
-			outputText("\n\nYou kneel down between her legs and experimentally stick your " + cockDescript(0) + " into her; she seems to simply suck it up, swallowing your entire shaft in a heartbeat.  Gods, she's immense!  You feel like you're sticking your shaft into a black hole, a cavern that has no ending.  She groans slightly at the penetration, but has easily taken your entire length with room to spare.  You shift around a bit, pushing her legs together to contract her gaping cunt.");
+			outputText("\n\nYou kneel down between her legs and experimentally stick your " + player.cockDescript(0) + " into her; she seems to simply suck it up, swallowing your entire shaft in a heartbeat.  Gods, she's immense!  You feel like you're sticking your shaft into a black hole, a cavern that has no ending.  She groans slightly at the penetration, but has easily taken your entire length with room to spare.  You shift around a bit, pushing her legs together to contract her gaping cunt.");
 
-			outputText("\n\nFinally, you feel her slick walls around your " + cockDescript(0) + ". The queen shudders, but now seeing that you mean to pump her full of your seed, visibly relaxes. Still, she's just too loose to give you the pleasure you're seeking...");
+			outputText("\n\nFinally, you feel her slick walls around your " + player.cockDescript(0) + ". The queen shudders, but now seeing that you mean to pump her full of your seed, visibly relaxes. Still, she's just too loose to give you the pleasure you're seeking...");
 
-			outputText("\n\nA wicked grin spreads across your face.  You reach forward and grab Hel's tail, wincing at its heat, and drag it back between the Harpy Queen's loins.  Hel looks at you over her shoulder and, grinning, takes over for you.  You brace yourself as her prehensile tail slithers back and, curling once around your " + cockDescript(0) + ", slips inside the queen with you.  You and the broodmother both gasp at once as her burning-hot tail crawls along your cock's shaft and into her gaping cunt until the harpy lets out a little scream into Hel's own crotch.  You guess the salamander found her womb and is wriggling her tail into it.");
-			if(player.cockArea(0) < 48) outputText("  Not to be outdone, you slam your hips forward, ramming your " + cockDescript(0) + " into the queen's depths until you catch up with Hel, pounding the entrance to her womb.");
-			outputText("\n\nNow that you have a second shaft inside the harpy's birth canal, it seems a lot less roomy. You start to piston your hips into the queen bitch; your shaft runs along three slick walls and Hel's hot tail with each thrust, leaving your " + cockDescript(0) + " feeling like it's in a liquid inferno, and it feels wonderful.  You start to fuck the queen faster, already feeling your own orgasm rising.  Her juices spill freely from her loose cunt, pooling between her thighs as you and Hel fill her utterly, giving her what's probably the first satisfying fuck she's been able to get in years.");
-			outputText("\n\nYou aren't surprised when the harpy gets off, rolling her head back and screeching as she climaxes. Laughing, Hel starts to thrash her tail around inside her, nearly managing to wrap it around your " + cockDescript(0) + " inside her.  With the sudden contractions and extra motion around your cock, you aren't able to last any longer; ");
-			if(player.cumQ() < 300) {
+			outputText("\n\nA wicked grin spreads across your face.  You reach forward and grab Hel's tail, wincing at its heat, and drag it back between the Harpy Queen's loins.  Hel looks at you over her shoulder and, grinning, takes over for you.  You brace yourself as her prehensile tail slithers back and, curling once around your " + player.cockDescript(0) + ", slips inside the queen with you.  You and the broodmother both gasp at once as her burning-hot tail crawls along your cock's shaft and into her gaping cunt until the harpy lets out a little scream into Hel's own crotch.  You guess the salamander found her womb and is wriggling her tail into it.");
+			if (player.cockArea(0) < 48) outputText("  Not to be outdone, you slam your hips forward, ramming your " + player.cockDescript(0) + " into the queen's depths until you catch up with Hel, pounding the entrance to her womb.");
+			outputText("\n\nNow that you have a second shaft inside the harpy's birth canal, it seems a lot less roomy. You start to piston your hips into the queen bitch; your shaft runs along three slick walls and Hel's hot tail with each thrust, leaving your " + player.cockDescript(0) + " feeling like it's in a liquid inferno, and it feels wonderful.  You start to fuck the queen faster, already feeling your own orgasm rising.  Her juices spill freely from her loose cunt, pooling between her thighs as you and Hel fill her utterly, giving her what's probably the first satisfying fuck she's been able to get in years.");
+			outputText("\n\nYou aren't surprised when the harpy gets off, rolling her head back and screeching as she climaxes. Laughing, Hel starts to thrash her tail around inside her, nearly managing to wrap it around your " + player.cockDescript(0) + " inside her.  With the sudden contractions and extra motion around your cock, you aren't able to last any longer; ");
+			if (player.cumQ() < 300) {
 				outputText("you slam your [hips] into the harpy's groin and ejaculate, launching thick, sperm-filled globs right into her waiting womb.\n\nYou cum and cum, filling the queen with all your seed until your ");
-				if(player.balls > 0) outputText("[balls] feel");
+				if (player.balls > 0) outputText("[balls] feel");
 				else outputText("crotch feels");
 				outputText(" hollow and empty.  Shuddering, you and Hel both withdraw, your cock and her tail a spunk--and juice-covered mess.");
 			}
 			else {
 				outputText("you slam your [hips] into the harpy's groin and ejaculate, releasing a massive torrent of spunk deep inside the queen's womb, causing the harpy to shudder at the sheer amount of sperm you let out.  You continue to coat the harpy's walls for a minute, until your ");
-				if(player.balls > 0) outputText("[balls] feel");
+				if (player.balls > 0) outputText("[balls] feel");
 				else outputText("crotch feels");
 				outputText(" hollow and empty.  You and Hel slowly withdraw, causing some of your semen to leak out of the harpy's massive canal, leaving your cock and Hel's tail a spunk-and-juice-covered mess.");
 			}
 			outputText("\n\nAfter a fuck like that, the broodmother will be laying a clutch of your eggs in no time.");
-			player.orgasm();
+			player.orgasm('Generic');
 			cheatTime(1/3, true);
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Throne Room -- [Harpy Queen] -- [Interrogate]
@@ -1124,19 +1152,19 @@ package classes.Scenes.Dungeons
 			outputText("\n\n\"<i>You bitch!</i>\" Hel snaps, grinding her foot into the harpy's chest.  \"<i>What the fuck is wrong with you people?  Did you even think, for one fucking second, actually THINK to maybe ask one of us?  Just fly down and ask any horny salamander boy, 'Wanna fill me with your seed till my eggs pop and make an army?' Guess what - he'd say yes! Any man in Mareth who's still pure at heart would say YES!</i>\"");
 			outputText("\n\nThe harpy queen turns her gaze toward Hel. \"<i>This one did not.</i>\"");
 			//[If PC told Hel about Hakon:
-			if(flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("\n\n\"<i>That's because he was MARRIED, YOU BITCH!</i>\" Hel screams, her tail practically blazing behind her. The queen recoils, but falls silent.");
+			if (flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 1) outputText("\n\n\"<i>That's because he was MARRIED, YOU BITCH!</i>\" Hel screams, her tail practically blazing behind her. The queen recoils, but falls silent.");
 			else outputText("\n\n\Hel scowls, but says nothing. It doesn't seem like you'll get anything further from the queen.");
 			//(Return PC to room menu)
-			doNext(1);
+			doNext(playerMenu);
 		}
 
 		//Tower of the Phoenix: Outro
 		//(Play when the PC interacts with Hakon, in the dungeon, while possessing both HARPY KEY key items)
 		public function towerOutro():void {
 			clearOutput();
-			if(flags[kFLAGS.HARPY_QUEEN_EXECUTED] == 0) flags[kFLAGS.HARPY_QUEEN_EXECUTED] = 1;
+			if (flags[kFLAGS.HARPY_QUEEN_EXECUTED] == 0) flags[kFLAGS.HARPY_QUEEN_EXECUTED] = 1;
 			//[IF PC DID NOT TELL HEL ABOUT HAKON BEFORE]
-			if(flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 0) {
+			if (flags[kFLAGS.HEL_KNOWS_ABOUT_HAKON] == 0) {
 				outputText("With Hakon's arm slung over your shoulder, you help the long-imprisoned salamander up the stairs and, with great effort, out the ancient doors of the tower.  Outside, you see Helia and her pseudo-phoenix half-sister Kiri.  Hakon recoils as the evening sunlight hits his eyes, his first taste of the sun in years.");
 				outputText("\n\nHel and Kiri turn to you, smiling from ear to ear as you bring Hakon outside.");
 				outputText("\n\n\"<i>Hel,</i>\" Kiri says, taking the salamander by the hand.  \"<i>I've got someone you might want to meet.</i>\"");
@@ -1173,20 +1201,20 @@ package classes.Scenes.Dungeons
 			//(If PC has Valeria: add \"<i>Valeria</i>\" to Followers menu)
 			flags[kFLAGS.CLEARED_HEL_TOWER] = 1;
 			kGAMECLASS.inDungeon = false;
-			doNext(14);
+			doNext(camp.returnToCampUseTwoHours);
 		}
 		//ROOMS
 		public function roomGuardHall():void {
-			kGAMECLASS.dungeonLoc = 17;
-			kGAMECLASS.tooltipLoc = "Valeria"
-			outputText("<b><u>Guard Hall</u></b>\n", true);
+			clearOutput();
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_GUARD_HALL;
+			outputText("<b><u>Guard Hall</u></b>\n");
 			outputText("You stand in what might have been a guard room once upon a time.  Now it is a ruined, ransacked mess.  It seems not to have been used in years, and the table, chairs, and spears lined up against the wall have all rotted away to almost nothing.");
 			dungeons.setDungeonButtons(roomStairwell, null, null, null);
 			//[If Armor has not been taken/fought with: 
-			if(flags[kFLAGS.WON_GOO_ARMOR_FIGHT] + flags[kFLAGS.LOST_GOO_ARMOR_FIGHT] == 0) {
+			if (flags[kFLAGS.WON_GOO_ARMOR_FIGHT] + flags[kFLAGS.LOST_GOO_ARMOR_FIGHT] == 0) {
 				if (flags[kFLAGS.CLEARED_HEL_TOWER] == 0) {
 					outputText("  However, a suit of half-plate armor has been left up against the eastern wall, hanging loosely on a rack; it seems to be in usable shape.");
-					addButton(0, "Armor", takeGooArmor);
+					addButton(0, "Armor", takeGooArmor, null, null, null, "Approach the armor. You're sure the armor might be useful.");
 				}
 				else outputText("  You recall there was a suit of half-plate armor.  The rack appears to be empty.");
 			}
@@ -1194,81 +1222,89 @@ package classes.Scenes.Dungeons
 			//(Display Options: [North Door] [Trapdoor] [Armor])
 			if (flags[kFLAGS.CLEARED_HEL_TOWER] > 0) {
 				outputText("\n\nYou have already cleared this tower. You can leave if you like to.");
-				addButton(10, "Leave", exitHelTower);
+				addButton(11, "Leave", exitHelTower);
 			}
 			addButton(7, "Trapdoor", roomCellar);
 
 		}
 		public function roomCellar():void {
-			kGAMECLASS.dungeonLoc = 18;
-			outputText("<b><u>Wine Cellar</u></b>\n", true);
+			clearOutput();
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_WINE_CELLAR;
+			outputText("<b><u>Wine Cellar</u></b>\n");
 			dungeons.setDungeonButtons(null, null, null, null);
 			//(Accessed from the Trapdoor button)
 			outputText("You've dropped down into a small underground hidey-hole, with ");
-			if(player.tallness < 60) outputText("just enough room to stand up in");
+			if (player.tallness < 60) outputText("just enough room to stand up in");
 			else outputText("a ceiling so low you have to crouch");
-			outputText(".  To your surprise, nothing horrifying jumps out and tries to rape you.  You see a few horns of mead slung up in a wine rack - they smell a bit pungent, but alcohol improves with age they say...");
-			if(flags[kFLAGS.HEL_DUNGEON_MEAD_LOOTED] < 5) {
-				outputText("(There are " + (5 - flags[kFLAGS.HEL_DUNGEON_MEAD_LOOTED]) + "x God's Mead horns here to take.)\n\n");
+			outputText(".  To your surprise, nothing horrifying jumps out and tries to rape you.  ");
+			if (flags[kFLAGS.HEL_DUNGEON_MEAD_LOOTED] < 5) {
+				outputText("You see a few horns of mead slung up in a wine rack - they smell a bit pungent, but alcohol improves with age they say... ");
+				outputText("There " + (flags[kFLAGS.HEL_DUNGEON_MEAD_LOOTED] == 4 ? "is" : "are") + " " + num2Text(5 - flags[kFLAGS.HEL_DUNGEON_MEAD_LOOTED]) + " God's Mead " + (flags[kFLAGS.HEL_DUNGEON_MEAD_LOOTED] == 4 ? "horn" : "horns") + " here to take.\n\n");
 				addButton(0, "GodMead", takeGodMead);
+			}
+			else {
+				outputText("The wine rack is empty. You have already looted all the horns of mead.");
 			}
 			//Display Options: [GodsMead] [Climb Up]
 			addButton(5, "Climb Up", roomGuardHall);
 		}
 		public function roomStairwell():void {
-			kGAMECLASS.dungeonLoc = 19;
-			kGAMECLASS.tooltipLoc = "Harpies";
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_STAIR_WELL;
 			clearOutput();
-			outputText("<b><u>Stair Well</u></b>\n", true);
+			outputText("<b><u>Stair Well</u></b>\n");
 			dungeons.setDungeonButtons(null, roomGuardHall, null, null);
-			if(flags[kFLAGS.HEL_HARPIES_DEFEATED] == 0) {
+			if (flags[kFLAGS.HEL_HARPIES_DEFEATED] == 0) {
 				outputText("You open the heavy double doors and cringe as a loud \"<i>SCREECH!</i>\" echoes out and up the next room - a wide open stairwell, it seems, with minimal cover.  The perfect place for a harpy to fight... Oh, shit!");
 				outputText("\n\nYou ready your [weapon] as a wing of harpies looks up from eating at a small table in the center of the stone stairwell, all staring at you with wide, astonished eyes.  Another few harpies peer down from above, poking their heads down the stairs to get a look at the intruder.  Almost in unison, they jump to their feet and bare their claws.");
 				outputText("\n\nIt's a fight!");
 				menu();
 				startCombat(new HarpyMob());
-				doNext(1);
+				doNext(playerMenu);
 				return;
 			}
 			else {
-				if(flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] == 0) {
+				if (flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] == 0) {
 					outputText("There's a pile of drugged, unconscious harpies you've already defeated on the floor, as well as Kiri, the only one that didn't attack you.  You recall that she knows Hel and is here to help the both of you.");
 					//(Display Options: [Talk] [Sex] [Valeria](If Encountered) [Go Upstairs] [Go Downstairs])
 					var valeria:Number = 0;
-					if (player.armorName == "goo armor") addButton(1, "Valeria", talkToValeria);
-					addButton(0, "Kiri", kiriInteraction);
+					if (player.armorName == "goo armor") addButton(1, "Valeria", talkToValeria, null, null, null, "Talk to Valeria about the current situation.");
+					addButton(0, "Kiri", kiriInteraction, null, null, null, "Approach Kiri, the half-breed girl.");
 				}
 				else {
-					outputText("There's a pile of drugged, unconscious harpies you've already defeated on the floor.  Kiri appears to have left.");
+					if (dungeons.checkPhoenixTowerClear())
+						outputText("You're in a large room. There is a wide open stairwell. Ever since your last visit, the room is awfully empty. To the south is a pair of large, open double doors. You can go downstairs into the dungeon or climb up the stairs to the mezzanine.");
+					else 
+						outputText("There's a pile of drugged, unconscious harpies you've already defeated on the floor.  Kiri appears to have left.");
 				}
 				addButton(5, "Upstairs", roomMezzanine);
 				addButton(7, "Downstairs", roomDungeon);
 			}
 		}
 		public function roomDungeon():void {
-			kGAMECLASS.dungeonLoc = 20;
-			outputText("<b><u>Dungeon</u></b>\n", true);
+			clearOutput();
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_DUNGEON;
+			outputText("<b><u>Dungeon</u></b>\n");
 			dungeons.setDungeonButtons(null, null, null, null);
 			//(Intro -- Before Fight)
-			if(flags[kFLAGS.HEL_BRIGID_DEFEATED] == 0) {
+			if (flags[kFLAGS.HEL_BRIGID_DEFEATED] == 0) {
 				outputText("You make your way downstairs into a small, smoky stone room.  A thick smell of steam and burnt meat hangs over the room, making you cough as you descend the stairs.  As you make your way into the tower's little dungeon, you quickly notice the salamander chained to a table.  He's a great big man, nearly eight feet tall and covered in scars.  He has short, spiky red hair, the same color as his tail and limb scales, and a black eyepatch covers his left socket.  He looks like hell, emaciated and exhausted, covered in thick cum-stains from being used an untold number of times by the harpies of the tower.");
 				outputText("\n\nBeside him, though, is the tallest harpy you've ever seen.  A foot over most of her sisters, she stands stark naked save for a red-hot iron poker in her hand and a heavy iron shield in the other.  Her pink hair is shaved down to a mohawk, and her face is covered with a dozen iron studs and rings.");
 				outputText("\n\n\"<i>'Bout time you made it down here, you " + player.mf("bastard","bitch") + ".  Mama Brigid's been waiting a loooong time for someone to try and break out one of her toys.</i>\"  She pats the hefty keyring on the underside of her shield and leers at you.");
 				outputText("\n\nYou ready your [weapon] and prepare to take the keys from her!");
 				startCombat(new Brigid());
-				doNext(1);
+				doNext(playerMenu);
 				return;
 			}
 			else {
 				if (flags[kFLAGS.CLEARED_HEL_TOWER] == 0) {
 					outputText("You're standing in a small dungeon room, nearly gagging on the smells of burnt meat and smoke.  A number of nasty torture devices hang on the walls, and a table sits in the middle of the room, ");
-					if(flags[kFLAGS.HEL_PC_TALKED_WITH_HAKON] == 0) {
+					if (flags[kFLAGS.HEL_PC_TALKED_WITH_HAKON] == 0) {
 						outputText("on which the salamander prisoner lies");
-						addButton(0, "Prisoner", helDungeonPrisonerTalk)
+						addButton(0, "Prisoner", helDungeonPrisonerTalk, null, null, null, "Talk to the salamander prisoner.")
 					}
 					else {
 						outputText("on which Hakon lies");
-						addButton(0, "Hakon", helDungeonPrisonerTalk)
+						addButton(0, "Hakon", helDungeonPrisonerTalk, null, null, null, "Talk to Hakon.")
 					}
 					outputText(".");
 					if (player.hasKeyItem("Harpy Key A") >= 0 && player.hasKeyItem("Harpy Key B") >= 0) outputText("\n\n<b>You have the keys to release the prisoner.  You may be able to return in the future by choosing \"Phoenix Tower\" from the dungeons submenu.</b>");
@@ -1278,19 +1314,20 @@ package classes.Scenes.Dungeons
 				}
 				//(Display Options: [Go Upstairs](Back to Stairwell & Kiri) [Prisoner] [Torture Gear]
 				addButton(5, "Upstairs", roomStairwell);
-				addButton(1, "Torture Gear", tortureGear)
+				addButton(1, "Torture Gear", tortureGear, null, null, null, "There are some kinky equipment, ripe for the picking.");
 			}
 		}
 		public function roomMezzanine():void {
-			kGAMECLASS.dungeonLoc = 21;
-			outputText("<b><u>Mezzanine</u></b>\n", true);
+			clearOutput();
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_MEZZANINE;
+			outputText("<b><u>Mezzanine</u></b>\n");
 			dungeons.setDungeonButtons(null, null, null, null);
 			//(Intro; Before Battle)
-			if(flags[kFLAGS.HEL_PHOENIXES_DEFEATED] == 0) {
+			if (flags[kFLAGS.HEL_PHOENIXES_DEFEATED] == 0) {
 				outputText("You ascend the heavy stone steps, circling the tower's walls as you ascend.  You are stopped perhaps half-way to the second main floor on a small terrace level with a wide open view overlooking the vale beneath the high mountains.  As you step onto the mezzanine, you watch with a scowl as a number of tall, muscular hermaphrodites step out from the shadows.  Each is clad in heavy chainmail and wields a scimitar and a blood-red shield, but is otherwise nude, revealing their reptilian pricks and slick pussies.  The soldiers standing before you look like harpies, but they have scaled, humanoid legs, long, fiery tails and their wings are the darkest crimson.  These are phoenixes - the dread half-breed warriors you and Hel are here to stop!");
 				menu();
 				startCombat(new PhoenixPlatoon());
-				doNext(1);
+				doNext(playerMenu);
 				return;
 			}
 			else {
@@ -1299,17 +1336,17 @@ package classes.Scenes.Dungeons
 				//(Display Options: [Go Upstairs] [Go Downstairs] [Phoenixes])
 				addButton(5, "Upstairs", roomThroneRoom);
 				addButton(7, "Downstairs", roomStairwell);
-				if (flags[kFLAGS.CLEARED_HEL_TOWER] == 0) addButton(0, "Phoenixes", checkOutDemBirdBitches);
+				if (flags[kFLAGS.CLEARED_HEL_TOWER] == 0) addButton(0, "Phoenixes", checkOutDemBirdBitches, null, null, null, "Examine the phoenixes and possibly sate your baser needs.");
 				//(Go Downstairs returns you to the Stairwell; Go Up takes you to the throne room)
 			}
 		}
 		public function roomThroneRoom():void {
-			kGAMECLASS.dungeonLoc = 22;
-			kGAMECLASS.tooltipLoc = "HarpyQueen";
-			outputText("<b><u>Throne Room</u></b>\n", true);
+			clearOutput();
+			kGAMECLASS.dungeonLoc = DungeonCore.DUNGEON_HEL_THRONE_ROOM;
+			outputText("<b><u>Throne Room</u></b>\n");
 			dungeons.setDungeonButtons(null, null, null, null);
 			//Throne Room Descript (Before Combat!)
-			if(flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] == 0) {
+			if (flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] == 0) {
 				outputText("Ascending the stairs, you are stopped by a pair of heavy double doors.  They're covered with rotting, chipped purple paint and laurels that look years old.  The sharp, screeching sounds of metal on metal ring out in the next room - the sounds of a fight!  You kick the door open, and charge into what must be some kind of throne room; a large carpet dominates your view, leading up to a towering throne surrounded by pillows and cushions, currently vacant.");
 
 				outputText("\n\nIn the center of the throne room stand Helia the Salamander and a harpy that could only be described as a broodmother.  She isn't particularly tall or menacing looking, but her hips are truly inhuman, thrice as wide as she is at the least, and her pillowy ass seems canyon-like in her nudity, the type of butt you could lose yourself in forever.  The harpy matron, wielding a staff, is currently locked in a fierce battle against Hel's red-hot scimitar.");
@@ -1333,7 +1370,7 @@ package classes.Scenes.Dungeons
 				outputText("\n\nShe stands, grabbing her great whitewood staff.  A ball of magical whitefire forms in her hand, ready to sear you alive.");
 				outputText("\n\n<b>An unseen force slams the door shut, preventing you from escape. It's a fight!</b>");
 				startCombat(new HarpyQueen());
-				doNext(1);
+				doNext(playerMenu);
 				return;
 			}
 			else {
@@ -1349,7 +1386,7 @@ package classes.Scenes.Dungeons
 					addButton(0, "Helia", HeliaThroneRoom);
 				}
 				if (flags[kFLAGS.HARPY_QUEEN_EXECUTED] == 1 && flags[kFLAGS.TOOK_QUEEN_STAFF] == 0) {
-					addButton(1, "Take Staff", takeQueensStaff);
+					addButton(1, "Take Staff", takeQueensStaff, null, null, null, weapons.E_STAFF.description);
 				}
 				addButton(7, "Downstairs", roomMezzanine);
 			}

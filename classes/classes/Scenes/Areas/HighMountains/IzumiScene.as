@@ -44,12 +44,12 @@ package classes.Scenes.Areas.HighMountains
 			return str.charAt(0).toUpperCase() + str.substr(1);
 		}
 
-		// Bundle of logic to determine if a player might "act" like a minotaur, based off of a couple of related statusAffects
+		// Bundle of logic to determine if a player might "act" like a minotaur, based off of a couple of related statusEffects
 		public function actsLikeACow():Boolean
 		{
 			if (player.inHeat) return true;
 			if (player.inRut) return true;
-			if (player.findStatusAffect(StatusAffects.Dysfunction)) return true;
+			if (player.hasStatusEffect(StatusEffects.Dysfunction)) return true;
 			return false;
 		}
 		
@@ -66,7 +66,7 @@ package classes.Scenes.Areas.HighMountains
 			{
 				outputText("As you wander the wasted landscape searching for anything of interest, you come across a large rock blocking what appears to be the entrance to a cave.  Wondering about how to best get around it, you suddenly become aware of a strange sound on the edge of your hearing.\n\n");
 
-				outputText("Flattening yourself against the stone in case of danger, you strain your ears and scan the horizon, searching for the source of the noise.  The volume gradually increases, and eventually you realise what it is that you’re hearing; someone nearby is loudly humming, a lively tune echoing off the rocks and cliffs.  As best you can tell, it seems to be coming from the other side of the enormous stone blocking your path.\n\n");
+				outputText("Flattening yourself against the stone in case of danger, you strain your ears and scan the horizon, searching for the source of the noise.  The volume gradually increases, and eventually you realize what it is that you’re hearing; someone nearby is loudly humming, a lively tune echoing off the rocks and cliffs.  As best you can tell, it seems to be coming from the other side of the enormous stone blocking your path.\n\n");
  
 				outputText("Your curiosity piqued, you search around the obstruction for a way inside, and finally manage to find a slim gap between the bottom of the rock and the cliff face.  Kneeling down, you peer inside and can make out the distinct glowing embers of a campfire.  You’re pretty sure you can make it inside, but it might be difficult to get away if danger threatens.  On the other hand, wild animals don’t light campfires, and a lust-crazed demon probably wouldn’t bother to hide itself so effectively....\n\n");
 
@@ -171,7 +171,7 @@ package classes.Scenes.Areas.HighMountains
 				}
 
 				// Shared
-				outputText("The humming stops almost instantly, and moments later a hand suddenly rests itself on the rock in front of you.  Looking up from your exertions, you find yourself face to face with a woman.  It takes a moment, but then you realise, you really are actually face to face with her - she’s as tall as you are!");
+				outputText("The humming stops almost instantly, and moments later a hand suddenly rests itself on the rock in front of you.  Looking up from your exertions, you find yourself face to face with a woman.  It takes a moment, but then you realize, you really are actually face to face with her - she’s as tall as you are!");
 
 				// Catch logic shit that we just broke
 				if (player.str < 75)
@@ -227,7 +227,7 @@ package classes.Scenes.Areas.HighMountains
 
 			if (player.tallness < 108)
 			{
-				outputText("You can still hear the humming, but at first, there doesn’t seem to be anyone around.  You creep closer to the tent, until suddenly, a huge shadow at the front of the tent shifts.  You freeze, straining your eyes through the darkness, as you suddenly realise that’s not a shadow at all - it’s an enormous figure!  You must have gasped, as without warning the humming stops.\n\n");
+				outputText("You can still hear the humming, but at first, there doesn’t seem to be anyone around.  You creep closer to the tent, until suddenly, a huge shadow at the front of the tent shifts.  You freeze, straining your eyes through the darkness, as you suddenly realize that’s not a shadow at all - it’s an enormous figure!  You must have gasped, as without warning the humming stops.\n\n");
 
 				outputText("“<i>Hm?</i>” the shadow grunts, then speaks.  “<i>Oh?  Now how did you find your way in here, I wonder?</i>”  The voice is deep, rich and undeniably female, but has a gravelly edge to it like a cross between magma and molten chocolate.  You hear the hiss of indrawn breath and a small light flares up briefly in the darkness, then the shadow speaks again.  “<i>Well, whatever. It’s been a while since I had company, ");
 
@@ -297,7 +297,7 @@ package classes.Scenes.Areas.HighMountains
 			else outputText(" exposing a delicious view of her thigh, the creamy-white flesh almost screaming out for your caresses.");
 			outputText("  If she notices, then she doesn’t seem to care.\n\n");
 			
-			outputText("“<i>Better, right?</i>” she asks, and you nod.  “<i>Sorry, I didn’t realise the smoke was getting to you at first.  It’s been a while since I’ve seen anything but a minotaur or a demon, at least ones that seem more interested in polite conversation than reaming everything in sight.</i>”  She grimaces, briefly.  “<i>So, what’s your story, " + this.heightDesc(false) +"?</i>”  Whoever she is, she seems friendly enough");
+			outputText("“<i>Better, right?</i>” she asks, and you nod.  “<i>Sorry, I didn’t realize the smoke was getting to you at first.  It’s been a while since I’ve seen anything but a minotaur or a demon, at least ones that seem more interested in polite conversation than reaming everything in sight.</i>”  She grimaces, briefly.  “<i>So, what’s your story, " + this.heightDesc(false) +"?</i>”  Whoever she is, she seems friendly enough");
 			if (player.tallness <= 96) outputText(" - if a little... imposing -");
 			else outputText(",");
 			outputText(" so you give her your name, and, hesitant to discuss your true quest in any depth, detail some of your past encounters in this strange world.  Nodding encouragingly, she raises a long, elaborately carved pipe to her lips, puffing away as you tell your story....\n\n");
@@ -350,17 +350,13 @@ package classes.Scenes.Areas.HighMountains
 				lustMod *= 2;
 			}
 
-			player.createStatusAffect(StatusAffects.IzumisPipeSmoke, SMOKE_DURATION, deltaSpd, deltaSns, deltaLib);
+			player.createStatusEffect(StatusEffects.IzumisPipeSmoke, SMOKE_DURATION, deltaSpd, deltaSns, deltaLib);
 			
 			// Can't use dynStats for this, because stats() has a chained modifier to incoming sens changes that could turn this value into 8x what we expected it to be
-			player.spe += deltaSpd;
-			player.sens += deltaSns;
-			player.lib += deltaLib;
-			
-			if (player.spe <= 0) player.spe = 1;
-			if (player.sens >= 100) player.sens = 100;
-			if (player.lib >= 100) player.lib = 100;
-			
+			player.spe = boundFloat(1,player.spe + deltaSpd, player.getMaxStats('spe'));
+			player.sens = boundFloat(1,player.sens + deltaSns, player.getMaxStats('sens'));
+			player.lib = boundFloat(1,player.lib + deltaLib, player.getMaxStats('lib'));
+
 			showStatDown('spe');
 			showStatUp('sens');
 			showStatUp('lib');
@@ -371,14 +367,10 @@ package classes.Scenes.Areas.HighMountains
 		// Update the duration of the pipe smoke effect
 		public function updateSmokeDuration(hours:int):void
 		{
-			var affectIndex:int = player.findStatusAffect(StatusAffects.IzumisPipeSmoke);
-
-			if (affectIndex >= 0)
-			{
-				player.statusAffect(affectIndex).value1 -= hours;
-
-				if (player.statusAffect(affectIndex).value1 <= 0)
-				{
+			var effect:StatusEffectClass = player.statusEffectByType(StatusEffects.IzumisPipeSmoke);
+			if (effect != null) {
+				effect.value1 -= hours;
+				if (effect.value1 <= 0) {
 					this.smokeEffectWearsOff();
 				}
 			}
@@ -387,15 +379,14 @@ package classes.Scenes.Areas.HighMountains
 		// Method to contain removal mechanics + scene text to spit out
 		protected function smokeEffectWearsOff():void
 		{
-			var affectIndex:int = player.findStatusAffect(StatusAffects.IzumisPipeSmoke);
+			var effect:StatusEffectClass = player.statusEffectByType(StatusEffects.IzumisPipeSmoke);
 
-			if (affectIndex >= 0)
-			{
-				player.spe += Math.abs(player.statusAffect(affectIndex).value2);
-				player.sens -= player.statusAffect(affectIndex).value3;
-				player.lib -= player.statusAffect(affectIndex).value4;
+			if (effect != null) {
+				player.spe += Math.abs(effect.value2);
+				player.sens -= effect.value3;
+				player.lib -= effect.value4;
 				
-				if (player.sens > 100) player.sens = 100;
+				if (player.sens > player.getMaxStats("sens")) player.sens = player.getMaxStats("sens");
 				if (player.spe > player.getMaxStats("spe")) player.spe = player.getMaxStats("spe");
 				if (player.lib <= 0) player.lib = 1;
 				
@@ -405,7 +396,7 @@ package classes.Scenes.Areas.HighMountains
 				
 				outputText("\n<b>You groan softly as your thoughts begin to clear somewhat.  It looks like the effects of Izumi's pipe smoke have worn off.</b>\n");
 				
-				player.removeStatusAffect(StatusAffects.IzumisPipeSmoke);
+				player.removeStatusEffect(StatusEffects.IzumisPipeSmoke);
 			}
 		}
 
@@ -584,7 +575,7 @@ package classes.Scenes.Areas.HighMountains
 			outputText("“<i>Ohhh!</i>”  She positively purrs as her eyes fall upon your naked [cock biggest] for the first time.  “<i>What’s this?</i>”  She leans forwards to stare at your genitals with undisguised interest.  “<i>Well, now... I figured you [race]s would be pretty");
 			if (player.isTaur()) outputText(" big");
 			else outputText(" small");
-			outputText(", but this isn’t what I was expecting at all.  Hmm... I </i>was<i> planning on giving you a handjob, but, uh... I guess this’ll have to do, huh?</i>”  She gives you an almost apologetic smile as she holds up her hand, thumb and forefinger curled into a ring as though to show you what she has planned, before reaching back down to your groin. Her fingers slide over your stiffening flesh and you realise in a flood of soul - crushing embarrassment that she’s right.  You’re so small, she actually can’t fit more than two fingers around your cock at a time.\n\n");
+			outputText(", but this isn’t what I was expecting at all.  Hmm... I </i>was<i> planning on giving you a handjob, but, uh... I guess this’ll have to do, huh?</i>”  She gives you an almost apologetic smile as she holds up her hand, thumb and forefinger curled into a ring as though to show you what she has planned, before reaching back down to your groin. Her fingers slide over your stiffening flesh and you realize in a flood of soul - crushing embarrassment that she’s right.  You’re so small, she actually can’t fit more than two fingers around your cock at a time.\n\n");
 
 			outputText("You try to look away, blushing crimson, but the weight on your");
 			if (player.isTaur()) outputText(" flank");
@@ -601,7 +592,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("  “<i>There.</i>”  She announces happily, softly stroking your cheek as though to reassure you.  “<i>All better now, right?  Good.</i>”  She doesn’t even wait for a response before turning her attention back to your [cock biggest]....\n\n");
 
-			outputText("Izumi holds you there easily, pinned against her chest as she slowly coaxes your stiffening erection to life, and you finally realise that you’re completely trapped.  If there ever was a chance for you to slip free and escape from this situation you must have missed it, because now you’re locked in the embrace of those strong, iron-muscled arms, all you can do is feel intimidated.  As Izumi casually molests you, you can’t help but realise how much more powerful than you she seems - how much stronger and more confident in everything she does.  At this moment, you feel as though if she desired, she could do anything she wanted to you");
+			outputText("Izumi holds you there easily, pinned against her chest as she slowly coaxes your stiffening erection to life, and you finally realize that you’re completely trapped.  If there ever was a chance for you to slip free and escape from this situation you must have missed it, because now you’re locked in the embrace of those strong, iron-muscled arms, all you can do is feel intimidated.  As Izumi casually molests you, you can’t help but realize how much more powerful than you she seems - how much stronger and more confident in everything she does.  At this moment, you feel as though if she desired, she could do anything she wanted to you");
 			if (player.str <= 75) outputText(" and you would be powerless to resist...");
 			else outputText(" and you would struggle to deny her will...");
 			outputText(" a feeling that is only compounded by the burning sense of shame you feel as she jacks you off with a measly two fingers.\n\n");
@@ -629,7 +620,7 @@ package classes.Scenes.Areas.HighMountains
 			{
 				outputText("The moment the word ‘Minotaur’ enters your lust-addled brain, your body shifts over to automatic. Your [cock biggest] twitches painfully, loins longing for the release that can only come from being filled full of gallons of hot Minotaur cream, and you let out a distinctly feminine sounding moan as depraved fantasies of being roughly taken by the bull-men rush through your head.\n\n");
 
-				outputText("Izumi leers shamelessly at your reddening face, then whispers, softly into your ear.  “<i>Dirty [boy]....</i>”  You realise that she knows exactly what you’ve been doing - or rather, what’s been repeatedly doing <i>you</i> - and that shameful revelation combined with the burning arousal you feel from the very thought of minotaur cum is more than enough to force you over the edge into a sudden orgasm.  Far from being upset, Izumi seems positively overjoyed at your premature ejaculation.\n\n");
+				outputText("Izumi leers shamelessly at your reddening face, then whispers, softly into your ear.  “<i>Dirty [boy]....</i>”  You realize that she knows exactly what you’ve been doing - or rather, what’s been repeatedly doing <i>you</i> - and that shameful revelation combined with the burning arousal you feel from the very thought of minotaur cum is more than enough to force you over the edge into a sudden orgasm.  Far from being upset, Izumi seems positively overjoyed at your premature ejaculation.\n\n");
 
 				outputText("“<i>Ahaha, well now, look at that!</i>”  She cries, beaming.  “<i>I guess I called it right, hmm?  Geez, did the minotaurs do something to you, or were you always this perverted?</i>”  Izumi snickers.  You can’t even muster up the energy to respond, you’re so drained from your sudden orgasm.\n\n");
 			}
@@ -665,7 +656,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("“<i>Well, that was fun.</i>”  Izumi says, sitting up and dusting off her palms, dismissively.  “<i>I’m assuming you’re not up to a rematch just yet from the way you’re shaking.</i>”  She picks up her pipe and takes a drag, shooting you a knowing grin.  “<i>Feel free to drop by again, though.  You know, in case you wanted to tell me off... or maybe if you just want me to bully you some more.</i>” \n\n");
 
-			player.orgasm();
+			player.orgasm('Dick');
 
 			menu();
 			doNext(camp.returnToCampUseOneHour);
@@ -717,7 +708,7 @@ package classes.Scenes.Areas.HighMountains
 		protected function surrenderMediumCockObey():void
 		{
 			outputText("Taking a deep breath, you grit your teeth and force yourself to calm down.");
-			if(player.isTaur()) outputText("  Y");
+			if (player.isTaur()) outputText("  Y");
 			else outputText("  Lowering your shaking hips, y");
 			outputText("ou manage to relax and simply wait passively for Izumi to resume her handjob.\n\n");
 
@@ -735,7 +726,7 @@ package classes.Scenes.Areas.HighMountains
 			else outputText(" puddle of your own");
 			outputText(" cum, staring at the cavern roof and panting madly for a good few minutes afterwards.  Once you regain the use of your legs, you retrieve your clothes and wander back to camp in a daze.\n\n");
 
-			player.orgasm();
+			player.orgasm('Dick');
 
 			menu();
 			doNext(camp.returnToCampUseOneHour);
@@ -752,7 +743,7 @@ package classes.Scenes.Areas.HighMountains
 			 
 			outputText("“<i>All done?</i>”  She asks.  You glare at her, and her grin widens.  “<i>So, you wanna cum, huh?  Well then, let’s do that.</i>”  She announces, happily.  Suddenly, she begins stroking you again - this time at a speed far beyond her previous unhurried pace.  Her hand flies up and down your shaft, stimulating you just as much as before, but at easily three times the speed!  It is, without a doubt, the most amazing handjob you’ve ever experienced.\n\n");
 
-			outputText("The insane feeling is just too much, and you feel your orgasm boiling up within you.  Just as you feel yourself rising to crest the orgamsic wave and hit sweet release... Izumi lets go.\n\n");
+			outputText("The insane feeling is just too much, and you feel your orgasm boiling up within you.  Just as you feel yourself rising to crest the orgasmic wave and hit sweet release... Izumi lets go.\n\n");
 			 
 			outputText("You cry out in anger and pain as you find your impending orgasm so cruelly denied, your [cock biggest] twitching and throbbing painfully");
 			if (player.hasVagina()) outputText(", [vagina] spasming in sympathy");
@@ -769,7 +760,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("“<i>So, you learned something today, right?  Next time, just do what I say, and the results are much more... fun.</i>” She smiles, then turns away.  Retrieving your clothes, you drag yourself back to camp, feeling decidedly shaky.\n\n");
 
-			player.orgasm();
+			player.orgasm('Dick');
 
 			menu();
 			doNext(camp.returnToCampUseOneHour);
@@ -804,7 +795,7 @@ package classes.Scenes.Areas.HighMountains
 			 
 			outputText("“<i>Two.</i>”  She teases, her technique changing completely.  Rather than just running her hands and feet gently over your flesh, she grips on tightly, her hands clenching around your [cock biggest] like vices.  Her movements change completely, instead of the simple, slow up-and-down motion she had been using, she begins to alternate the motions of her left and right angles of attack - while her left hand rolls up your shaft, the right slides down to meet it.  Even her feet seem to somehow press in tighter against your flesh, mirroring her hands; the strange technique creating a unique wave-like rolling sensation that feels quite unlike anything you’ve experienced on Mareth before. You wonder briefly if there might be a little bit of magic involved here before your thoughts are obliterated by an avalanche of pleasure - Izumi has begun to speed up.\n\n");
 			 
-			outputText("You can only grunt and shiver under the onslaught as Izumi works you over with this bizarre new approach.  There’s no gentleness here, you realise; no playful teasing or long, drawn out pauses.  This move is designed for one thing, and one thing only - to force you to cum.");
+			outputText("You can only grunt and shiver under the onslaught as Izumi works you over with this bizarre new approach.  There’s no gentleness here, you realize; no playful teasing or long, drawn out pauses.  This move is designed for one thing, and one thing only - to force you to cum.");
 			if (player.balls > 0) outputText("  You groan, your aching balls coming to the same conclusion as you have, twitching under a passing stroke from one of Izumi’s soles and tensing up in readiness.");
 			outputText("  You understand now why Izumi warned you about this technique; you are no longer being teased, gently coaxed towards the edge and then pulled back at the last minute.  As of now, you are being milked.\n\n");
 			 
@@ -821,7 +812,7 @@ package classes.Scenes.Areas.HighMountains
 			 
 			outputText("Izumi returns to her tent and lights up her pipe, unceremoniously abandoning you there on the cave floor, apparently done with you for now.  Still, it’s some time before you are able to drag yourself to your feet and stumble home to your camp, wondering how long it’ll be before you can see straight again...\n\n");
 
-			player.orgasm();
+			player.orgasm('Dick');
 
 			menu();
 			doNext(camp.returnToCampUseOneHour);
@@ -916,7 +907,7 @@ package classes.Scenes.Areas.HighMountains
 				outputText("\n\n");
 
 				outputText("Izumi reaches around from behind you and you half turn to look at her, but she grips you by the chin and firmly turns your head away from her.  Your gaze flits nervously around the cave at random as you feel Izumi’s other hand glide slowly across your [skinfurscales], running along your stomach and down towards your");
-				if(player.isNaga()) outputText(" [leg]");
+				if (player.isNaga()) outputText(" [leg]");
 				else outputText(" thighs");
 				outputText(".\n\n");
 
@@ -964,12 +955,13 @@ package classes.Scenes.Areas.HighMountains
 		protected function surrenderFemaleNonExhibitionVariant():void
 		{
 			clearOutput();
+			var titsOrgasm:Boolean = false;
 
 			outputText("You squirm desperately, the feeling of a dozen pairs of eyes leering at you making you feel decidedly uncomfortable.  Izumi apparently notices your distress, however, as a few seconds later you hear a thunderous crack as she reaches out to a nearby outcropping of jagged rock, snapping it off with one massive hand.\n\n");
 
 			outputText("“<i>Get lost, ya scummy vultures!</i>” She yells,");
 			if (player.isTaur()) outputText(" sitting upright on your back and");
-			outputText(" hurling the rock forcefully at the circle of watchers. It shatters harmlessly on a boulder, but the crowd gets the message, disappearing in a flurry of angry squawks and howls. “<i>Sorry,</i>” Izumi adds apologetically as you twist your neck around to stare at her in confusion. “<i>Like I said, this neighbourhood’s full of trash like that, you know? I didn’t realise they’d upset you.</i>” She smiles - a friendly, honest smile, bereft of guile or malice.\n\n");
+			outputText(" hurling the rock forcefully at the circle of watchers. It shatters harmlessly on a boulder, but the crowd gets the message, disappearing in a flurry of angry squawks and howls. “<i>Sorry,</i>” Izumi adds apologetically as you twist your neck around to stare at her in confusion. “<i>Like I said, this neighbourhood’s full of trash like that, you know? I didn’t realize they’d upset you.</i>” She smiles - a friendly, honest smile, bereft of guile or malice.\n\n");
 
 			outputText("Despite your uncomfortable situation, you can’t help but feel kind of... reassured.  The smile soon becomes something more than friendly though, and suddenly Izumi’s head darts forwards and she forces her tongue into your surprised");
 			if (player.hasMuzzle()) outputText(" maw");
@@ -1014,7 +1006,7 @@ package classes.Scenes.Areas.HighMountains
 
 				outputText("Satisfied with her inspection, one giant hand slides");
 				if (player.isNaga()) outputText(" over your [hip].");
-				else if( player.isDrider()) outputText(" between your spindly legs, slapping them lightly to force you to spread them wider.");
+				else if ( player.isDrider()) outputText(" between your spindly legs, slapping them lightly to force you to spread them wider.");
 				else outputText(" between your thighs, slapping them lightly to force you to open them wider.");
 				outputText("  The pressure of her breasts pushing into your back increases as she draws you into a one armed hug, resting her chin on your shoulder and nuzzling her face into your neck.  “<i>Let’s play!</i>”  She announces in a cheery, sing-song voice.  Then her tongue snakes out, feeling inhumanly long as it slides across your flesh from the base of your neck to your cheek.  “<i>Well, I say ‘let’s’... don’t worry, kitten. I’m just gonna mess your head up for a little while, that’s all.  I’ll try not to make you swear off men for good, though...</i>”  She chuckles breathily into your ear as her questing hand snakes");
 				if (player.isNaga()) outputText(" along");
@@ -1036,13 +1028,13 @@ package classes.Scenes.Areas.HighMountains
 
 				if (player.lactationQ() > 0) outputText("You let out a moan of pleasure as a sudden jet of milk spurts from your heavy breasts, splattering across the rocky ground.  Izumi doesn’t let up though, instead working your nipple even harder, almost feverishly pinching and squeezing away, forcing more and more of the warm liquid to be coaxed free of your bust.\n\n");
 
-				if ((player.findStatusAffect(StatusAffects.BreastsMilked) > 0) && (player.lactationQ() > 750))
+				if ((player.hasStatusEffect(StatusEffects.BreastsMilked)) && (player.lactationQ() > 750))
 				{
 					outputText("You instinctively relax and lean back into the cushioned softness of Izumi’s breasts as the familiar sensation of being milked washes over you.  Your breasts respond readily to the repeated stimulation, great jets of milk answering the insistent urging of Izumi’s fingers.  Her other hand detaches itself from your groin temporarily to begin cupping and squeezing at your bust as well, much to your enjoyment.  You lay there in her arms, gazing down at your [chest] as you are being milked, and you can’t help but think to yourself");
 
 					if (player.cor < 40) outputText(" ‘How did this happen?‘  How did you get into this bizarre state, this weird situation?  It seems so strange, and yet, you can’t seem to summon up the energy to object or resist at all.  Perhaps, you wonder briefly, it has something to do with that damned smoke.  Izumi <i>was</i> smoking something, after all, and if it’s strong enough to affect a person as huge as her....\n\n");
 					else if (player.cor >= 40 && player.cor <= 90) outputText(" how surprisingly pleasant this is.  Izumi’s treatment of your nipples is getting a little rough, but you can’t deny that it does feel good to be milked so intimately, your breasts being emptied, spurt by spurt.  You smile, dully, and resolve to just enjoy the sensation while you can.  After all, it isn’t like enjoying yourself once in a while is going to lead to anything bad.\n\n");
-					else outputText(" how good it feels to be milked again.  How <i>hot</i> it feels, having someone work over your body like this, manipulating your swollen teats until they give up their cargo of your precious milk.  Izumi’s hands are rough and methodical, squeezing out an dribbling arc from one breast, then the other; left, right, left, right, left, right, an endless, mechanical rhythm, by this point completely bereft of sensuality.\n\n");
+					else outputText(" how good it feels to be milked again.  How <i>hot</i> it feels, having someone work over your body like this, manipulating your swollen teats until they give up their cargo of your precious milk.  Izumi’s hands are rough and methodical, squeezing out a dribbling arc from one breast, then the other; left, right, left, right, left, right, an endless, mechanical rhythm, by this point completely bereft of sensuality.\n\n");
 				}
 
 				outputText("But that just adds to your arousal.  There’s something about the situation that you just can’t help but find strangely thrilling.  You’re actually quite enjoying the sensation of being milked; it feels somehow... Right. You feel docile.  Placid.  Satisfied with your place in the world, as though you really were just some dumb animal, being harvested for her milk - like a cow.\n\n");
@@ -1051,19 +1043,20 @@ package classes.Scenes.Areas.HighMountains
 
 				outputText("Enraptured by the concept, you submerge yourself in fantasy as Izumi drains your fat, eager udders.  Your eyes roll back into your head as you daydream of rough hands, methodical inspections of your swollen breast-udders, and finally the chilling thrill of being guided towards the cold embrace of those steely, sucking tubes for another day’s ‘work’.  You’re not entirely sure through your lust-addled haze, but you think you might even have heard yourself murmur out a little ‘moo’ once or twice...\n\n");
 
-				outputText("Finally, you realise - with a slight note of disappointment - that Izumi has finished, her hand snaking back down");
+				outputText("Finally, you realize - with a slight note of disappointment - that Izumi has finished, her hand snaking back down");
 				if (player.isNaga()) outputText(" to");
 				else outputText(" between");
 				outputText(" your [legs] as she returns her attention to your groin.\n\n");
 
 				outputText("Despite her earlier protestations of inexperience when it comes to women, Izumi certainly seems to know what she’s doing.  It isn’t long before you’re squirming in her grip, panting helplessly as you instinctively roll your hips in response to Izumi’s skillful fingers, all the while flicking her thumb across your by now hypersensitive [clit].  Her tongue slides lasciviously across your neck, feeling impossibly long and causing you to gasp and shiver as you wonder just what other uses she might find for it before too long...\n\n");
 
-				outputText("You open you mouth to gasp for air, Izumi’s head darts forwards and she locks her lips to yours, pulling you into a sudden french kiss.  Her tongue wraps around your own, bizarrely flexible as it invades your mouth, forcing you to surrender to her embrace.  She runs her hands over your body and you can only moan feebly into her mouth as your orgasm begins to rise within you, suffusing your entire being as you flex and strain inside Izumi’s iron grip.  You squirm and buck your hips desperately and Izumi pins you down, riding out your orgasm as she strums away at your desperate nethers, your juices splattering wetly across the cave floor.\n\n");
+				outputText("You open your mouth to gasp for air, Izumi’s head darts forwards and she locks her lips to yours, pulling you into a sudden french kiss.  Her tongue wraps around your own, bizarrely flexible as it invades your mouth, forcing you to surrender to her embrace.  She runs her hands over your body and you can only moan feebly into her mouth as your orgasm begins to rise within you, suffusing your entire being as you flex and strain inside Izumi’s iron grip.  You squirm and buck your hips desperately and Izumi pins you down, riding out your orgasm as she strums away at your desperate nethers, your juices splattering wetly across the cave floor.\n\n");
 
 				outputText("Izumi releases you, a trail of saliva hanging between your exhausted mouths for a moment before she gives you an indulgent pat on the behind and rises to her feet, licking suggestively at her fingers.  You shakily pull your clothes towards you and redress, while Izumi settles back down to take a long drag from her pipe, eyeing you with clear amusement as you attempt to cover yourself.  You decide to make your escape before the big woman decides to rope you into another, more strenuous round of sexual wrestling...\n\n");
+				titsOrgasm = true;
 			}
 
-			player.orgasm();
+			player.orgasm(titsOrgasm ? 'Tits' : 'Vaginal');
 
 			menu();
 			doNext(camp.returnToCampUseOneHour);
@@ -1095,7 +1088,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("“<i>Hey out there!  Turns out my friend here is just too big a slut to resist the smell of some juicy cock, and you got her all riled up.  So, with that in mind,</i>” She announces, loudly.  “<i>She’s up for public use.  Who’s first?</i>”\n\n");
 
-			outputText("There’s a moment of deathly silence that seems to stretch for minutes.  Then, suddenly, an imp comes hurtling out of cover, already reaching for his loincloth, casting a wary glance at Izumi.  She gives him a winning smile, like a shopkeeper welcoming a client.  You realise that would make you the merchandise in this situation, and for some reason it just turns you on even more.\n\n");
+			outputText("There’s a moment of deathly silence that seems to stretch for minutes.  Then, suddenly, an imp comes hurtling out of cover, already reaching for his loincloth, casting a wary glance at Izumi.  She gives him a winning smile, like a shopkeeper welcoming a client.  You realize that would make you the merchandise in this situation, and for some reason it just turns you on even more.\n\n");
 
 			outputText("“<i>Lucky number one!</i>”  Izumi extends a hand towards you in an expansive gesture.  “<i>She’s all yours.  Pick any hole, she’s too cockhungry to care.</i>”  The imp eyes you up for a moment, then steps onto your");
 			if (player.isBiped()) outputText(" thighs");
@@ -1103,7 +1096,7 @@ package classes.Scenes.Areas.HighMountains
 			outputText(", pulling aside his loincloth to reveal his raging erection.  It bobs up and down, the bulbous head mere inches from your face.  “<i>Well?</i>”  Izumi asks.  “<i>What are you waiting for?  Get started, slut!</i>”\n\n");
 
 			outputText("Hesitantly, you lean forwards and envelop the imp’s waiting cock into your mouth.  You struggle not to think about the taste as you submissively service the imp, but then you notice from the corner of your eye that the ring of observers have crept a little closer, leaving the safety of their rocky hiding spots to get a better view...  a better view of you.  A better view of you, naked");
-			if(player.isBiped()) outputText(" and on your knees");
+			if (player.isBiped()) outputText(" and on your knees");
 			outputText(", sucking on an imp’s cock like it was candy.  Suddenly, it doesn’t seem nearly so bad.\n\n");
 
 			outputText("“<i>You wanted to give them a show, right?</i>”  Izumi whispers to you, still grinning.  You nod your head as best you can around the stiff phallus invading your mouth.  “<i>Well then, in that case...  do it right, you stupid slut!</i>”  She roars suddenly, grabbing you by the back of the neck and forcing your face down onto the imp’s cock.  You gag and squeak in surprise as you find your nose suddenly pressed up against his stomach, his thick meat invading your throat, cutting off your air.\n\n");
@@ -1113,7 +1106,7 @@ package classes.Scenes.Areas.HighMountains
 			else outputText(" face");
 			outputText("-fuck, tears of exertion streaming down your face.  “<i>Tongue his balls, then you get to come up for air,</i>” she commands, and you comply.  A few seconds later, you’re rewarded with the distinct hot, gloopy sensation of the imp blowing his load into your throat - and, much to your lust-addled surprise, a quick shoulder-squeeze from Izumi.  “<i>Sorry if I’m being a little rough, "+ this.heightDesc() +". Just playing the part, you know?</i>”  She whispers, reassuringly.\n\n");
 
-			outputText("The imp pulls himself free of your mouth, staggering away to the safety of the rocks.  More importantly however, you realise that the ring of spectators has begun to close in, apparently satisfied that they’re no longer confined to just spectating.\n\n");
+			outputText("The imp pulls himself free of your mouth, staggering away to the safety of the rocks.  More importantly however, you realize that the ring of spectators has begun to close in, apparently satisfied that they’re no longer confined to just spectating.\n\n");
 
 			outputText("“<i>Hope you’re ready for round two.</i>” Izumi mutters.  You can’t help but nod, smiling hungrily as you eye the approaching crowd.\n\n");
 
@@ -1125,7 +1118,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("You jerk upright with a start, warm bedding falling away from your body, the last few hours slowly beginning to filter through the sleepy haze clouding your thoughts.  Izumi seems to have worn herself out too, splayed out across the floor beside you.  You look around, gathering your bearings before deciding a sneaky exit from the Oni’s home is your best course of action...\n\n");
 
-			player.orgasm();
+			player.orgasm('Vaginal');
 
 			menu();
 			doNext(camp.returnToCampUseOneHour);
@@ -1159,7 +1152,7 @@ package classes.Scenes.Areas.HighMountains
 			outputText(" backwards, self-preservation instincts kicking in, intent on escaping the deranged Oni.  To your surprise, rather than snatching or leaping at you, she just blinks and looks at you in confusion.\n\n");
 
 			outputText("“<i>Huh?  What’s the matter?</i>”  She asks, looking genuinely nonplussed.  She reaches out towards you and you shuffle away again, putting a little more distance between the two of you.");
-			if(player.lust >= player.maxLust()) outputText("  Despite how much the fight with the enormous Oni has turned you on, you’re still hesitant to capitulate to her will entirely.");
+			if (player.lust >= player.maxLust()) outputText("  Despite how much the fight with the enormous Oni has turned you on, you’re still hesitant to capitulate to her will entirely.");
 			outputText("  Izumi actually looks a little hurt.  “<i>You... you really don’t want to do it?</i>”  You can only stare at the oversized giantess in utter confusion as she stammers awkwardly.  “<i>D-Did I do something wrong? I was only playing around, so... we can do it now, right?  What’s wrong?!</i>”  Against all your expectations, Izumi actually backs down, settling back into a seated position on her knees, her expression visibly deflating.\n\n");
 
 			outputText("“<i>Oh, I get it.  It’s me, right?  You don’t find a girl like me attractive.</i>”  Her face falls as she stares at the floor, looking positively morose.  “<i>It’s okay, I don’t blame you.  This whole situation probably seems pretty weird, right?  One minute I’m smacking you around, the next I’m trying to jump you... I forget sometimes that not everyone acts the way Oni do when it comes to stuff like this.</i>”  She sniffs, rubbing one massive palm into her eye and scowling.\n\n");
@@ -1167,13 +1160,13 @@ package classes.Scenes.Areas.HighMountains
 			outputText("“<i>Ah, stupid.  Don’t mind me, really. You can leave if you want, it’s okay; I won’t chase you or anythin’.  I just got over excited since I don’t get to talk to people very often, but I can’t expect you to want to bang someone who just tried to clean the floor with ya.</i>”  Izumi raises her head and gives you a wavering smile.  “<i>Really.  It’s fine! Oni get a little <b>heated</b> after a good fight, you know?  So, I did a dumb thing and figured you were feelin’ the same.  I shoulda known that ‘no’ doesn’t mean ‘only if you beat me’ to a human, right?!  Ahaha, ah... I’m an idiot.</i>”  She droops her head again.\n\n");
 
 			outputText("You hesitate.  It seems like she’s being honest about letting you go, which is unexpected to say the least.  If you wanted to, you’re pretty sure you could just get up and");
-			if(player.isNaga()) outputText(" slither");
+			if (player.isNaga()) outputText(" slither");
 			else outputText(" walk");
 			outputText(" out of the cave without any trouble.  On the other hand...");
-			if (player.lust >= 75) outputText(" the idea of sex with Izumi <i>is</i> quite a tantalizing prospect.  F");
+			if (player.lust100 >= 75) outputText(" the idea of sex with Izumi <i>is</i> quite a tantalizing prospect.  F");
 			else outputText(" f");
 			outputText("rom your position, you can clearly make out how tightly her kimono clings to her substantial assets, how only a thin scrap of material dangling between those powerful thighs - not even reaching low enough to touch the floor - obscures your vision and prevents you from seeing <i>everything</i>.");
-			if (player.lust >= 75) outputText("  Despite yourself, you have to wonder exactly what it would feel like to slide between those giant sweat-slicked thighs, bury your face into Izumi’s mountainous bust, and just let your libido run wild.");
+			if (player.lust100 >= 75) outputText("  Despite yourself, you have to wonder exactly what it would feel like to slide between those giant sweat-slicked thighs, bury your face into Izumi’s mountainous bust, and just let your libido run wild.");
 			outputText("\n\n");
 
 			menu();
@@ -1216,7 +1209,7 @@ package classes.Scenes.Areas.HighMountains
 			outputText("“<i>Feel free to come back if you want me to clean your clock again, yeah?</i>”  She calls after you with a grin.  You shake your head ruefully as you make your way down the mountain and back to your camp.  Overall, that could have gone better, but it could have gone a lot worse, too.\n\n");
 
 			menu();
-			cleanupAfterCombat();
+			combat.cleanupAfterCombat();
 		}
 
 		// Call this shit at the top of any "Stay" scene for shared initial content
@@ -1246,7 +1239,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("Try as you might, you find that you just can’t break free of Izumi’s grasp.  Not only that, but the constant rubbing, flexing sensation stimulating [eachCock], combined with the heat of Izumi’s body and the scent of whatever heady drug she was smoking hanging around her like a perfume, you give one final shudder and give in, going limp against the massive woman’s rack.\n\n");
 
-			outputText("Slowly, you start to pull back your hips, gently dragging your [cocks] back across Izumi’s stomach.  You realise foggily that underneath her kimono, she must be fairly well-toned, as the muscles in her abdomen provide a pleasingly firm and bumpy surface for you to rub yourself across.  Anxious to satisfy the needy throbbing in your cock, you slowly start to thrust, rolling your hips backwards and forwards as you grind yourself into Izumi’s abs.\n\n");
+			outputText("Slowly, you start to pull back your hips, gently dragging your [cocks] back across Izumi’s stomach.  You realize foggily that underneath her kimono, she must be fairly well-toned, as the muscles in her abdomen provide a pleasingly firm and bumpy surface for you to rub yourself across.  Anxious to satisfy the needy throbbing in your cock, you slowly start to thrust, rolling your hips backwards and forwards as you grind yourself into Izumi’s abs.\n\n");
 
 			outputText("The sensation is oddly unique, hard yet yielding, and you find yourself quickly entranced by the pleasure, falling into a steady rhythm, burying your face into Izumi’s bust and wrapping your arms around her for support.  Still fully clothed, you begin to grind yourself against Izumi, mindlessly searching for release.\n\n");
 
@@ -1264,16 +1257,16 @@ package classes.Scenes.Areas.HighMountains
 				if (player.biggestCockLength() <= 5)
 				{
 					outputText("  “<i>Hmph.</i>” Izumi grunts, smirking as she cups your balls.  “<i>Just like a baby... in more ways than one, am I right?</i>”  She continues, extending her middle finger to stroke the entirety of the underside of");
-					if(player.totalCocks() > 1) outputText(" one of your");
+					if (player.totalCocks() > 1) outputText(" one of your");
 					else outputText(" your");
 					outputText(" trembling, undersized prick");
-					if(player.totalCocks() > 1) outputText("s");
+					if (player.totalCocks() > 1) outputText("s");
 					outputText(", from tip to base, as your hips roll into your backstroke.  You shiver in embarrassment, causing Izumi to snort with amusement.\n\n");
 				}
 			}
 
 			outputText("The thought of Izumi getting turned on too just makes your lust burn even hotter and you renew your efforts, grinding and humping into Izumi’s stomach, running your tongue over the soft skin of her breasts as she strokes your hair indulgently.  The climbing heat of your bodies conspires to melt your thoughts away, your poor dick");
-			if(player.totalCocks() > 1) outputText("s");
+			if (player.totalCocks() > 1) outputText("s");
 			outputText(" trapped in the hottest point of all - directly between you.  Assaulted on all sides by the rising heat and the increasingly slippery sensation of rubbing against Izumi’s sweat-soaked body, your cock feels as though it has been transformed into a supernova of arousal, burning with desire and incredibly sensitive.\n\n");
 
 			outputText("The two of you remain there in this strange half-standing, half-fucking position for what feels like the best part of an hour as you grind and groan, suckle and slurp.  If just rubbing away at her from the outside feels this good, how much better must it feel to actually feel [oneCock] inside her, part of you wonders... and then another quieter, darker part of you wonders if it wouldn’t be so much hotter if you never found out.\n\n");
@@ -1286,10 +1279,10 @@ package classes.Scenes.Areas.HighMountains
 			if (player.totalCocks() > 1) outputText(" each of");
 			outputText(" your iron-hard cock");
 			if (player.totalCocks() > 1) outputText("s");
-			outputText("... only to splatter instantly against the insides of your [armor].  Your eyes go wide as you realise in a rush of embarrassment that you forgot to even so much as slip your cock");
-			if(player.totalCocks() > 1) outputText("s");
+			outputText("... only to splatter instantly against the insides of your [armor].  Your eyes go wide as you realize in a rush of embarrassment that you forgot to even so much as slip your cock");
+			if (player.totalCocks() > 1) outputText("s");
 			outputText(" free before humping yourself to a climax against Izumi’s stomach.  The realisation does nothing to hinder your orgasm, however - and may even have heightened it - as surge after surge of baby batter explodes free from your erection");
-			if(player.totalCocks() > 1) outputText("s");
+			if (player.totalCocks() > 1) outputText("s");
 			outputText(", coating the insides of your underwear with thick, sticky goo.\n\n");
 
 			outputText("Your underwear thoroughly decorated, your cock");
@@ -1304,8 +1297,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("“<i>Well, I gotta admit, that wasn’t exactly how I was expecting the fight to end,</i>” she says, scratching the back of her neck in a manner that seems almost coquettish. “<i>But it was pretty fun all the same. Next time you’re in the neighborhood, let me know if you’re up for a rematch, or... whatever.  Okay?</i>” She asks, retaking her seat by the fire and retrieving her pipe.  You nod, absently, still kind of dazed after the abortive end to the fight, and wander off to find somewhere to wash the increasingly unpleasant feeling contents of your underclothing away.\n\n");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Dick');
+			combat.cleanupAfterCombat();
 		}
 
 		// Loss scene for buttstuffins
@@ -1327,7 +1320,7 @@ package classes.Scenes.Areas.HighMountains
 			else outputText("  It");
 			outputText(" must have been visible to Izumi, too, since she laughs and speaks up a moment later.\n\n");
 
-			outputText("“<i>Alright, I see you’re ready.  Let’s get this thing started, shall we?</i>”  She chuckles, squatting down tantalizingly over your [cock biggest].  To your surprise, however, she spins around in place, turning her back to you while maintaining her position.  It isn’t until her hand reaches back to grab at your erection and begins guiding it towards her plowable rear that you realise what she’s doing.  She catches your eye and pauses, her face colouring slightly.\n\n");
+			outputText("“<i>Alright, I see you’re ready.  Let’s get this thing started, shall we?</i>”  She chuckles, squatting down tantalizingly over your [cock biggest].  To your surprise, however, she spins around in place, turning her back to you while maintaining her position.  It isn’t until her hand reaches back to grab at your erection and begins guiding it towards her plowable rear that you realize what she’s doing.  She catches your eye and pauses, her face colouring slightly.\n\n");
 
 			outputText("“<i>What?</i>” she asks, sounding a little embarrassed.  “<i>Girls are allowed to like stuff like this too, you know..</i>”  You can’t help but smile at her insecurity as you reach forwards and grip her hips, pulling her backwards onto your erection.  She gasps and her eyes widen slightly in surprise as your [cockhead biggest] slips inside her, but then her distinctive grin returns.  “<i>Oh, so it’s like that, is it? Well, let’s see how ya like this!</i>”\n\n");
 
@@ -1371,8 +1364,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("Either way, after assuring Izumi that you’ll survive, you stagger out of the cave and begin to make your decidedly wobbly way back to camp.  Hopefully, your bruises won’t keep you awake....\n\n");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Dick');
+			combat.cleanupAfterCombat();
 		}
 
 		// Super Ordinary Regular Missionary Sexy Time, honest
@@ -1407,8 +1400,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("You nod, pulling yourself to your feet and after exchanging a hasty goodbye with Izumi, you stumble towards the exit.  You’re not quite sure about ‘next time’, but you have to admit that really could have gone worse....\n\n");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Dick');
+			combat.cleanupAfterCombat();
 		}
 
 		// No bits, no scenes. Izumi had no scenes written for genderless players. In some cases, other scenes would do a p. reasonable job with some reformatting.
@@ -1425,17 +1418,17 @@ package classes.Scenes.Areas.HighMountains
 			outputText("“<i>Huh. You, uh... you actually </i>don’t<i> have a dick.</i>” She says, sounding a little taken aback. “<i>You know, I gotta say, I think you’re the first person I’ve met on this rock without a wang?  Seriously.  I just kind of assumed you had one.  Kinda lost track of my gameplan here, ‘cause I was really expecting something to grab onto down here.</i>”  She taps her lip with her free hand while you stare at her, bemused.  Then an ominous, toothy grin spreads slowly across her face.  “<i>Okay, new plan.</i>”  She announces, then her hand staps out to snatch hold of your ankle in an iron grip.  “<i>I guess I’ll just have to eat ya.</i>”\n\n");
 
 			outputText("Before you can protest, you find yourself being spun effortlessly upside down by the oversized Oni, suspended by your");
-			if(player.isNaga()) outputText(" tail");
+			if (player.isNaga()) outputText(" tail");
 			else outputText(" ankle");
 			outputText(") in an extremely uncomfortable position.  Izumi’s grin becomes positively feral as she tears your clothing free");
-			if(!player.isNaga()) outputText("before grabbing onto your other ankle, forcibly spreading your legs apart and leaving you creating a very undignified Y-shape");
+			if (!player.isNaga()) outputText("before grabbing onto your other ankle, forcibly spreading your legs apart and leaving you creating a very undignified Y-shape");
 			outputText(".\n\n");
 
 			outputText("“<i>Well, "+ this.heightDesc() +", you really are weird... no dick </i>or<i> pussy.  I, err...</i>”  She says, the confusion caused your evident lack of equipment spreading across her face.  “<i>I gotta say, I’m fresh out of ideas over here.</i>”\n\n");
 
 			outputText("She gently lowers you toward the floor, and releases her grip on your ankles.  “I-I guess you can go, yeah?” She says, motioning toward the entrance to her cave.  Paying you no mind, she heads off toward her tent, clearly no longer interested in you.\n\n");
 
-			cleanupAfterCombat();
+			combat.cleanupAfterCombat();
 		}
 
 		// Big bad oni gonna eatcha
@@ -1458,10 +1451,10 @@ package classes.Scenes.Areas.HighMountains
 			// TODO: Theres some logical holes with where/what Izumi can know about the players actual gender (A Standard Problem I guess)
 
 			outputText("Before you can protest, you find yourself being spun effortlessly upside down by the oversized Oni, suspended by your");
-			if(player.isNaga()) outputText(" tail");
+			if (player.isNaga()) outputText(" tail");
 			else outputText(" ankle");
 			outputText(" in an extremely uncomfortable position.  Izumi’s grin becomes positively feral as she tears your clothing free before");
-			if(!player.isNaga()) outputText(" grabbing onto your other ankle, forcibly spreading your legs apart and leaving you creating a very undignified Y-shape");
+			if (!player.isNaga()) outputText(" grabbing onto your other ankle, forcibly spreading your legs apart and leaving you creating a very undignified Y-shape");
 			outputText(".\n\n");
 
 			outputText("“<i>Oh, calm down.</i>”  Izumi seems quite unphased by your protests, having her sights clearly set on something else entirely.  “<i>I just wanna try something.  Besides, it’ll be fun!  Promise!</i>” She beams down at you, then rears back, opens her mouth and lunges her face forwards into your crotch!  You yelp in surprise as Izumi’s tongue suddenly slams into your [vagina] as though it held a grudge against it, flickering back and forth, up and down, darting this way and that as she slathers your nethers with her saliva.\n\n");
@@ -1480,8 +1473,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("Izumi is gracious or wracked by her guilty conscious enough to let you rest up quietly in her cave without further molestation until the pounding in your head fades away.  As you carefully pick your way back down the mountain, you muster up a half-hearted wave of goodbye back to the cheerfully waving giantess.  While you’re not sure if you’d exactly describe what you just experienced as fun... at the very least, you’re glad she didn’t <i>actually</i> try to eat you.  Deep down though, part of you can’t help wondering if she really would...\n\n");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Dick');
+			combat.cleanupAfterCombat();
 		}
 
 		/**
@@ -1498,15 +1491,15 @@ package classes.Scenes.Areas.HighMountains
 			clearOutput();
 
 			outputText("Izumi slips backwards onto one knee and holds up a hand for pause,");
-			if((player.HP/player.maxHP()) <= 0.1) outputText(" the brief reprieve giving both of you a moment to recover.\n\n");
-			else if(monster.lust >= 100) outputText(" the Oni’s cheeks tinged a rosy peach in contrast to her alabaster skin.\n\n");
+			if ((player.HP/player.maxHP()) <= 0.1) outputText(" the brief reprieve giving both of you a moment to recover.\n\n");
+			else if (monster.lust >= monster.maxLust()) outputText(" the Oni’s cheeks tinged a rosy peach in contrast to her alabaster skin.\n\n");
 			else outputText(" momentarily staggered by your furious onslaught.\n\n");
  
 			outputText("“<i>Alright, alright! Hold it a second!</i>” she yells, scowling as she pulls herself back to her feet.  Warily, you remain in your combat stance just out of reach, waiting to see if she’ll try anything.  Instead of launching some kind of surprise attack, however, she just dusts herself off, glaring at you thoughtfully.  The two of you exchange stares for a long, tense moment, before finally Izumi lets out a quiet grunt.\n\n");
 			 
 			outputText("“<i>Hmph. Okay, okay; I admit it.  You’re pretty good, kid. So, if ya want, we’ll call this one a draw. Go on, get outta here, before I change my mind.</i>”  It seems like she talks a big game, but the second things stop going her way, she wants to back out.  Izumi catches sight of your surprised expression and chuckles.  “<i>What, you actually think you can take </i>me?<i> Full force, without some cheap gimmick?  I’m not normally in the business of granting death wishes, so I’ll give ya one last chance to walk out nice and peaceful before I decide I gotta teach you a lesson.</i>”  She folds her arms and smirks at you expectantly, clearly expecting you to take the hint and run.\n\n");
 			 
-			outputText("But you don’t.  After her performance in the last fight, you’re pretty sure you can take her – and besides, her smug attitude is beginning to get on your nerves.  You stand your ground, glaring daggers at the busty giantess.  Izumi’s smirk widens slowly into a full-force leer as she realises you’re not just going to cut and run.\n\n");
+			outputText("But you don’t.  After her performance in the last fight, you’re pretty sure you can take her – and besides, her smug attitude is beginning to get on your nerves.  You stand your ground, glaring daggers at the busty giantess.  Izumi’s smirk widens slowly into a full-force leer as she realizes you’re not just going to cut and run.\n\n");
 			 
 			outputText("“<i>You’re really gonna try your luck, aren’t ya?</i>”  Izumi asks. When you nod in response, she throws back her head and lets out a booming, uproarious laugh.  “<i>I love it! I </i>love<i> this attitude!  Fighting you is more exciting than anything else I’ve encountered on this godawful rock!  Alright, here – I’ll give you a gift! A glimpse of my full strength, no gimmicks, no holding back. And remember, you asked for this, so I don’t want to see you crying when you lose!</i>” \n\n");
 
@@ -1541,10 +1534,11 @@ package classes.Scenes.Areas.HighMountains
 				outputText("Izumi was pretty strong when she claimed to be just playing around and using only a single hand to fight you, but there’s nothing playful about her appearance now.  In fact, in her strange, crouched stance, muscles straining against some invisible force, snarling and roaring at the empty air as she stares into nothing, you can’t help but feel she looks like nothing more than a crazed monster...  a demon, straight out of a story made to scare wayward children. You have to do something, you realize.  You have to interrupt her, before she finishes whatever it is she’s doing!\n\n");
 
 				// Tease victory
-				if (monster.lust >= 100) // I assume LustMax is always presumed to be 100?
+				if (monster.lust >= monster.maxLust()) // I assume LustMax is always presumed to be 100?
 				{
 					// Gonna refactor the tease attack code to seperate out the display elements from the action elements, so I we can grab a player-appropriate text blurb
-					outputText("[teaseText]");
+					//outputText("[teaseText]");
+					getGame().combat.combatTeases.tease(true);
 					outputText("Izumi pays your attempts to distract her no mind, focused entirely on her strange ritual. You slink forwards, hoping that something a little more... hands on might do the trick. But ");
 				}
 				else
@@ -1564,7 +1558,7 @@ package classes.Scenes.Areas.HighMountains
 				}
 				else if (player.inte >= 75)
 				{
-					outputText("her arm lunges out in an uppercutting grab, her fist latching around your throat and wrenching you from the floor.  Izumi is far too strong to best directly; leverage, you realise, is what you need to free yourself.  You reach out for the bright red curve of Izumi’s horn. \n\n");
+					outputText("her arm lunges out in an uppercutting grab, her fist latching around your throat and wrenching you from the floor.  Izumi is far too strong to best directly; leverage, you realize, is what you need to free yourself.  You reach out for the bright red curve of Izumi’s horn. \n\n");
 
 				}
 				else if (player.tou >= 90)
@@ -1605,6 +1599,12 @@ package classes.Scenes.Areas.HighMountains
 			outputText("You could play nice and let the Oni go free... she is asking nicely, after all.  On the other hand, after the way she tried to ravage you earlier, you figure Izumi’s arrogant attitude could use being taken down a notch or two.  The only question is, what exactly are you going to do?\n\n");
 
 			menu();
+			addDisabledButton(1, "TribHorn", "This scene requires you to have vagina.");
+			addDisabledButton(2, "LetsFuck", "This scene requires you to have cock.");
+			addDisabledButton(3, "RevengeAnal", "This scene requires you to have cock.");
+			addDisabledButton(4, "RevengeOral", "This scene requires you to have cock.");
+			addDisabledButton(5, "Tentacruel", "This scene requires you to have at least eight tentacle cocks.");
+			
 			addButton(0, "Let Go", letGoAndLeaveYouSillyFuck);
 
 			flags[kFLAGS.IZUMI_SEEN_PC_GENDER] = player.gender;
@@ -1620,7 +1620,7 @@ package classes.Scenes.Areas.HighMountains
 				addButton(3, "RevengeAnal", gonnaGetMeSomeRevengeButtsexin);
 				addButton(4, "RevengeOral", sayThatsAPrettyFaceBeAShameIfSomebodyJizzedAllOverIt);
 
-				if (player.tentacleCocks() >= 8) addButton(5, "Tentacruel", tentacruelRevengeFux);
+				if (player.countCocksOfType(CockTypesEnum.TENTACLE) >= 8) addButton(5, "Tentacruel", tentacruelRevengeFux);
 			}
 		}
 
@@ -1639,7 +1639,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("She swirls around and disappears into the gloom of the cave in a flurry of scented smoke.  For your part, you’re left with a long trek home and a complete lack of any idea what the hell just happened.  But on the upside, you <i>do</i> also have a nice stack of shiny gems to make up for the confusion.\n\n");
 
-			cleanupAfterCombat();
+			combat.cleanupAfterCombat();
 		}
 
 		// Kinda friendly fux
@@ -1719,8 +1719,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("“<i>It’s just a little thank you gift. You know, for uh...</i>”  She winks, provocatively.  “<i>Services rendered?</i>”  Smiling, you make your way back to camp, feeling decidedly good about yourself.\n\n");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Generic');
+			combat.cleanupAfterCombat();
 		}
 
 		// Fuck dat giant oni butt
@@ -1818,7 +1818,7 @@ package classes.Scenes.Areas.HighMountains
 				outputText("Ignoring her, you begin to force your aching erection into the tight hole below you.  It’s a surprisingly snug fit, given how huge Izumi is, something you’re only too happy to enjoy as you sink your turgid dick into her bowels.  Whether it’s because of her species or simply something to do with the muscles covering her frame you’re not sure, but as you slide inside of her, every inch of your cock seems to be being gripped by the Oni girl’s bountiful ass, massaged on all sides by coaxing, undulating muscle.  It’s simply too much to bear; with one powerful thrust, you bury yourself up to the [sheath], actually forcing Izumi to grunt in surprise and discomfort.\n\n");
 
 				outputText("“<i>Oh, just going all the way");
-				if(player.balls > 0) outputText(" balls");
+				if (player.balls > 0) outputText(" balls");
 				else outputText(" hilt");
 				outputText("-deep right away, huh?  Fine, that’s fine, I can take this,</i>”  She mumbles through gritted teeth.  You chuckle at her futile whining as you pull almost all the way out, leaving just your [cockhead biggest] lodged within her, enjoying the pleasant tingling sensation as her ass mindlessly twitches and clenches around your sensitive flesh, then thrust in again, all the way down to the [sheath].  Izumi’s entire body clenches as you bottom out again, and to your mild amusement, this time there’s no backtalk.\n\n");
 
@@ -1842,7 +1842,7 @@ package classes.Scenes.Areas.HighMountains
 
 					outputText("“<i>What?  It’s a natural thing, asshole,</i>” she snarls.  “<i>It’s not like I liked it. What kind of person would get off from that?  I’m not one of those freaks!</i>”  You shake your head at her in amusement, then motion for her to turn around and face the wall again.  She pales slightly, clearly worried you’re about to try for a second round, but quietly does as she’s told.\n\n");
 
-					outputText("You don’t quite have the energy for that just now though, so instead, you pick up your clothes and make for the exit.  As you walk past Izumi’s discarded clothing, you spy a small pouch full of gems that you hadn’t noticed before.  You snatch that too, making a speedy escape before the Oni girl realises she could probably make it to her feet before you got her horn by this point....\n\n");
+					outputText("You don’t quite have the energy for that just now though, so instead, you pick up your clothes and make for the exit.  As you walk past Izumi’s discarded clothing, you spy a small pouch full of gems that you hadn’t noticed before.  You snatch that too, making a speedy escape before the Oni girl realizes she could probably make it to her feet before you got her horn by this point....\n\n");
 				}
 				else
 				{
@@ -1902,8 +1902,8 @@ package classes.Scenes.Areas.HighMountains
 				outputText("You turn to say something to Izumi, but to your surprise you discover she’s actually fallen asleep.  Shaking your head in amusement at the Oni girl’s inferior stamina, you make your way out of the cave and back to camp, counting the gems as you go. \n\n");
 			}
 			
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Dick');
+			combat.cleanupAfterCombat();
 		}
 
 		// Huehue, Tentacruel!
@@ -1931,8 +1931,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("You’re not satisfied just with that though, particularly when the main event is displayed so tantalizingly before you.  Raising yet another tentacle, you plunge forwards and force yourself into Izumi’s pussy, penetrating her fully.  Despite her increased size, she’s surprisingly tight, but you’re still able to comfortably push in deeper than you’d probably be able to with a smaller partner.  Izumi grunts and sways in the impromptu sling you’ve set up, rocking backwards and forwards as you pump into her from two different angles.  It’s an interesting experience to say the least, double-dicking an amazonian monster-woman while simultaneously ensuring she can’t fight back by molesting her magical horn.  For good measure, you give the horn another quick squeeze and roll the coiled tentacle wrapping it around a little, eliciting a high pitched squeal from Izumi, her entire body going momentarily tense.\n\n");
 
-			outputText("When she relaxes, her face is completely flushed, her eyes looking distinctly fogged with arousal.  She isn’t struggling or resisting anymore; in fact, you realise, she’s even begun to roll her hips in time with your thrusts, helping you to penetrate her deeper, harder, stronger.  She seems to be functioning almost on automatic, stretching her neck forwards to accept more of your length as you thrust into her mouth, then twisting her head to the side as you pull out, stimulating more of your member than your previous thrusting.  Even her moaning seems quieter, more submissive, as though she’s accepted her role in the proceedings - or at least blocked out everything but the sensations she’s feeling enough to enjoy them.");
-			if (player.tentacleCocks() >= 10) outputText("  You decide to test the theory, snaking another prehensile appendage into each of her open, outstretched palms.  Sure enough, after a few fumbling attempts, Izumi manages to grasp the concept of a handjob and awkwardly starts to jerk them off.");
+			outputText("When she relaxes, her face is completely flushed, her eyes looking distinctly fogged with arousal.  She isn’t struggling or resisting anymore; in fact, you realize, she’s even begun to roll her hips in time with your thrusts, helping you to penetrate her deeper, harder, stronger.  She seems to be functioning almost on automatic, stretching her neck forwards to accept more of your length as you thrust into her mouth, then twisting her head to the side as you pull out, stimulating more of your member than your previous thrusting.  Even her moaning seems quieter, more submissive, as though she’s accepted her role in the proceedings - or at least blocked out everything but the sensations she’s feeling enough to enjoy them.");
+			if (player.countCocksOfType(CockTypesEnum.TENTACLE) >= 10) outputText("  You decide to test the theory, snaking another prehensile appendage into each of her open, outstretched palms.  Sure enough, after a few fumbling attempts, Izumi manages to grasp the concept of a handjob and awkwardly starts to jerk them off.");
 
 			outputText("\n\nRegardless, you’re still not finished.  After all, there’s still one hole left unaccounted for, and after all the trouble she’s given you, it hardly seems fair that she should just get to check out and enjoy the ride.  Izumi’s eyes widen as she feels your final tentacock slide between her buttcheeks, rubbing against the slick flesh, tracing an ominous ring around her hole before prodding demandingly at the entrance to her ass.\n\n");
 
@@ -1942,12 +1942,12 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("Izumi arches her back powerfully as you bury yourself deep inside each of her holes and begin to flood her with your thick, scalding spooge.  After filling her innards from as many angles as seem to be available, you pull out for a few more spurts, ensuring that you thoroughly coat Izumi’s face, her still-twitching ab muscles and the vast landscape of her bust.  For good measure, you finally release her horn, eliciting a decidedly girly whimper, and let your final tentacle release itself all over the rocky protrusion.  Izumi can only shiver and pant as you defile her horn on a whim, evidently completely exhausted at this point.\n\n");
 
-			outputText("By the time your orgasm finally subsides, Izumi has been reduced to a cummy, sticky mess, laying on her back panting for breath, her entire body liberally coated with your seed.  Your tentacles snake out again, and her eyes widen slightly in fear, but she doesn’t need to worry; you’re just wiping yourself off on her hair, after all.  As she realises that, she relaxes, apparently falling asleep.  With a smug smile, you redress and decide to take a poke around her camp for a while. \n\n");
+			outputText("By the time your orgasm finally subsides, Izumi has been reduced to a cummy, sticky mess, laying on her back panting for breath, her entire body liberally coated with your seed.  Your tentacles snake out again, and her eyes widen slightly in fear, but she doesn’t need to worry; you’re just wiping yourself off on her hair, after all.  As she realizes that, she relaxes, apparently falling asleep.  With a smug smile, you redress and decide to take a poke around her camp for a while. \n\n");
 
 			outputText("Amidst some miscellaneous junk that you cannot for the life of you figure out, you find a small pile of gems.  You help yourself to them as payment for the good time you just showed the uppity Oni, stow them safely away and wander back to camp, whistling happily to yourself.\n\n");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Dick');
+			combat.cleanupAfterCombat();
 		}
 
 		// Facefuck
@@ -2013,8 +2013,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("On the way out, you notice a small leather bag just laying out in the open.  Inspecting it, you discover it to be filled with a small fortune in gems!  You decide to take it with you - after all, it’s not like Izumi seems to need the money, plus she <i>did</i> try to rape you, so it’s technically a trophy.  Feeling decidedly more light hearted about your situation, you leave the cave and make your way back to camp, happily inspecting the gems as you go.\n\n");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Dick');
+			combat.cleanupAfterCombat();
 		}
 
 		// Nice horn, be a shame if somebody got it all sticky, huh?
@@ -2030,7 +2030,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("“<i>Wait!  Wait wait wait, you’re not thinking-?!</i>” She yammers.  “<i>You can’t!  You super can’t! Seriously, t-that’s dangerous!  You might hurt yourself, what are you thinking?!  And... a-and if you did that, I’d die!  I’ll really die!</i>”  To your intense surprise, she claps her hands together in front of her face and screws her eyes tight shut in fear, bowing her head in pleading submission.  “<i>Have mercy!</i>”\n\n");
 
-			outputText("You can’t help but smirk in amusement at her misplaced terror as you realise what she thinks you’re planning to do.  Although the idea of totally overloading the big woman’s horn to see how she’d react is very tempting, you’re pretty sure forcing it inside yourself would be an incredibly bad idea; at the very least, if Izumi were to lose control of herself and start thrashing around... it is <i>close</i> to what you had in mind though.  \n\n");
+			outputText("You can’t help but smirk in amusement at her misplaced terror as you realize what she thinks you’re planning to do.  Although the idea of totally overloading the big woman’s horn to see how she’d react is very tempting, you’re pretty sure forcing it inside yourself would be an incredibly bad idea; at the very least, if Izumi were to lose control of herself and start thrashing around... it is <i>close</i> to what you had in mind though.  \n\n");
 
 			outputText("Extricating yourself from Izumi’s clutches, you scoot forwards, ignoring the whimpering girl below you.  You press your [vag] against her horn, causing her to shiver and let out a panicked whine, tensing up as she anticipates the onslaught to come.  Rather than try to pull the horn fully <i>into</i> you, however, you begin to roll your hips, grinding your dampening nethers against the uneven surface.\n\n");
 
@@ -2042,7 +2042,7 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("You let out an amused laugh.  You have to admit, it’s pretty funny that the big bad muscle-girl couldn’t manage to control herself even while she’s technically being raped.\n\n");
 
-			outputText("“<i>Having fun?</i>”  You ask, smiling to yourself.  Izumi’s eyes snap open, her face turning an even deeper shade of crimson than before as her eyes flicker down to her crotch.  Poor girl, you think; she might not even have fully realised what she was doing.  Well, she does now...\n\n");
+			outputText("“<i>Having fun?</i>”  You ask, smiling to yourself.  Izumi’s eyes snap open, her face turning an even deeper shade of crimson than before as her eyes flicker down to her crotch.  Poor girl, you think; she might not even have fully realized what she was doing.  Well, she does now...\n\n");
 
 			outputText("“<i>I-It’s... it’s not... s-shut up!</i>” She stammers, adding “<i>It’s not my f-fault if you keep t-touching me in weird places and I get... distracted!  </i>You’re<i> the perverted one here, not me!</i>”\n\n");
 
@@ -2068,8 +2068,8 @@ package classes.Scenes.Areas.HighMountains
 
 			outputText("By the time you get back to camp, you’re almost feeling good enough to whistle.");
 
-			player.orgasm();
-			cleanupAfterCombat();
+			player.orgasm('Generic');
+			combat.cleanupAfterCombat();
 		}
 	}
 }

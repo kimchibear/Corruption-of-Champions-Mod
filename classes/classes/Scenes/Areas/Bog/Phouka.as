@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Created by K.Quesom 11.06.14
  */
 package classes.Scenes.Areas.Bog
@@ -12,13 +12,13 @@ package classes.Scenes.Areas.Bog
 		{ 
 			var damage:int;
 			//Only the bunny, goat and horse forms make physical attacks
-			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 1) {
-				outputText(capitalA + short + " completely misses you due to his blindness!\n", false);
+			if (hasStatusEffect(StatusEffects.Blind) && rand(3) < 1) {
+				outputText(capitalA + short + " completely misses you due to his blindness!\n");
 			}
 			else if (PhoukaScene.phoukaForm == PhoukaScene.PHOUKA_FORM_BUNNY) {
 				damage = Math.round((60 + 30 + 10) - rand(player.tou) - player.armorDef); //60 == Bunny Strength, 30 == Bunny Weapon Attack
 				outputText("The bunny morph hops towards you.  At the last second he changes direction and throws a kick toward you with his powerful hind legs.");
-				if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect())
+				if (player.getEvasionRoll())
 					outputText("\nThrowing yourself out of the way, you manage to avoid the kick.  The " + this.short + " hops out of reach and prepares for another attack.");
 				else if (damage <= 0)
 					outputText("\nYou block his attack by moving your shoulder in close, absorbing the energy of the kick harmlessly.");
@@ -30,7 +30,7 @@ package classes.Scenes.Areas.Bog
 			else if (PhoukaScene.phoukaForm == PhoukaScene.PHOUKA_FORM_GOAT) {
 				damage = Math.round((80 + 40 + 10) - rand(player.tou) - player.armorDef); //80 == Goat Strength, 40 == Goat Weapon Attack
 				outputText("The goat morph races toward you, head down.");
-				if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect())
+				if (player.getEvasionRoll())
 					outputText("\nThrowing yourself out of the way, you manage to keep from getting skewered.");
 				else if (damage <= 0)
 					outputText("\nYou manage to smack the goat morph in the side of the head.  The horns pass you by harmlessly.");
@@ -42,7 +42,7 @@ package classes.Scenes.Areas.Bog
 			else { //HORSE
 				damage = Math.round((95 + 55 + 10) - rand(player.tou) - player.armorDef); //95 == Horse Strength, 55 == Horse Weapon Attack
 				outputText("The stallion charges you, clearly intending to trample you under its hooves.");
-				if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect() || (damage <= 0))
+				if (player.getEvasionRoll() || (damage <= 0))
 					outputText("\nAs the stallion passes you twist in place and manage to stay clear of its legs.");
 				else {
 					player.takeDamage(damage);
@@ -60,7 +60,7 @@ package classes.Scenes.Areas.Bog
 				outputText("The bunny morph leaps forward, trying to catch you off guard and grapple you.  ");
 			else outputText("The stallion rears up on his hind legs, waving his massive cock at you.  ");
 
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				if (PhoukaScene.phoukaForm == PhoukaScene.PHOUKA_FORM_BUNNY)
 					outputText("You throw yourself out of the way at the last moment and succeed in throwing the " + this.short + " off balance. He staggers away, his attempted attack ruined.\n");
 				else outputText("You manage to look away in time and the " + this.short + "'s lewd display has no real effect on you.\n");
@@ -77,29 +77,35 @@ package classes.Scenes.Areas.Bog
 		}
 
 		protected function phoukaFightSilence():void
-		{ //Reuses the statusAffect Web-Silence from the spiders
+		{ //Reuses the statusEffect Web-Silence from the spiders
 			outputText(this.capitalA + this.short + " scoops up some muck from the ground and rams it down over his cock.  After a few strokes he forms the lump of mud and precum into a ball and whips it at your face.  ");
-			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2)
+			if (hasStatusEffect(StatusEffects.Blind) && rand(3) < 2)
 				outputText("Since he's blind the shot goes horribly wide, missing you entirely.");
-			else if (combatMiss())
-				outputText("You lean back and let the muck ball whip pass to one side, avoiding the attack.");
-			else if (combatEvade())
-				outputText("You pull back and to the side, blocking the shot with your arm. The muck splatters against it uselessly.");
-			else if (combatMisdirect())
-				outputText(this.capitalA + this.short + " was watching you carefully before his throw.  That proves to be his undoing as your misleading movements cause him to lob the muck at the wrong time");
-			else if (combatFlexibility())
-				outputText("As the ball leaves his fingers you throw yourself back, your spine bending in an inhuman way.  You feel the ball sail past, inches above your chest.");
-			else {
-				outputText("The ball smacks into your face like a wet snowball.  It covers most of your nose and mouth with a layer of sticky, salty mud which makes it hard to breathe.  You'll be unable to use your magic while you're struggling for breath!\n");
-				player.createStatusAffect(StatusAffects.WebSilence, 0, 0, 0, 0); //Probably safe to reuse the same status affect as for the spider morphs
+			else
+			{
+				var evade:String = player.getEvasionReason();
+				if (evade == EVASION_SPEED)
+					outputText("You lean back and let the muck ball whip pass to one side, avoiding the attack.");
+				else if (evade == EVASION_EVADE)
+					outputText("You pull back and to the side, blocking the shot with your arm. The muck splatters against it uselessly.");
+				else if (evade == EVASION_MISDIRECTION)
+					outputText(this.capitalA + this.short + " was watching you carefully before his throw.  That proves to be his undoing as your misleading movements cause him to lob the muck at the wrong time");
+				else if (evade == EVASION_FLEXIBILITY)
+					outputText("As the ball leaves his fingers you throw yourself back, your spine bending in an inhuman way.  You feel the ball sail past, inches above your chest.");
+				else if (evade != null) // failsafe
+					outputText("You throw yourself out of the way at the last moment!");
+				else {
+					outputText("The ball smacks into your face like a wet snowball.  It covers most of your nose and mouth with a layer of sticky, salty mud which makes it hard to breathe.  You'll be unable to use your magic while you're struggling for breath!\n");
+					player.createStatusEffect(StatusEffects.WebSilence, 0, 0, 0, 0); //Probably safe to reuse the same status affect as for the spider morphs
+				}
 			}
 			combatRoundOver();
 		}
 
 		override protected function performCombatAction():void
 		{
-			var blinded:Boolean = findStatusAffect(StatusAffects.Blind) >= 0;
-			if ((!blinded) && player.findStatusAffect(StatusAffects.WebSilence) < 0 && rand(4) == 0) {
+			var blinded:Boolean = hasStatusEffect(StatusEffects.Blind);
+			if ((!blinded) && !player.hasStatusEffect(StatusEffects.WebSilence) && rand(4) == 0) {
 				phoukaTransformToPhouka(); //Change to faerie form so that it can lob the ball of muck at you
 				phoukaFightSilence();
 			}
@@ -132,7 +138,7 @@ package classes.Scenes.Areas.Bog
 			else if (lustDelta >= 5)
 				outputText("\n\nThe " + this.short + " stops its assault for a moment.  A glob of precum oozes from its cock before it shakes its head and gets ready to attack again.");
 			else if (lustDelta > 0)
-				outputText("\n\nThe " + this.short + " hesitates and slows down.  You see its cock twitch and then it readies for the next attack.", false);
+				outputText("\n\nThe " + this.short + " hesitates and slows down.  You see its cock twitch and then it readies for the next attack.");
 			applyTease(lustDelta);
 		}
         
@@ -148,7 +154,7 @@ package classes.Scenes.Areas.Bog
 				if (player.hasVagina())
 					outputText("lass and spread yer legs for me.”</i>\n\n");
 				else outputText("lad and spread yer asscheeks for me.”</i>\n\n");
-				doNext(game.endLustLoss);
+				doNext(game.combat.endLustLoss);
 			}
 			else {
 				if (player.hasVagina()) { //Phouka prefer vaginal if they can get it
@@ -260,6 +266,7 @@ package classes.Scenes.Areas.Bog
 
 			this.a = "the ";
 			this.short = phoukaName;
+			this.imageName = "phouka";
 			this.long = "The " + this.short + " is flying around near you, waiting for an opening.  He has the general appearance of a faerie, though he is slightly larger and his skin and wings are coal black.  A large cock stands erect between his legs.  His cat-like green eyes, filled with lust, follow your every motion.";
 
 			this.createCock(1, 0.5, CockTypesEnum.HUMAN);

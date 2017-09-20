@@ -17,8 +17,8 @@ package classes.GlobalFlags
 		public static const UNKNOWN_ACHIEVEMENT_009:int			= 009;
 		
 		//Zone Achievements (010-029)
-		public static const ZONE_EXPLORER:int					= 110; //Discover every zone.
-		public static const ZONE_SIGHTSEER:int					= 111; //Discover every place.
+		public static const ZONE_EXPLORER:int					= 010; //Discover every zone.
+		public static const ZONE_SIGHTSEER:int					= 011; //Discover every place.
 		public static const ZONE_WHERE_AM_I:int					= 012; //Explore for the first time.
 		public static const ZONE_FOREST_RANGER:int				= 013; //Explore the forest 100 times.
 		public static const ZONE_VACATIONER:int					= 014; //Explore the lake 100 times.
@@ -56,11 +56,11 @@ package classes.GlobalFlags
 		public static const POPULATION_VILLAGE:int				= 042; //Population 10
 		public static const POPULATION_TOWN:int					= 043; //Population 25
 		public static const POPULATION_CITY:int					= 044; //Population 100
-		public static const POPULATION_METROPOLIS:int			= 045; //Population 500 (shadow achievement)
-		public static const UNKNOWN_ACHIEVEMENT_046:int			= 046;
-		public static const UNKNOWN_ACHIEVEMENT_047:int			= 047;
-		public static const UNKNOWN_ACHIEVEMENT_048:int			= 048;
-		public static const UNKNOWN_ACHIEVEMENT_049:int			= 049;
+		public static const POPULATION_METROPOLIS:int			= 045; //Population 250
+		public static const POPULATION_MEGALOPOLIS:int			= 046; //Population 500
+		public static const POPULATION_CITY_STATE:int			= 047; //Population 1,000 (shadow achievement)
+		public static const POPULATION_KINGDOM:int				= 048; //Population 2,500 (shadow achievement)
+		public static const POPULATION_EMPIRE:int				= 049; //Population 5,000 (shadow achievement)
 		
 		//Time Achievements (050-059)
 		public static const TIME_MONTH:int						= 050; //30 days
@@ -83,8 +83,8 @@ package classes.GlobalFlags
 		public static const DUNGEON_PHOENIX_FALL:int			= 065;
 		public static const DUNGEON_ACCOMPLICE:int				= 066; //shadow achievement
 		public static const DUNGEON_EXTREMELY_CHASTE_DELVER:int	= 067; //shadow achievement
-		public static const UNKNOWN_ACHIEVEMENT_068:int			= 068;
-		public static const UNKNOWN_ACHIEVEMENT_069:int			= 069;
+		public static const DUNGEON_DELVER_APPRENTICE:int		= 068;
+		public static const DUNGEON_END_OF_REIGN:int			= 069;
 		
 		//Fashion and Wealth Achievements (070-074)(075-079)
 		public static const FASHION_WANNABE_WIZARD:int			= 070;
@@ -122,14 +122,16 @@ package classes.GlobalFlags
 		public static const HOLIDAY_CHRISTMAS_III:int			= 098;
 		public static const HOLIDAY_VALENTINE:int				= 099;
 		
-		//Realistic and Hardcore Achievements (100-109)
+		//Hunger Achievements (100-104)
 		public static const REALISTIC_TASTES_LIKE_CHICKEN:int	= 100;
 		public static const REALISTIC_CHAMPION_NEEDS_FOOD:int	= 101; //Champion needs food badly!
 		public static const REALISTIC_GOURMAND:int				= 102;
 		public static const REALISTIC_GLUTTON:int				= 103;
 		public static const REALISTIC_FASTING:int				= 104;
-		public static const UNKNOWN_ACHIEVEMENT_105:int			= 105;
-		public static const UNKNOWN_ACHIEVEMENT_106:int			= 106;
+		
+		//Challenge Achievements (105-109)
+		public static const CHALLENGE_ULTIMATE_NOOB:int			= 105; //Defeat Lethice at level 1.
+		public static const CHALLENGE_ULTIMATE_MUNDANE:int		= 106; //Defeat Lethice without spells. NOT USED.
 		public static const UNKNOWN_ACHIEVEMENT_107:int			= 107;
 		public static const UNKNOWN_ACHIEVEMENT_108:int			= 108;
 		public static const UNKNOWN_ACHIEVEMENT_109:int			= 109;
@@ -195,8 +197,15 @@ package classes.GlobalFlags
 		public static const GENERAL_DICK_BANISHER:int			= 166;
 		public static const GENERAL_ULTRA_PERKY:int				= 167;
 		public static const GENERAL_UP_TO_11:int				= 168; //This one goes to eleven.
-		public static const UNKNOWN_ACHIEVEMENT_169:int			= 169;
-		
+		public static const GENERAL_YOU_BASTARD:int				= 169;
+		public static const GENERAL_YABBA_DABBA_DOO:int			= 170;
+		public static const GENERAL_ANTWORKS:int				= 171;
+		public static const GENERAL_OFF_WITH_HER_HEAD:int		= 172; //Awarded for beheading Lethice.
+		public static const GENERAL_NOOOOOOO:int				= 173; //Insert Darth Vader voice here.
+		public static const GENERAL_KAIZO_TRAP:int				= 174; //Fall victim to Kaizo Trap. NOT USED.
+		public static const GENERAL_SAVE_SCUMMER:int			= 175; //Save scum. NOT USED.
+		public static const GENERAL_MAKE_MARETH_GREAT_AGAIN:int	= 176; //Make Mareth Great Again indeed!
+		public static const GENERAL_TERRACOTTA_IMPY:int			= 177; //Place 100 Imp Statues around your camp (Shadow achievement)
 	}
 
 }

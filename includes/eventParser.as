@@ -4,400 +4,90 @@ import classes.Player;
 import classes.Items.Consumable;
 import classes.Scenes.Areas.Lake;
 import classes.Scenes.Camp.ScarredBlade;
+import classes.internals.profiling.Begin;
+import classes.internals.profiling.End;
+import classes.display.SpriteDb;
+import classes.internals.*;
+
+import coc.view.MainView;
 
 //Used to jump the fuck out of pregnancy scenarios for menus.
 //const EVENT_PARSER_ESCAPE:int = 800;
 //const PHYLLA_GEMS_HUNTED_TODAY:int = 893;
 
-public function eventParser(eventNo:*):void {
-	//Clear banked buttons
-
-	//trace("EVENT CODE: " + eventNo);
-	if (eventNo is Function)
-	{
-		eventNo();
+public function playerMenu():void {
+	mainViewManager.hidePlayerDoll();
+	if (!inCombat) spriteSelect(null);
+	mainView.setMenuButton(MainView.MENU_NEW_MAIN, "New Game", charCreation.newGameGo);
+	mainView.nameBox.visible = false;
+	showStats();
+	if (_gameState == 1 || _gameState == 2) {
+		kGAMECLASS.combat.combatMenu();
+		return;
 	}
-	else if (eventNo is int)
-	{
-		//trace("Numeric eventNo "+eventNo+" replace it with function");
-		//Clear sprite if not in combat
-		if (!inCombat && eventNo != cleanupAfterCombat) spriteSelect(-1);
-		//Clear pic if not in combat
-		//if(!inCombat() && eventNo != cleanupAfterCombat) clearImages();
-		//Reset newgame buttons till back at camp
-		mainView.setMenuButton( MainView.MENU_NEW_MAIN, "New Game", charCreation.newGameGo );
-		if (eventNo != 1) {
-			hideMenus();
-		}
-		
-		if (eventNo == 9999) // Game over event; overriding whatever the fuck has been done to the UI up to this point to force display of the data and new game buttons
-		{
-			mainView.showMenuButton( MainView.MENU_NEW_MAIN );
-			mainView.showMenuButton( MainView.MENU_DATA );
-			mainView.hideMenuButton( MainView.MENU_APPEARANCE );
-			mainView.hideMenuButton( MainView.MENU_LEVEL );
-			mainView.hideMenuButton( MainView.MENU_PERKS );
-			mainView.hideMenuButton( MainView.MENU_STATS );
-		}
-		/*if(eventNo == 1000 && gameState == 1 && menuLoc == 1) {
-			menuLoc = 0;
-			outputText("\n\n", false);
-			if(!combatRoundOver()) enemyAI();
-			else outputText(monster.capitalA + monster.short + " is defeated!");
+	combat.plotFight = false; //Clear restriction on item overlaps if not in combat
+	flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = ""; //Clear item if stuck
+	if (inDungeon) {
+		kGAMECLASS.dungeons.checkRoom();
+		return;
+	}
+	else if (inRoomedDungeon) {
+		if (inRoomedDungeonResume != null) {
+			inRoomedDungeonResume();
 			return;
-		}*/
-
-
-		if(eventNo < 1000) doSystem(eventNo);
-//		if(eventNo >=1000 && eventNo < 2000) inventory.doItems(eventNo);
-		if(eventNo >=2000 && eventNo < 5000) errorPrint(eventNo); //No events should be in this range anymore. Previously called doEvent(eventNo);
-		if(eventNo >=5000 && eventNo < 7000) doCombat(eventNo);
-		if(eventNo >= 10000 && eventNo < 10999) charCreation.doCreation(eventNo);
-		//if(eventNo >= 11000) doDungeon(eventNo);
+		}
 	}
-
-	else
-	{
-		errorPrint(eventNo);		// Dump the system state to the window so the player can file a decent bug-report
-	}
+	flags[kFLAGS.PLAYER_PREGGO_WITH_WORMS] = 0;
+	doCamp();
 }
 
-
-public function doSystem(eventNo:Number):void {
-	//@ camp
-	//(clear data/appearance buttons if not at camp
-	//trace("System Event", eventNo)
-
-	if(eventNo != 1)
-	{
-		hideMenus();
+public function gameOver(clear:Boolean = false):void { //Leaves text on screen unless clear is set to true
+	var textChoices:Number = rand(5);
+	if (silly && rand(5) == 0 && flags[kFLAGS.HARDCORE_MODE] == 0) textChoices = 5 + rand(4); //20% chance of humourous bad end texts.
+	if (clear) clearOutput();
+	outputText("\n\n<font color=\"#800000\">");
+	//Standard
+	if (textChoices == 0) outputText("<b>GAME OVER</b>");
+	if (textChoices == 1) outputText("<b>Game over, man! Game over!</b>");
+	if (textChoices == 2) outputText("<b>You just got Bad-Ended!</b>");
+	if (textChoices == 3) outputText("<b>Your adventures have come to an end...</b>");
+	if (textChoices == 4) outputText("<b>Oh dear, you are bad-ended!</b>");	//Runescape
+	//Silly Mode
+	if (textChoices == 5) outputText("<b>Don't lose hope... " + player.short + "! Stay determined!</b>"); //Undertale
+	if (textChoices == 6) outputText("<b>Wasted</b>"); //Grand Theft Auto V
+	if (textChoices == 7) outputText("<b>Ya dun goofed</b>"); //One of the memes
+	if (textChoices == 8) outputText("<b>Git gud</b>");	//One of the memes
+	outputText("</font>");
+	//Delete save on hardcore.
+	if (flags[kFLAGS.HARDCORE_MODE] > 0) {
+		outputText("\n\n<b>Error deleting save file.</b>");
+		/*outputText("\n\n<b>Your save file has been deleted, as you are on Hardcore Mode!</b>");
+		flags[kFLAGS.TEMP_STORAGE_SAVE_DELETION] = flags[kFLAGS.HARDCORE_SLOT];
+		var test:* = SharedObject.getLocal(flags[kFLAGS.TEMP_STORAGE_SAVE_DELETION], "/");
+		if (test.data.exists)
+		{
+			trace("DELETING SLOT: " + flags[kFLAGS.TEMP_STORAGE_SAVE_DELETION]);
+			test.clear();
+		}*/
 	}
-	switch (eventNo) {
-		case 1:
-			mainView.nameBox.visible = false;
-			if (gameState == 1 || gameState == 2) {
-				menuLoc = 0;
-				eventParser(5000);
-				return;
-			}
-			//Clear restriction on item overlaps if not in combat
-			plotFight = false;
-			if (inDungeon) {
-				menuLoc = 0;
-				kGAMECLASS.dungeons.checkRoom();
-				//dungeonRoom(dungeonLoc);
-				return;
-			}
-			else if (inRoomedDungeon)
-			{
-				menuLoc = 0;
-				if (inRoomedDungeonResume != null) inRoomedDungeonResume();
-				return;
-			}
-			menuLoc = 0;
-			flags[kFLAGS.PLAYER_PREGGO_WITH_WORMS] = 0;
-			if (flags[kFLAGS.IN_INGNAM] == 1) ingnam.menuIngnam();
-			else if (flags[kFLAGS.IN_PRISON] == 1) prison.prisonRoom();
-			else camp.doCamp();
-			return;
-
-
-		case 2:
-			exploration.doExplore();
-			return;
-
-
-		case 3:
-			desert.exploreDesert();
-			return;
-
-
-		case 4:
-			forest.exploreForest();
-			return;
-
-
-		case 5:
-			lake.exploreLake();
-			return;
-
-
-		case 6:
-			mountain.exploreMountain();
-			return;
-
-
-		case 10:
-			masturbateGo(); //Masturbate
-			return;
-
-
-		case 11:
-			//Rest
-			camp.rest();
-			return;
-
-
-		case 12:
-			//Explore new zones
-			exploration.tryDiscover();
-			return;
-
-
-		case 13:
-			camp.returnToCampUseOneHour();
-/*			//Pass an hour
-			outputText("An hour passes...\n", true);
-			timeQ = 1;
-			goNext(1, false); */
-			return;
-
-
-		case 14:
-			camp.returnToCampUseTwoHours();
-/*			outputText("Two hours pass...\n", true);
-			timeQ = 2;
-			goNext(2, false); */
-			return;
-
-
-		case 15:
-			camp.returnToCampUseFourHours();
-/*			outputText("Four hours pass...\n", true);
-			timeQ = 4;
-			goNext(4, false); */
-			return;
-
-
-		case 16:
-			camp.returnToCampUseEightHours();
-/*			outputText("Eight hours pass...\n", true);
-			timeQ = 8;
-			goNext(8, false); */
-			return;
-
-
-		case 17:
-			clearOutput();
-			goNext(24, false);
-			return;
-
-
-		case 19:
-			//Load menu
-			saves.loadScreen();
-			return;
-
-
-		case 20:
-			//Save Menu
-			saves.saveScreen();
-			return;
-
-
-		case -20:
-			saves.saveGameObject(null, true);
-			return;
-
-
-		case -21:
-			saves.openSave();
-			showStats();
-			statScreenRefresh();
-			return;
-
-
-		case 30:
-			// I have NO idea what could call this. I don't see anything that passes 30 as an event number anywhere
-			var f:MouseEvent;
-			saves.saveLoad(f);
-			return;
-
-
-		case 40:
-			//Use wait command
-			//See camp.as
-			camp.doWait();
-			return;
-
-
-		case 41:
-			//Use sleep command
-			//in camp.as
-			camp.doSleep();
-			return;
-
-
-		case 42:
-			//Choose masturbate options
-			masturbateMenu();
-			return;
-
-
-		case 44:
-			//Gain +5 Str due to level
-			dynStats("str", 5);
-			outputText("Your muscles feel significantly stronger from your time adventuring.", true);
-			doNext(116);
-			return;
-
-
-		case 45:
-			//Gain +5 Toughness due to level
-			dynStats("tou", 5);
-			trace("HP: " + player.HP + " MAX HP: " + maxHP());
-			statScreenRefresh();
-			outputText("You feel tougher from all the fights you have endured.", true);
-			doNext(116);
-			return;
-
-
-		case 46:
-			//Gain +5 Intelligence due to level
-			dynStats("int", 5);
-			outputText("Your time spent fighting the creatures of this realm has sharpened your wit.", true);
-			doNext(116);
-			return;
-
-
-		case 47:
-			//Gain +5 speed due to level
-			dynStats("spe", 5);
-			outputText("Your time in combat has driven you to move faster.", true);
-			doNext(116);
-			return;
-
-
-		case 48:
-			//Use Onahole
-			onaholeUse();
-			return;
-
-
-		case 49:
-			//Use Stimbelt
-			stimBeltUse();
-			return;
-
-
-		case 50:
-			deluxeOnaholeUse();
-			return;
-
-
-		case 51:
-			allNaturalOnaholeUse();
-			return;
-
-
-		case 52:
-			allNaturalStimBeltUse();
-			return;
-
-
-		case 65:
-			//turn on/off autosave
-			var e:MouseEvent;
-			player.autoSave = !player.autoSave;
-			saves.saveLoad(e);
-			return;
-
-
-		case 71:
-			//Places menu
-			camp.places();
-			return;
-
-
-		case 74:
-			//Camp followers screen
-			doNext(1);
-			kGAMECLASS.tooltipLoc = ""
-			camp.campFollowers();
-			return;
-
-
-		case 79:
-			deluxeDildo();
-			return;
-
-
-		case 80:
-			forest.exploreDeepwoods();
-			return;
-
-
-		case 82:
-			saves.deleteScreen();
-			return;
-
-
-		case 94:
-			exploration.debugOptions();
-			return;
-
-
-		case 95:
-			highMountains.exploreHighMountain();
-			return;
-
-
-		case 97:
-			plains.explorePlains();
-			return;
-
-
-		case 111:
-			swamp.exploreSwamp();
-			return;
-
-
-		case 114:
-			stage.focus = null;
-			//mainView.aCb.visible = false;
-			if (mainView.aCb.parent != null)
-			{
-				mainView.removeChild(mainView.aCb);
-				applyPerk(tempPerk);
-			}
-			return;
-
-		case 115:
-			stage.focus = null;
-			//mainView.aCb.visible = false;
-			if (mainView.aCb.parent != null)
-			{
-				mainView.removeChild(mainView.aCb);
-				
-			}
-			eventParser(1);
-			return;
-
-		case 116:
-			perkBuyMenu();
-			return;
-
-
-		case 118:
-			if (!monster.hasVagina()) monster.createVagina();
-			monster.vaginas[0].vaginalLooseness = VAGINA_LOOSENESS_GAPING;
-			monster.ass.analLooseness = 3;
-			outputText(mainView.eventTestInput.text, true, true);
-			simpleChoices("Again", 117, "", 0, "", 0, "", 0, "Quit", mainMenu);
-			mainView.eventTestInput.x = -10207.5;
-			mainView.eventTestInput.y = -1055.1;
-			return;
-
-
-		case 119:
-			mainView.eventTestInput.x = -10207.5;
-			mainView.eventTestInput.y = -1055.1;
-			mainMenu();
-			return;
-
-	}
-
-	errorPrint(eventNo);		// Dump the system state to the window so the player can file a decent bug-report
+	flags[kFLAGS.TIMES_BAD_ENDED]++;
+	awardAchievement("Game Over!", kACHIEVEMENTS.GENERAL_GAME_OVER, true, true);
+	menu();
+	addButton(0, "Game Over", gameOverMenuOverride, null, null, null, "Your game has ended. Please load a saved file or start a new game.");
+	if (flags[kFLAGS.HARDCORE_MODE] <= 0) addButton(1, "Nightmare", camp.wakeFromBadEnd, null, null, null, "It's all just a dream. Wake up.");
+	//addButton(3, "NewGamePlus", charCreation.newGamePlus, null, null, null, "Start a new game with your equipment, experience, and gems carried over.");
+	//if (flags[kFLAGS.EASY_MODE_ENABLE_FLAG] == 1 || debug) addButton(4, "Debug Cheat", playerMenu);
+	gameOverMenuOverride();
+	inCombat = false;
+	dungeonLoc = 0; //Replaces inDungeon = false;
+}
+
+private function gameOverMenuOverride():void { //Game over event; override whatever the fuck has been done to the UI up to this point to force display of the data and new game buttons
+	mainView.showMenuButton(MainView.MENU_NEW_MAIN);
+	mainView.showMenuButton(MainView.MENU_DATA);
+	mainView.hideMenuButton(MainView.MENU_APPEARANCE);
+	mainView.hideMenuButton(MainView.MENU_LEVEL);
+	mainView.hideMenuButton(MainView.MENU_PERKS);
 }
 
 public function getCurrentStackTrace():String		// Fuck, stack-traces only work in the debug player.
@@ -432,6 +122,12 @@ public function errorPrint(details:* = null):void
 //Argument is time passed.  Pass to event parser if nothing happens.
 // The time argument is never actually used atm, everything is done with timeQ instead...
 public function goNext(time:Number, needNext:Boolean):Boolean  {
+	Begin("eventParser","goNext",time);
+	var rslt:Boolean = goNextWrapped(time,needNext);
+	End("eventParser","goNext");
+	return rslt;
+}
+private function goNextWrapped(time:Number, needNext:Boolean):Boolean  {
 	//Update system time
 	//date = new Date();
 	//trace ("MONTH: " + date.month + " DATE: " + date.date + " MINUTES: " + date.minutes);
@@ -446,8 +142,7 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 		timeQ--;
 		model.time.hours++;
 
-		genderCheck();
-		regeneration(false);
+		kGAMECLASS.combat.regeneration(false);
 		//Inform all time aware classes that a new hour has arrived
 		for (var tac:int = 0; tac < _timeAwareClassList.length; tac++) if (_timeAwareClassList[tac].timeChange()) needNext = true;
 		if (model.time.hours > 23) {
@@ -455,7 +150,8 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 			model.time.days++;
 		}
 		else if (model.time.hours == 21) {
-			outputText("\nThe sky darkens as a starless night falls.  The blood-red moon slowly rises up over the horizon.\n");
+			if (flags[kFLAGS.LETHICE_DEFEATED] <= 0) outputText("\nThe sky darkens as a starless night falls.  The blood-red moon slowly rises up over the horizon.\n");
+			else outputText("\nThe sky darkens as a starry night falls.  The blood-red moon slowly rises up over the horizon.\n");
 			needNext = true;
 		}
 		else if (model.time.hours == 6) {
@@ -477,24 +173,27 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 
 		//IMP GANGBAAAAANGA
 		//The more imps you create, the more often you get gangraped.
-		temp = player.statusAffectv1(StatusAffects.BirthedImps) * 2;
+		temp = player.statusEffectv1(StatusEffects.BirthedImps) * 2;
 		if (temp > 7) temp = 7;
 		if (player.findPerk(PerkLib.PiercedLethite) >= 0) temp += 4;
 		if (player.inHeat) temp += 2;
 		if (vapula.vapulaSlave()) temp += 7;
 		//Reduce chance
+		var scarePercent:Number = 0;
+		scarePercent += flags[kFLAGS.CAMP_WALL_SKULLS] + flags[kFLAGS.CAMP_WALL_STATUES] * 4;
+		if (scarePercent > 100) scarePercent = 100;
 		if (flags[kFLAGS.CAMP_WALL_PROGRESS] > 0) temp /= 1 + (flags[kFLAGS.CAMP_WALL_PROGRESS] / 100);
 		if (flags[kFLAGS.CAMP_WALL_GATE] > 0) temp /= 2;
-		if (flags[kFLAGS.CAMP_WALL_SKULLS] > 0) temp *= 1 - (flags[kFLAGS.CAMP_WALL_SKULLS] / 100);
+		temp *= 1 - (scarePercent / 100);
 		if (model.time.hours == 2) {
 			if (model.time.days % 30 == 0 && flags[kFLAGS.ANEMONE_KID] > 0 && player.hasCock() && flags[kFLAGS.ANEMONE_WATCH] > 0 && flags[kFLAGS.TAMANI_NUMBER_OF_DAUGHTERS] >= 40) {
 				anemoneScene.goblinNightAnemone();
 				needNext = true;
 			}
-			else if (temp > rand(100) && player.findStatusAffect(StatusAffects.DefenseCanopy) < 0) {
-				if (player.gender > 0 && (player.findStatusAffect(StatusAffects.JojoNightWatch) < 0 || player.findStatusAffect(StatusAffects.PureCampJojo) < 0) && (flags[kFLAGS.HEL_GUARDING] == 0 || !helFollower.followerHel()) && flags[kFLAGS.ANEMONE_WATCH] == 0 && (flags[kFLAGS.HOLLI_DEFENSE_ON] == 0 || flags[kFLAGS.FUCK_FLOWER_KILLED] > 0) && (flags[kFLAGS.KIHA_CAMP_WATCH] == 0 || !kihaFollower.followerKiha()) && !(flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && (flags[kFLAGS.SLEEP_WITH] == "Marble" || flags[kFLAGS.SLEEP_WITH] == "")) && (flags[kFLAGS.IN_INGNAM] == 0 && flags[kFLAGS.IN_PRISON] == 0)) {
+			else if (temp > rand(100) && !player.hasStatusEffect(StatusEffects.DefenseCanopy)) {
+				if (player.gender > 0 && !(player.hasStatusEffect(StatusEffects.JojoNightWatch) && player.hasStatusEffect(StatusEffects.PureCampJojo)) && (flags[kFLAGS.HEL_GUARDING] == 0 || !helFollower.followerHel()) && flags[kFLAGS.ANEMONE_WATCH] == 0 && (flags[kFLAGS.HOLLI_DEFENSE_ON] == 0 || flags[kFLAGS.FUCK_FLOWER_KILLED] > 0) && (flags[kFLAGS.KIHA_CAMP_WATCH] == 0 || !kihaFollower.followerKiha()) && !(flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && (flags[kFLAGS.SLEEP_WITH] == "Marble" || flags[kFLAGS.SLEEP_WITH] == "")) && (flags[kFLAGS.IN_INGNAM] == 0 && flags[kFLAGS.IN_PRISON] == 0)) {
 					impScene.impGangabangaEXPLOSIONS();
-					doNext(1);
+					doNext(playerMenu);
 					return true;
 				}
 				else if (flags[kFLAGS.KIHA_CAMP_WATCH] > 0 && kihaFollower.followerKiha()) {
@@ -505,7 +204,7 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 					outputText("\n<b>Helia informs you over a mug of beer that she whupped some major imp asshole last night.  She wiggles her tail for emphasis.</b>\n");
 					needNext = true;
 				}
-				else if (player.gender > 0 && player.findStatusAffect(StatusAffects.JojoNightWatch) >= 0 && player.findStatusAffect(StatusAffects.PureCampJojo) >= 0) {
+				else if (player.gender > 0 && player.hasStatusEffect(StatusEffects.JojoNightWatch) && player.hasStatusEffect(StatusEffects.PureCampJojo)) {
 					outputText("\n<b>Jojo informs you that he dispatched a crowd of imps as they tried to sneak into camp in the night.</b>\n");
 					needNext = true;
 				}
@@ -517,22 +216,26 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 					outputText("\n<b>Your sleep is momentarily disturbed by the sound of tiny clawed feet skittering away in all directions.  When you sit up, you can make out Kid A holding a struggling, concussed imp in a headlock and wearing a famished expression.  You catch her eye and she sheepishly retreats to a more urbane distance before beginning her noisy meal.</b>\n");
 					needNext = true;
 				}
-				else if(flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && (flags[kFLAGS.SLEEP_WITH] == "Marble" || flags[kFLAGS.SLEEP_WITH] == "") && (player.inte / 5) >= rand(15)) {
-					outputText("\n<b>Your sleep is momentarily disturbed by the sound of imp hands banging against your cabin door. Fortunately, you've locked the door before you've went to sleep.</b>\n");
+				else if (flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && (flags[kFLAGS.SLEEP_WITH] == "Marble" || flags[kFLAGS.SLEEP_WITH] == "") && (player.inte / 5) >= rand(15)) {
+					outputText("\n<b>Your sleep is momentarily disturbed by the sound of imp hands banging against your cabin door. Fortunately, you locked the door before you went to sleep.</b>\n");
 					needNext = true;
 				}
 			}
 			//wormgasms
-			else if (flags[kFLAGS.EVER_INFESTED] == 1 && rand(100) <= 4 && player.hasCock() && player.findStatusAffect(StatusAffects.Infested) < 0) {
-				if (player.hasCock() && (player.findStatusAffect(StatusAffects.JojoNightWatch) < 0 || player.findStatusAffect(StatusAffects.PureCampJojo) < 0) && (flags[kFLAGS.HEL_GUARDING] == 0 || !helFollower.followerHel()) && flags[kFLAGS.ANEMONE_WATCH] == 0) {
-					nightTimeInfestation();
+			else if (flags[kFLAGS.EVER_INFESTED] == 1 && rand(100) <= 4 && player.hasCock() && !player.hasStatusEffect(StatusEffects.Infested)) {
+				if (player.hasCock() && !(player.hasStatusEffect(StatusEffects.JojoNightWatch) && player.hasStatusEffect(StatusEffects.PureCampJojo)) && (flags[kFLAGS.HEL_GUARDING] == 0 || !helFollower.followerHel()) && flags[kFLAGS.ANEMONE_WATCH] == 0 && (flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && flags[kFLAGS.SLEEP_WITH] == "")) {
+					kGAMECLASS.mountain.wormsScene.nightTimeInfestation();
 					return true;
+				}
+				else if (flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && flags[kFLAGS.SLEEP_WITH] == "") {
+					outputText("\n<b>You hear the sound of a horde of worms banging against the door. Good thing you locked it before you went to sleep!</b>\n");
+					needNext
 				}
 				else if (flags[kFLAGS.HEL_GUARDING] > 0 && helFollower.followerHel()) {
 					outputText("\n<b>Helia informs you over a mug of beer that she stomped a horde of gross worms into paste.  She shudders after at the memory.</b>\n");
 					needNext = true;
 				}
-				else if (player.gender > 0 && player.findStatusAffect(StatusAffects.JojoNightWatch) >= 0 && player.findStatusAffect(StatusAffects.PureCampJojo) >= 0) {
+				else if (player.gender > 0 && player.hasStatusEffect(StatusEffects.JojoNightWatch) && player.hasStatusEffect(StatusEffects.PureCampJojo)) {
 					outputText("\n<b>Jojo informs you that he dispatched a horde of tiny, white worms as they tried to sneak into camp in the night.</b>\n");
 					needNext = true;
 				}
@@ -581,17 +284,17 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 			}
 		}
 		//Diapause!
-		else if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00228] > 0 && (player.pregnancyIncubation > 0 || player.buttPregnancyIncubation > 0)) {
-			if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00229] == 1) {
-				flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00229] = 0;
-				outputText("\n\nYour body reacts to the influx of nutrition, accelerating your pregnancy. Your belly bulges outward slightly.", false);
+		else if (flags[kFLAGS.DIAPAUSE_FLUID_AMOUNT] > 0 && (player.pregnancyIncubation > 0 || player.buttPregnancyIncubation > 0)) {
+			if (flags[kFLAGS.DIAPAUSE_NEEDS_DISPLAYING] == 1) {
+				flags[kFLAGS.DIAPAUSE_NEEDS_DISPLAYING] = 0;
+				outputText("\n\nYour body reacts to the influx of nutrition, accelerating your pregnancy. Your belly bulges outward slightly.");
 				needNext = true;
 			}
 			if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
 				flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
 				return true;
 			}
-			flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00228]--;
+			flags[kFLAGS.DIAPAUSE_FLUID_AMOUNT]--;
 			if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
 			if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
 				flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
@@ -639,19 +342,25 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 			}
 		}
 		//Egg loot!
-		if(player.findStatusAffect(StatusAffects.LootEgg) >= 0) {
+		if (player.hasStatusEffect(StatusEffects.LootEgg)) {
 			trace("EGG LOOT HAS");
+			if (!player.hasStatusEffect(StatusEffects.Eggs)) { //Handling of errors.
+				outputText("Oops, looks like something went wrong with the coding regarding gathering eggs after pregnancy. Hopefully this should never happen again. If you encounter this again, please let Kitteh6660 know so he can fix it.");
+				player.removeStatusEffect(StatusEffects.LootEgg);
+				doNext(playerMenu);
+				return true;
+			}
 			//default
 			var itype:ItemType =
 					[
 						[consumables.BROWNEG,consumables.PURPLEG,consumables.BLUEEGG,consumables.PINKEGG,consumables.WHITEEG,consumables.BLACKEG],
 						[consumables.L_BRNEG,consumables.L_PRPEG,consumables.L_BLUEG,consumables.L_PNKEG,consumables.L_WHTEG,consumables.L_BLKEG]]
-							[player.statusAffect(player.findStatusAffect(StatusAffects.Eggs)).value2 || 0][player.statusAffect(player.findStatusAffect(StatusAffects.Eggs)).value1 || 0] ||
+							[player.statusEffectByType(StatusEffects.Eggs).value2 || 0][player.statusEffectByType(StatusEffects.Eggs).value1 || 0] ||
 							consumables.BROWNEG;
-			player.removeStatusAffect(StatusAffects.LootEgg);
-			player.removeStatusAffect(StatusAffects.Eggs);
+			player.removeStatusEffect(StatusEffects.LootEgg);
+			player.removeStatusEffect(StatusEffects.Eggs);
 			trace("TAKEY NAU");
-			inventory.takeItem(itype, camp.campMenu);
+			inventory.takeItem(itype, playerMenu);
 			return true;
 		}
 		// Benoit preggers update
@@ -660,42 +369,54 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 	
 	// Hanging the Uma massage update here, I think it should work...
 	telAdre.umasShop.updateBonusDuration(time);
-	if (player.findStatusAffect(StatusAffects.UmasMassage) >= 0)
+	if (player.hasStatusEffect(StatusEffects.UmasMassage))
 	{
-		trace("Uma's massage bonus time remaining: " + player.statusAffectv3(StatusAffects.UmasMassage));
+		trace("Uma's massage bonus time remaining: " + player.statusEffectv3(StatusEffects.UmasMassage));
 	}
 	
 	highMountains.izumiScenes.updateSmokeDuration(time);
-	if (player.findStatusAffect(StatusAffects.IzumisPipeSmoke) >= 0)
+	if (player.hasStatusEffect(StatusEffects.IzumisPipeSmoke))
 	{
-		trace("Izumis pipe smoke time remaining: " + player.statusAffectv1(StatusAffects.IzumisPipeSmoke));
+		trace("Izumis pipe smoke time remaining: " + player.statusEffectv1(StatusEffects.IzumisPipeSmoke));
 	}
 	
 	//Drop axe if too short!
 	if ((player.tallness < 78 && player.str < 90) && player.weapon == weapons.L__AXE) {
 		outputText("<b>\nThis axe is too large for someone of your stature to use, though you can keep it in your inventory until you are big enough.</b>\n");
-		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), camp.campMenu);
+		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), playerMenu);
 		return true;
 	}
 	if ((player.tallness < 60 && player.str < 70) && player.weapon == weapons.L_HAMMR) {
 		outputText("<b>\nYou've become too short to use this hammer anymore.  You can still keep it in your inventory, but you'll need to be taller to effectively wield it.</b>\n");
-		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), camp.campMenu);
+		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), playerMenu);
 		return true;
 	}		
 	if (player.weapon == weapons.CLAYMOR && player.str < 40) {
 		outputText("\n<b>You aren't strong enough to handle the weight of your weapon any longer, and you're forced to stop using it.</b>\n");
-		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), camp.campMenu);
+		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), playerMenu);
 		return true;
 	}
 	if (player.weapon == weapons.WARHAMR && player.str < 80) {
 		outputText("\n<b>You aren't strong enough to handle the weight of your weapon any longer!</b>\n");
-		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), camp.campMenu);
+		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), playerMenu);
 		return true;
 	}
 	//Drop beautiful sword if corrupted!
-	if (player.weaponPerk == "holySword" && player.cor >= 35) {
+	if (player.weaponPerk == "holySword" && player.cor >= (35 + player.corruptionTolerance())) {
 		outputText("<b>\nThe <u>" + player.weaponName + "</u> grows hot in your hand, until you are forced to drop it.  Whatever power inhabits this blade appears to be unhappy with you.  Touching it gingerly, you realize it is no longer hot, but as soon as you go to grab the hilt, it nearly burns you.\n\nYou realize you won't be able to use it right now, but you could probably keep it in your inventory.</b>\n\n");
-		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), camp.campMenu);
+		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), playerMenu);
+		return true;
+	}
+	//Drop ugly sword if uncorrupt
+	if (player.weaponPerk == "uglySword" && player.cor < (70 - player.corruptionTolerance())) {
+		outputText("<b>\nThe <u>" + player.weaponName + "</u> grows hot in your hand, until you are forced to drop it. Whatever power inhabits this blade appears to be disgusted with your purity. Touching it gingerly, you realize it is no longer hot, but as soon as you go to grab the hilt, it nearly burns you.\n\nYou realize you won't be able to use it right now, but you could probably keep it in your inventory.</b>\n\n");
+		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), playerMenu);
+		return true;
+	}
+	//Drop midnight rapier if uncorrupt
+	if (player.weaponPerk == "midnightRapier" && player.cor < (90 - player.corruptionTolerance())) {
+		outputText("<b>\nThe <u>" + player.weaponName + "</u> grows hot in your hand, until you are forced to drop it. Whatever power inhabits this blade appears to be disgusted with your purity. Touching it gingerly, you realize it is no longer hot, but as soon as you go to grab the hilt, it nearly burns you.\n\nYou realize you won't be able to use it right now, but you could probably keep it in your inventory.</b>\n\n");
+		inventory.takeItem(player.setWeapon(WeaponLib.FISTS), playerMenu);
 		return true;
 	}
 	//Drop scarred blade if not corrupted enough!
@@ -716,19 +437,19 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 			if (player.hasCock()) outputText("maleness");
 			else outputText("bulgy balls");
 			outputText(" within the imprisoning leather, and it actually hurts to wear it.  <b>You'll have to find some other form of protection!</b>\n\n");
-			inventory.takeItem(player.setArmor(ArmorLib.NOTHING), camp.campMenu);
+			inventory.takeItem(player.setArmor(ArmorLib.NOTHING), playerMenu);
 			return true;
 		}
 		//Lost pussy
 		else if (!player.hasVagina()) {
 			outputText("\nYou fidget uncomfortably as the crease in the gusset of your lewd bikini digs into your sensitive, featureless loins.  There's simply no way you can continue to wear this outfit in comfort - it was expressly designed to press in on the female mons, and without a vagina, <b>you simply can't wear this exotic armor.</b>\n\n");
-			inventory.takeItem(player.setArmor(ArmorLib.NOTHING), camp.campMenu);
+			inventory.takeItem(player.setArmor(ArmorLib.NOTHING), playerMenu);
 			return true;
 		}
 		//Tits gone or too small
 		else if (player.biggestTitSize() < 4) {
 			outputText("\nThe fine chain that makes up your lewd bikini-top is dangling slack against your flattened chest.  Every movement and step sends it jangling noisily, slapping up against your [nipples], uncomfortably cold after being separated from your " + player.skinFurScales() + " for so long.  <b>There's no two ways about it - you'll need to find something else to wear.</b>\n\n");
-			inventory.takeItem(player.setArmor(ArmorLib.NOTHING), camp.campMenu);
+			inventory.takeItem(player.setArmor(ArmorLib.NOTHING), playerMenu);
 			return true;
 		}
 	}
@@ -736,9 +457,37 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 	if (player.lowerGarment != UndergarmentLib.NOTHING) {
 		if (player.isTaur() || player.isDrider() || (player.isNaga() && player.lowerGarmentPerk != "NagaWearable")) {
 			outputText("You feel something slipping off as if by magic. Looking down on the ground, you realize it's your " + player.lowerGarmentName + ". Looking down at your lower body, you let out a sigh and pick up your " + player.lowerGarmentName + ". ");
-			inventory.takeItem(player.setUndergarment(UndergarmentLib.NOTHING), camp.campMenu);
+			inventory.takeItem(player.setUndergarment(UndergarmentLib.NOTHING, 1), playerMenu);
 			return true;
 		}
+	}
+	//Unequip undergarment if bimbo skirt & corruption
+	if (player.armorName == "bimbo skirt" && player.cor >= 10 && player.upperGarment != UndergarmentLib.NOTHING) {
+		outputText("\nYou are feeling strange heat in your [breasts]. The thought of how much more pleasure you'll have without the embarassing strain from your " + player.upperGarmentName + " drives you into the frenzy. You take of the top of your dress, put off the garment and start teasing your [nipples], feeling lost in the waves warmth radiating through you body. Eventually, the pleasure subsides, but you decide to stay without your " + player.upperGarmentName + " for a while.\n\n");
+		kGAMECLASS.dynStats("lus", 10);
+		inventory.takeItem(player.setUndergarment(UndergarmentLib.NOTHING, 0), playerMenu);
+		return true;
+	}
+	if (player.armorName == "bimbo skirt" && player.cor >= 10 && player.lowerGarment != UndergarmentLib.NOTHING) {
+		outputText("\nLost in strange thought, you reach with your hand under the skirt. You take of you " + player.lowerGarmentName + " and immediately feel the increased sensitivity of your skin. You think how irresistible seductive you'll become without that embarassing underwear, and decide to stay that way.\n\n");
+		kGAMECLASS.dynStats("lus", 10);
+		inventory.takeItem(player.setUndergarment(UndergarmentLib.NOTHING, 1), playerMenu);
+		return true;
+	}
+	if (player.armorName == "bimbo skirt" && player.upperGarment != UndergarmentLib.NOTHING && flags[kFLAGS.TIMES_ORGASM_TITS] > 10) {
+		outputText("\nThe pressure building in your [breasts] becomes unbearable. Hastily, you take off your " + player.upperGarmentName + " and start teasing your nipples. ");
+		if (kGAMECLASS.bimboProgress.ableToProgress()) {
+			kGAMECLASS.bimboProgress.titsOrgasm();
+			
+		}
+		inventory.takeItem(player.setUndergarment(UndergarmentLib.NOTHING, 0), playerMenu);
+		return true;
+	}
+	//Unequip shield if you're wielding a large weapon.
+	if (player.weaponPerk == "Large" && player.shield != ShieldLib.NOTHING) {
+		outputText("Your current weapon requires the use of two hands. As such, your shield has been unequipped automatically. ");
+		inventory.takeItem(player.setShield(ShieldLib.NOTHING), playerMenu);
+		return true;
 	}
 	// update cock type as dog/fox depending on whether the player resembles one more then the other.
 	// Previously used to be computed directly in cockNoun, but refactoring prevents access to the Player class when in cockNoun now.
@@ -759,12 +508,16 @@ public function goNext(time:Number, needNext:Boolean):Boolean  {
 		}
 		
 	}	
-	statScreenRefresh();
-	if (needNext) {
-		doNext(1);
+	if (prison.trainingFeed.prisonCaptorFeedingQuestTrainingExists() && prison.trainingFeed.prisonCaptorFeedingQuestTrainingIsTimeUp() && rand(100) < (flags[kFLAGS.PRISON_CAPTURE_CHANCE] + player.obey / 4) && !inDungeon && !inRoomedDungeon && !prison.inPrison && !ingnam.inIngnam) {
+		prison.goBackToPrisonBecauseQuestTimeIsUp();
 		return true;
 	}
-	eventParser(1);
+	statScreenRefresh();
+	if (needNext) {
+		doNext(playerMenu);
+		return true;
+	}
+	playerMenu();
 	return false;
 }
 
@@ -776,94 +529,17 @@ public function cheatTime(time:Number, needNext:Boolean = false):void {
 	if (model.time.minutes > 59) {
 		timeQ++;
 		model.time.minutes -= 60;
-		goNext(timeQ, needNext);
+		if (!buttonIsVisible(0)) goNext(timeQ, needNext);
 	}
 	time = Math.floor(time);
 	//Advance hours
 	while(time > 0) {
 		time--;
 		model.time.hours++;
-		if(model.time.hours > 23) {
+		if (model.time.hours > 23) {
 			model.time.days++;
 			model.time.hours = 0;
 		}
 	}
 	statScreenRefresh();
-}
-
-public function growHair(amount:Number = .1):Boolean {
-	//Grow hair!
-	temp = player.hairLength;
-	player.hairLength += amount;
-	if(player.hairLength > 0 && temp == 0) {
-		outputText("\n<b>You are no longer bald.  You now have " + hairDescript() + " coating your head.\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 1 && temp < 1) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 3 && temp < 3) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 6 && temp < 6) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 10 && temp < 10) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 16 && temp < 16) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 26 && temp < 26) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 40 && temp < 40) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.hairLength >= 40 && player.hairLength >= player.tallness && temp < player.tallness) {
-		outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + hairDescript() + ".\n</b>", false);
-		return true;
-	}
-	return false;
-}
-
-public function growBeard(amount:Number = .1):Boolean {
-	//Grow beard!
-
-	var tempBeard:Number = player.beardLength;
-	player.beardLength += amount;
-
-	if(player.beardLength > 0 && tempBeard == 0) {
-		outputText("\n<b>You feel a tingling in your cheeks and chin.  You now have " + beardDescript() + " coating your cheeks and chin.\n</b>", false);
-		return true;
-	}
-	else if(player.beardLength >= 0.2 && tempBeard < 0.2) {
-		outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + beardDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.beardLength >= 0.5 && tempBeard < 0.5) {
-		outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + beardDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.beardLength >= 1.5 && tempBeard < 1.5) {
-		outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + beardDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.beardLength >= 3 && tempBeard < 3) {
-		outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + beardDescript() + ".\n</b>", false);
-		return true;
-	}
-	else if(player.beardLength >= 6 && tempBeard < 6) {
-		outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + beardDescript() + ".\n</b>", false);
-		return true;
-	}
-
-	return false;
 }

@@ -1,6 +1,8 @@
 package classes.Scenes.Areas.Bog
 {
 	import classes.*;
+	import classes.display.SpriteDb;
+	import classes.internals.*;
 
 	public class ChameleonGirl extends Monster
 	{
@@ -10,7 +12,7 @@ package classes.Scenes.Areas.Bog
 			this.weaponName = "tongue";
 			this.weaponVerb = "tongue-slap";
 			this.weaponAttack = 10;
-			createStatusAffect(StatusAffects.Attacks, 1, 0, 0, 0);
+			createStatusEffect(StatusEffects.Attacks, 1, 0, 0, 0);
 			eAttack();
 			this.weaponAttack = 30;
 			this.weaponName = "claws";
@@ -22,17 +24,18 @@ package classes.Scenes.Areas.Bog
 		public function chameleonClaws():void
 		{
 			//Blind dodge change
-			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 1) {
-				outputText(capitalA + short + " completely misses you with a blind claw-attack!\n", false);
+			if (hasStatusEffect(StatusEffects.Blind) && rand(3) < 1) {
+				outputText(capitalA + short + " completely misses you with a blind claw-attack!\n");
 			}
 			//Evade:
-			else if (game.combatMiss() || game.combatEvade() || game.combatFlexibility() || game.combatMisdirect()) outputText("The chameleon girl's claws slash towards you, but you lean away from them and they fly by in a harmless blur.");
+			else if (player.getEvasionRoll()) outputText("The chameleon girl's claws slash towards you, but you lean away from them and they fly by in a harmless blur.");
 			//Get hit
 			else {
 				var damage:Number = int((str + weaponAttack) - rand(player.tou));
 				if (damage > 0) {
-					damage = player.takeDamage(damage);
-					outputText("The chameleon swings her arm at you, catching you with her claws.  You wince as they scratch your skin, leaving thin cuts in their wake. (" + damage + ")");
+					
+					outputText("The chameleon swings her arm at you, catching you with her claws.  You wince as they scratch your skin, leaving thin cuts in their wake. ");
+					damage = player.takeDamage(damage, true);
 				}
 				else outputText("The chameleon swings her arm at you, catching you with her claws.  You defend against the razor sharp attack.");
 			}
@@ -43,22 +46,23 @@ package classes.Scenes.Areas.Bog
 		public function rollKickClawWhatTheFuckComboIsThisShit():void
 		{
 			//Blind dodge change
-			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 1) {
-				outputText(capitalA + short + " completely misses you with a blind roll-kick!\n", false);
+			if (hasStatusEffect(StatusEffects.Blind) && rand(3) < 1) {
+				outputText(capitalA + short + " completely misses you with a blind roll-kick!\n");
 			}
 			//Evade:
-			else if (game.combatMiss() || game.combatEvade() || game.combatFlexibility() || game.combatMisdirect()) {
+			else if (player.getEvasionRoll()) {
 				var damage2:Number = 1 + rand(10);
-				damage2 = game.doDamage(damage2);
-				outputText("The chameleon girl leaps in your direction, rolls, and kicks at you.  You sidestep her flying charge and give her a push from below to ensure she lands face-first in the bog. (" + damage2 + ")");
-
+				outputText("The chameleon girl leaps in your direction, rolls, and kicks at you.  You sidestep her flying charge and give her a push from below to ensure she lands face-first in the bog. ");
+				damage2 = game.combat.doDamage(damage2, true);
+				outputText("<b>(<font color=\"#800000\">" + damage2 + "</font>)</b>");
 			}
 			//Get hit
 			else {
 				var damage:Number = int((str + weaponAttack) - rand(player.tou) - player.armorDef) + 25;
 				if (damage > 0) {
-					damage = player.takeDamage(damage);
-					outputText("The chameleon leaps in your direction, rolls, and kicks you square in the shoulder as she ascends, sending you reeling.  You grunt in pain as a set of sharp claws rake across your chest. (" + damage + ")");
+					
+					outputText("The chameleon leaps in your direction, rolls, and kicks you square in the shoulder as she ascends, sending you reeling.  You grunt in pain as a set of sharp claws rake across your chest. ");
+					damage = player.takeDamage(damage, true);
 				}
 				else outputText("The chameleon rolls in your direction and kicks up at your chest, but you knock her aside without taking any damage..");
 			}
@@ -67,7 +71,7 @@ package classes.Scenes.Areas.Bog
 
 		override protected function performCombatAction():void
 		{
-			game.spriteSelect(89);
+			game.spriteSelect(SpriteDb.s_chameleon);
 			var select:int = rand(3);
 			if (select == 0) rollKickClawWhatTheFuckComboIsThisShit();
 			else if (select == 1) chameleonTongueAttack();
@@ -84,8 +88,8 @@ package classes.Scenes.Areas.Bog
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
 			if (pcCameWorms) {
-				outputText("\n\nThe chameleon girl recoils.  \"<i>Ew, gross!</i>\" she screetches as she runs away, leaving you to recover from your defeat alone.");
-				game.cleanupAfterCombat();
+				outputText("\n\nThe chameleon girl recoils.  \"<i>Ew, gross!</i>\" she screeches as she runs away, leaving you to recover from your defeat alone.");
+				game.combat.cleanupAfterCombat();
 			} else {
 				game.bog.chameleonGirlScene.loseToChameleonGirl();
 			}

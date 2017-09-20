@@ -1,7 +1,8 @@
 package classes.Scenes.NPCs
 {
 	import classes.*;
-	import classes.internals.WeightedDrop;
+import classes.StatusEffects.Combat.AnemoneVenomDebuff;
+import classes.internals.WeightedDrop;
 
 	public class Anemone extends Monster
 	{
@@ -9,7 +10,7 @@ package classes.Scenes.NPCs
 
 		override public function eAttack():void
 		{
-			outputText("Giggling playfully, the anemone launches several tentacles at you.  Most are aimed for your crotch, but a few attempt to caress your chest and face.\n", false);
+			outputText("Giggling playfully, the anemone launches several tentacles at you.  Most are aimed for your crotch, but a few attempt to caress your chest and face.\n");
 			super.eAttack();
 		}
 
@@ -23,35 +24,8 @@ package classes.Scenes.NPCs
 		public function applyVenom(str:Number = 1):void
 		{
 			//First application
-			if (player.findStatusAffect(StatusAffects.AnemoneVenom) < 0) player.createStatusAffect(StatusAffects.AnemoneVenom, 0, 0, 0, 0);
-			//Gain some lust
-			game.dynStats("lus", (2 * str));
-
-			//Loop through applying 1 point of venom at a time.
-			while (str > 0) {
-				str--;
-				//Str bottommed out, convert to lust
-				if (player.str < 2) game.dynStats("lus", 2);
-				//Lose a point of str.
-				else {
-					showStatDown("str");
-					// strDown.visible = true;
-					// strUp.visible = false;
-					player.str--;
-					player.addStatusValue(StatusAffects.AnemoneVenom, 1, 1);
-				}
-				//Spe bottomed out, convert to lust
-				if (player.spe < 2) game.dynStats("lus", 2);
-				//Lose a point of spe.
-				else {
-					showStatDown("spe");
-					// speDown.visible = true;
-					// speUp.visible = false;
-					player.spe--;
-					player.addStatusValue(StatusAffects.AnemoneVenom, 2, 1);
-				}
-			}
-			game.statScreenRefresh();
+			var ave:AnemoneVenomDebuff = player.createOrFindStatusEffect(StatusEffects.AnemoneVenom) as AnemoneVenomDebuff;
+			ave.applyEffect(str);
 		}
 
 
@@ -62,9 +36,9 @@ package classes.Scenes.NPCs
 
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
-			if(pcCameWorms){
+			if (pcCameWorms){
 				outputText("\n\nYour foe doesn't seem to mind at all...");
-				doNext(game.endLustLoss);
+				doNext(game.combat.endLustLoss);
 			} else {
 				game.anemoneScene.loseToAnemone();
 			}
@@ -72,7 +46,7 @@ package classes.Scenes.NPCs
 
 		override public function outputAttack(damage:int):void
 		{
-			outputText("You jink and dodge valiantly but the tentacles are too numerous and coming from too many directions.  A few get past your guard and caress your skin, leaving a tingling, warm sensation that arouses you further.", false);
+			outputText("You jink and dodge valiantly but the tentacles are too numerous and coming from too many directions.  A few get past your guard and caress your skin, leaving a tingling, warm sensation that arouses you further.");
 		}
 
 		public function Anemone()
@@ -84,11 +58,11 @@ package classes.Scenes.NPCs
 			// this.plural = false;
 			this.createCock(7,1,CockTypesEnum.ANEMONE);
 			this.createVagina(false, VAGINA_WETNESS_SLICK, VAGINA_LOOSENESS_LOOSE);
-			this.createStatusAffect(StatusAffects.BonusVCapacity, 5, 0, 0, 0);
+			this.createStatusEffect(StatusEffects.BonusVCapacity, 5, 0, 0, 0);
 			createBreastRow(Appearance.breastCupInverse("B"));
 			this.ass.analLooseness = ANAL_LOOSENESS_NORMAL;
 			this.ass.analWetness = ANAL_WETNESS_DRY;
-			this.createStatusAffect(StatusAffects.BonusACapacity,10,0,0,0);
+			this.createStatusEffect(StatusEffects.BonusACapacity,10,0,0,0);
 			this.tallness = 5*12+5;
 			this.hipRating = HIP_RATING_CURVY;
 			this.buttRating = BUTT_RATING_NOTICEABLE;

@@ -1,8 +1,9 @@
-﻿package classes.Scenes.Dungeons.D3 
+package classes.Scenes.Dungeons.D3 
 {
 	import classes.Appearance;
 	import classes.Monster;
-	import classes.StatusAffects;
+	import classes.StatusEffects;
+	import classes.PerkLib;
 	import classes.GlobalFlags.kGAMECLASS;
 	import classes.GlobalFlags.kFLAGS;
 	
@@ -50,13 +51,13 @@
 			
 			checkMonster();
 			
-			createStatusAffect(StatusAffects.TentagrappleCooldown, 10, 0, 0, 0);
+			createStatusEffect(StatusEffects.TentagrappleCooldown, 10, 0, 0, 0);
 		}
 		
 		private function cleanupEffects():void
 		{
-			if (player.findStatusAffect(StatusAffects.Tentagrappled)) player.removeStatusAffect(StatusAffects.Tentagrappled);
-			if (player.findStatusAffect(StatusAffects.ShowerDotEffect)) player.removeStatusAffect(StatusAffects.ShowerDotEffect);
+			if (player.hasStatusEffect(StatusEffects.Tentagrappled)) player.removeStatusEffect(StatusEffects.Tentagrappled);
+			if (player.hasStatusEffect(StatusEffects.ShowerDotEffect)) player.removeStatusEffect(StatusEffects.ShowerDotEffect);
 		}
 		
 		override public function defeated(hpVictory:Boolean):void
@@ -79,16 +80,16 @@
 			
 			// Her damage is all lust but in low amounts. This is something of a marathon fight.
 			
-			if (findStatusAffect(StatusAffects.TentagrappleCooldown) >= 0)
+			if (hasStatusEffect(StatusEffects.TentagrappleCooldown))
 			{
-				addStatusValue(StatusAffects.TentagrappleCooldown, 1, -1);
-				if (statusAffectv1(StatusAffects.TentagrappleCooldown) <= 0)
+				addStatusValue(StatusEffects.TentagrappleCooldown, 1, -1);
+				if (statusEffectv1(StatusEffects.TentagrappleCooldown) <= 0)
 				{
-					removeStatusAffect(StatusAffects.TentagrappleCooldown);
+					removeStatusEffect(StatusEffects.TentagrappleCooldown);
 				}
 			}
 			
-			if (player.findStatusAffect(StatusAffects.ShowerDotEffect) >= 0)
+			if (player.hasStatusEffect(StatusEffects.ShowerDotEffect))
 			{
 				showerDotEffect();
 				
@@ -99,11 +100,11 @@
 			{
 				vineHeal();
 			}
-			else if (findStatusAffect(StatusAffects.TentagrappleCooldown) < 0)
+			else if (!hasStatusEffect(StatusEffects.TentagrappleCooldown))
 			{
 				tentagrapple();
 			}
-			else if (player.findStatusAffect(StatusAffects.GardenerSapSpeed) < 0 && this.findStatusAffect(StatusAffects.VineHealUsed) >= 0)
+			else if (!player.hasStatusEffect(StatusEffects.GardenerSapSpeed) && this.hasStatusEffect(StatusEffects.VineHealUsed))
 			{
 				sapSpeed();
 			}
@@ -132,12 +133,12 @@
 		
 		private function vineHeal():void
 		{
-			if (findStatusAffect(StatusAffects.VineHealUsed) < 0)
+			if (!hasStatusEffect(StatusEffects.VineHealUsed))
 			{
-				createStatusAffect(StatusAffects.VineHealUsed, 0, 0, 0, 0);
+				createStatusEffect(StatusEffects.VineHealUsed, 0, 0, 0, 0);
 			}
 			
-			if (findStatusAffect(StatusAffects.Stunned) < 0)
+			if (!hasStatusEffect(StatusEffects.Stunned))
 			{
 				outputText("Tipping herself backward, the succubus gardener lets herself pitch into the writhing tendrils behind her, her mouth opened welcomingly. The tentacles gently catch her, and rather than ravishing her vulnerable form, they merely gather above her parted lips, dribbling thick flows of pink slime. Her throat bobs as she swallows, her injuries vanishing in seconds. The vines push her back up onto her feet. She's smiling a little dopily.");
 				
@@ -175,20 +176,24 @@
 				
 				if (this.lustVuln <= 0.3) outputText(" Whatever is in that healing nectar must be weakening her self-control.");
 			}
-			
-			this.HP = this.eMaxHP();
+
+this.HP = this.maxHP();
 			this.lustVuln += 0.3;
 			this.fatigue += 5;
+			if (fatigue >= 100) { //Exhausted!
+				outputText(" <b>It appears that the vines have run out of pink slime.</b>");
+				fatigue = 100;
+			}
 		}
 		
 		private function tentagrapple():void
 		{
-			createStatusAffect(StatusAffects.TentagrappleCooldown, 10, 0, 0, 0);
+			createStatusEffect(StatusEffects.TentagrappleCooldown, 10, 0, 0, 0);
 			
 			//Used once every ten rounds
 			outputText("A web of interwoven vines lashes out from behind the succubus, somehow leaving her untouched by the wave of advancing greenery. They're trying to grab you!");
 			
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect())
+			if (player.getEvasionRoll())
 			{
 				//Dodge
 				outputText(" You slip aside at the last moment, barely avoiding being wrapped in the squirming mass. It snaps back, perhaps at the limits of its reach, leaving you once more eye to eye with the alluring gardener.");
@@ -197,7 +202,7 @@
 			{
 				//Do not dodddddddggggeee
 				outputText(" You twist to the side, but one snags you by the wrist. Another loops around your [leg], and an avalanche of slime-oozing tentacles falls across the rest of you, wrapping you up in snug coils. Their grip is equal parts iron grip and lover's caress. You'd better struggle free before they really start to work on you!");
-				player.createStatusAffect(StatusAffects.Tentagrappled, 0, 0, 0, 0);
+				player.createStatusEffect(StatusEffects.Tentagrappled, 0, 0, 0, 0);
 			}
 		}
 		
@@ -205,13 +210,13 @@
 		{
 			clearOutput();
 			
-			var numRounds:int = player.statusAffectv1(StatusAffects.Tentagrappled);
+			var numRounds:int = player.statusEffectv1(StatusEffects.Tentagrappled);
 			
 			if (rand(player.str) > this.str / (1 + (numRounds / 2)))
 			{
 				outputText("You scrabble desperately against the tentacles enveloping your body, pulling against the cast-iron grip around your limbs. You tug against them again and again, and with one final mighty heave, you slip free of their grasp!");
 				
-				player.removeStatusAffect(StatusAffects.Tentagrappled);
+				player.removeStatusEffect(StatusEffects.Tentagrappled);
 				
 				combatRoundOver();
 			}
@@ -228,10 +233,12 @@
 					outputText(". You're intimately aware of the vegetative masses pressing down on you from every angle, lavishing you with attentions so forceful that they threaten to squeeze the very breathe from your body. It's impossible to ignore. You do your best to breathe and ignore the undulated affections, but even you can't deny the way that it makes your heart beat faster.");
 				}
 				
-				player.addStatusValue(StatusAffects.Tentagrappled, 1, 1);
-				player.takeDamage(75 + rand(15));
-				game.dynStats("lus+", 3 + rand(3));
-				if (flags[kFLAGS.PC_FETISH] >= 2) game.dynStats("lus+", 5);
+				player.addStatusValue(StatusEffects.Tentagrappled, 1, 1);
+				if (player.findPerk(PerkLib.Juggernaut) < 0 && armorPerk != "Heavy") {
+					player.takeDamage(75 + rand(15));
+				}
+				player.takeLustDamage(3 + rand(3), true);
+				if (flags[kFLAGS.PC_FETISH] >= 2) player.takeLustDamage(7, true);
 				combatRoundOver();
 			}
 		}
@@ -254,9 +261,11 @@
 				outputText("You're intimately aware of the vegetative masses pressing down on you from every angle, lavishing you with attentions so forceful that they threaten to squeeze the very breathe from your body. It's impossible to ignore. You do your best to breathe and ignore the undulated affections, but even you can't deny the way that it makes your heart beat faster.");
 			}
 	
-			player.addStatusValue(StatusAffects.Tentagrappled, 1, 1);
-			player.takeDamage(75 + rand(15));
-			game.dynStats("lus+", 3 + rand(3));
+			player.addStatusValue(StatusEffects.Tentagrappled, 1, 1);
+			if (player.findPerk(PerkLib.Juggernaut) < 0 && armorPerk != "Heavy") {
+				player.takeDamage(75 + rand(15));
+			}
+			player.takeLustDamage(3 + rand(3), true);
 			combatRoundOver();
 		}
 		
@@ -270,7 +279,7 @@
 			
 			for (var i:int = 0; i < 10; i++)
 			{
-				if (!(combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()))
+				if (!(player.getEvasionRoll()))
 				{
 					damage += 2 + rand(1 + player.lib / 20) + rand(1 + player.sens / 20);
 				}
@@ -279,7 +288,7 @@
 			if (damage >= 0)
 			{
 				var sL:Number = player.lust;
-				game.dynStats("lus+", damage);
+				player.takeLustDamage(damage, true);
 				sL = Math.round(player.lust - sL);
 				outputText(" The sinuous plant-based tentacles lash at you like a dozen tiny whips! Preparing for stinging pain, you're somewhat taken aback when they pull back at the last moment, sensually caressing your most sensitive places! (" + sL + ")");
 			}
@@ -293,7 +302,7 @@
 		{
 			outputText("The succubus lifts her hands up in the air, saying, <i>“Why not taste a sampling of the pleasures I offer?”</i> Above her, a canopy of corrupt, snarled greenery forms, oozing unmistakable sexual fluids - both male and female. Splatters of jism and pussy juice fall like curtains of corruptive rain, their scent lacing the air with their heady musk.");
 	
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect())
+			if (player.getEvasionRoll())
 			{
 			//Dodge
 				outputText(" Somehow, you manage to twist out from under the organic raincloud without getting stained by a single drop, though your breath has quickened, and not just from the physical effort.");
@@ -301,10 +310,10 @@
 			else
 			{
 				//Fail
-				if (player.findStatusAffect(StatusAffects.ShowerDotEffect) < 0)
-					player.createStatusAffect(StatusAffects.ShowerDotEffect, 3, 0, 0, 0);
+				if (!player.hasStatusEffect(StatusEffects.ShowerDotEffect))
+					player.createStatusEffect(StatusEffects.ShowerDotEffect, 3, 0, 0, 0);
 				else
-					player.addStatusValue(StatusAffects.ShowerDotEffect, 1, 3);
+					player.addStatusValue(StatusEffects.ShowerDotEffect, 1, 3);
 					
 				outputText(" You try your best to avoid the onslaught of off-white, but your efforts are in vain. Slick wetness splatters into and around you, making the ground itself so slippery that you nearly topple over. Unfortunately, the treacherous footing gives the gardener's plants plenty of time to work their foul work, layering you mixed slime until you're dripping. You groan in disappointment and building arousal, uncomfortably aware of the way the juices are exciting you as you they soak into your skin.");
 			}
@@ -312,32 +321,32 @@
 		
 		private function showerDotEffect():void
 		{
-			game.dynStats("lus+", 2 + rand(2));
+			player.takeLustDamage(2 + rand(2), true);
 			
-			player.addStatusValue(StatusAffects.ShowerDotEffect, 1, -1);
+			player.addStatusValue(StatusEffects.ShowerDotEffect, 1, -1);
 			
 				//Dot effect
-			if (player.lust < 50) outputText("The tentacles' sex-juices are still covering you - still slowly arousing you. You've got a good handle on it for now.\n\n");
-			else if (player.lust < 60) 
+			if (player.lust100 < 50) outputText("The tentacles' sex-juices are still covering you - still slowly arousing you. You've got a good handle on it for now.\n\n");
+			else if (player.lust100 < 60)
 			{
 				outputText("You try to wipe some of the fragrant seed from your palm, but all you succeed in doing is smearing it into your [hips].");
 				if (player.cor < 50) outputText(" You're ashamed to admit");
 				else outputText(" You're a little irritated to admit"); 
 				outputText(" that it's starting to feel really good.\n\n");
 			}
-			else if (player.lust < 70)
+			else if (player.lust100 < 70)
 			{
 				outputText("You groan at the warm slipperiness enveloping your [skinFurScales] as the tainted tentacles' fluids go to work on you. There's nothing you can do but try to endure it. If only it didn't feel so... hot to be drenched in. If you wind up losing, you hope she'll do this again....\n\n");
 			}
-			else if (player.lust < 80)
+			else if (player.lust100 < 80)
 			{
 				outputText("You whimper as the insidious plant-sperm works on your vulnerable " + player.skinDesc + ", building pernicious desires in tiny, insistent increments. It's getting harder to focus... harder not to think about how good all those tentacles would feel in you and on you, caressing your most intimate places.\n\n");
 			}
-			else if (player.lust < 90)
+			else if (player.lust100 < 90)
 			{
 				outputText("You shudder in place, stumbling dazedly as your ardor rises to a fever pitch. Soon, you're going to wind up too turned-on to resist, and when that happens, those tentacles are going to take you. The worst part? It's starting to sound really, really... really good to you. Not struggling, no tension... just giving in to what your body craves and loving it.\n\n");
 			}
-			else if (player.lust < 100)
+			else if (player.lust100 < 100)
 			{
 				outputText("Ohhhh, you're close now. You can feel the need hammering inside of you, soaking in through your [skinFurScales] to stoke the fires between your [legs] into a blazing inferno, one you couldn't resist even if you wanted to. Then... then you'll be free to cum. You shake your head. Gotta hold it together");
 				if (player.hasCock())
@@ -358,9 +367,9 @@
 				return;
 			}
 			
-			if (player.statusAffectv1(StatusAffects.ShowerDotEffect) < 0)
+			if (player.statusEffectv1(StatusEffects.ShowerDotEffect) < 0)
 			{
-				player.removeStatusAffect(StatusAffects.ShowerDotEffect);
+				player.removeStatusEffect(StatusEffects.ShowerDotEffect);
 				outputText("<b>The lust-inducing effects of the plant-spunk feel like they've dissipated...</b>\n\n");
 			}
 		}
@@ -391,24 +400,20 @@
 			
 			outputText("\n\nThe lactic adhesive effectively slows your movements. You won't be dodging around quite so nimbly anymore, but at least you get to watch the succubus moan and twist, kneading the last few golden droplets from her engorged tits. She licks a stray strand from her finger while watching you, smiling. <i>“Ready to give up yet?”</i>");
 			
-			// 20%?
-			var speedSapped:Number = player.spe * 0.2;
-			player.spe -= speedSapped;
-			player.createStatusAffect(StatusAffects.GardenerSapSpeed, speedSapped, 0, 0, 0);
-			kGAMECLASS.mainView.statsView.showStatDown( 'spe' );
+			player.createOrFindStatusEffect(StatusEffects.GardenerSapSpeed);
 		}
 		
 		private function lustAuraCast():void
 		{
-			outputText("The demoness blinks her eyes closed and knits her eyebrows in concentration.  The red orbs open wide and she smiles, licking her lips.   The air around her grows warmer, and muskier, as if her presence has saturated it with lust.", false);
-			if (this.findStatusAffect(StatusAffects.LustAura) >= 0) 
+			outputText("The demoness blinks her eyes closed and knits her eyebrows in concentration.  The red orbs open wide and she smiles, licking her lips.   The air around her grows warmer, and muskier, as if her presence has saturated it with lust.");
+			if (this.hasStatusEffect(StatusEffects.LustAura))
 			{
-				outputText("  Your eyes cross with unexpected feelings as the taste of desire in the air worms its way into you.  The intense aura quickly subsides, but it's already done its job.", false);
-				game.dynStats("lus", (8+int(player.lib/20 + player.cor/25)));
+				outputText("  Your eyes cross with unexpected feelings as the taste of desire in the air worms its way into you.  The intense aura quickly subsides, but it's already done its job.");
+				player.takeLustDamage((8+int(player.lib/20 + player.cor/25)), true);
 			}
 			else 
 			{
-				createStatusAffect(StatusAffects.LustAura,0,0,0,0);
+				createStatusEffect(StatusEffects.LustAura,0,0,0,0);
 			}
 		}
 		
@@ -425,7 +430,8 @@
 				outputText("\n\nIt hangs there for a moment while the succubus yanks your mouth open, just in time to receive the undoubtedly drugged jism. It practically sizzles on your tongue, tasting of almonds and walnuts with a distinctly fruity aftertaste. Your mouth gulps it down automatically, and with slow-dawning comprehension, you understand how the succubus could be so obsessed with these plants. Your groin heats eagerly as the plant spunk absorbs into your system. Your pupils dilate. Gods, it feels good!");
 				
 				outputText("\n\nYou barely even realize that the temptress has stepped away. How can you fight this?");
-				game.dynStats("lus", (8 + int(player.lib / 20 + player.cor / 25)), "cor+", 5);
+				player.takeLustDamage(8 + int(player.lib / 20 + player.cor / 25), true);
+				game.dynStats("cor+", 5);
 			}
 			else
 			{

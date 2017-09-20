@@ -12,7 +12,7 @@ package classes.Items.Armors
 	public final class GooArmor extends Armor {
 		
 		public function GooArmor() {
-			super("GooArmr","GooArmr","goo armor","Valeria, the goo-girl armor",22,1,"This shining suit of platemail is more than just platemail - it houses the goo-girl, Valeria!  Together, they provide one tough defense, but you had better be okay with having goo handling your junk while you fight if you wear this! But the real question is, how did you manage to get this into your inventory? Tsk, tsk. \n\nType: Heavy armor \nDefense: 22 \nBase value: 1 \nSpecial: Regeneration + Increased Fantasize");
+			super("GooArmr","GooArmr","goo armor","Valeria, the goo-girl armor",22,1,"This shining suit of platemail is more than just platemail - it houses the goo-girl, Valeria!  Together, they provide one tough defense, but you had better be okay with having goo handling your junk while you fight if you wear this!","Heavy");
 		}
 		
 		override public function useText():void { //Produces any text seen when equipping the armor normally
@@ -43,7 +43,7 @@ package classes.Items.Armors
 		}
 		
 		override public function get def():Number { 
-			if (game.flags[kFLAGS.NEW_GAME_PLUS_LEVEL] > 0 || game.flags[kFLAGS.HARDCORE_MODE] > 0 || game.flags[kFLAGS.HUNGER_ENABLED] >= 1) {
+			if (game.valeria.valeriaFluidsEnabled()) {
 				if (game.flags[kFLAGS.VALERIA_FLUIDS] < 50) {
 					return 15 + int(game.flags[kFLAGS.VALERIA_FLUIDS] / 5);
 				}

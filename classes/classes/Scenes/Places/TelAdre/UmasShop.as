@@ -55,16 +55,13 @@
 			outputText("You make your way to Uma's shop.  It's close to Loppe's house");
 			
 			// Added some shit for variance if the players not (presumably) sexed up Loppe too much in the past.
-			if (flags[kFLAGS.LOPPE_TIMES_SEXED] <= 3)
-			{
+			if (flags[kFLAGS.LOPPE_TIMES_SEXED] <= 3 && flags[kFLAGS.LOPPE_PC_MET_UMA] == 0) {
 				outputText(" but you've never noticed the quaint storefront before.  ");
 			}
-			else if (flags[kFLAGS.LOPPE_TIMES_SEXED] <= 8)
-			{
+			else if (flags[kFLAGS.LOPPE_TIMES_SEXED] <= 8) {
 				outputText(" and the homely building has caught your eye once or twice in the past.  ");
 			}
-			else 
-			{
+			else  {
 				outputText(" and from there you've seen the humble exterior many times.  ");
 			}
 			
@@ -114,7 +111,7 @@
 			// Loppe's revelation about your apparant relationship comes as something of a shock to you, but you try - and fail - to hide the suprise from your face." etc
 
 			outputText("Uma looks between the two of you with interest.  \"<i>[Boyfriend] huh?  So it's you whom I have to thank for the broken springs in Loppe's bed?</i>\" Uma says with a smile, offering you a hand.\n\n");
-			outputText("You give her a winning smile back and accept it, wondering if you should prepare yourself for a macho-type squeezing match.  Even as you shake her hand, you apologise, telling her it wasn't your intention to make Loppe's bed need replacement springs.\n\n");
+			outputText("You give her a winning smile back and accept it, wondering if you should prepare yourself for a macho-type squeezing match.  Even as you shake her hand, you apologize, telling her it wasn't your intention to make Loppe's bed need replacement springs.\n\n");
 			outputText("Loppe and Uma look at each other and then they both burst out laughing.  \"<i>Oh, sugar... you're so silly,</i>\" Loppe says.  \"<i>[name], I learned a long time ago that Loppe's beds must be both battle and waterproof.  So, her bed is custom made; you could have an army of minotaurs stomp through and it wouldn't even bend.</i>\" Uma says with a grin.\n\n");
 			outputText("You give them your best confused expression, realising that Uma and her daughter must have similar tastes in humor; she was evidently joking with you.\n\n");
 			outputText("Uma is the first to break the awkwardness.  \"<i>Well then, care to give me the details?  How did you two meet?  When did you start fooling around?  Has my daughter worked so hard you had to seek a healer yet?</i>\"\n\n");
@@ -140,9 +137,7 @@
 			outputText("\"<i>Yeah, she is nice, she's just a little... quirky sometimes,</i>\" Loppe agrees.  \"<i>And I think she likes you too, sugar; nice work.</i>\"  She grins, patting you on the shoulder.\n\n");
 			outputText("You tell her that you're glad, but you have other things to do, so you'll catch her some other time. \"<i>Alright sugar, see you around,</i>\" Loppe announces as she turns and walks away, back in the direction of her home, leaving you to start heading back to what passes for yours in this world.\n\n");
 			
-			outputText("<b>Uma's Clinic is now available from the Tel'Adre shops menu!</b>");
-			
-			
+			outputText("<b>You now have discount on Uma's services!</b>");
 
 			// Flag the shop visit
 			// There's still a flag left over from Loppe's initial content that I dont' think is actually used.
@@ -163,12 +158,28 @@
 			clearOutput();
 			
 			// Hide the stuff that dun make no sense if you're dropping back from a menu inside the clinic
-			if (!returnedTo)
+			if (flags[kFLAGS.LOPPE_PC_MET_UMA] == 0) {
+				outputText("You wander around Tel'Adre for a good while until something has caught your eyes. The exterior is unlike anything you've seen before. ");
+				outputText("\"Kemono's Oriental Clinic\" is written on a wooden board above the entryway. You open the door and head inside.\n\n");
+				outputText("The strange internal hallway appears strange, but the waiting room outside is light and airy.  Windows are adorned with multiple elaborate windchimes, which tinkle and clatter softly as a cooling breeze drifts through the house. A huge shelf dominates one wall, covered in - you find yourself double-checking - what look like tiny, miniature versions of trees.  A nondescript statue-fountain stands in one corner, water welling from its tip and flowing gently down its sides to create a calming sound.  In another corner, there is a small garden of colorful, polished stones and soft white sand.  Multiple lushly-cushioned chairs complete the room, obviously a waiting room - a dense bead curtain cordons off a doorway leading deeper inside the building, and " + (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1 ? "Loppe's mother" : "the owner") + " must clearly lie beyond.\n\n");
+				outputText("A bipedal humanoid horse with unmistakable human features walks over to greet you. She's huge, easily seven feet tall, certainly far bigger than the half-horse who brought you here, with full, round breasts and wide womanly hips clearly delineated by the strange dress that she wears, a rich blue with a pattern of white snowflakes on it.  She looks "); 
+				// Assuming Uma is ~7' tall == 84". 6" leeway for the variants or more? PAGING FENOXO!
+				if (player.tallness < 78)
+					outputText("down at you ");
+				else if (player.tallness < 90)
+					outputText("straight at you ");
+				else
+					outputText("up at you ");
+				outputText("with a soft expression; her features are maternal and friendly, but there's a playful twinkle in her eye that makes her look younger than she really is. For all that, she's clearly a mature woman but still strong and attractive. Black hair, starting to go gray at the tips, is worn in a long, elegant braid, the end knotted around an elaborate butterfly hairpin. While her fur is a beautiful shade of chestnut brown, her large eyes are a deep brown, almost black. She casually flicks an equine ear in a manner that invites you to try her services.\n\n");
+				outputText("You introduce yourself to the equine woman. \"<i>Welcome. I'm Uma and I run this business. If you need massaging services, let me know,</i>\" Uma says.");
+				flags[kFLAGS.LOPPE_PC_MET_UMA] = 0.5;
+			}
+			else if (!returnedTo)
 			{
 				outputText("You decide to pay Uma a visit at the clinic, so you follow the way through the streets to the apparently humble clinic.  Once there, you open the door and enter.\n\n");
 				outputText("The interior of Uma's clinic is as calm and quiet as usual.  There don't seem to be any customers present at this moment, and you announce your presence by knocking gently on a counter.  The tall horse-woman walks softly out through the beaded curtain, giving you a friendly smile.\n\n");
-				outputText("\"<i>Why, if it isn't my little girl's special someone.  What brings you here, hmm?  Wanted to try my services?  A friendly little chat?  Or...</i>\" She saunters confidently over to you and gives you a knowing grin.  \"<i>I bet my loose-lipped little Loppe has hinted that I'm not currently seeing anybody, hmm?  Is that why you're here - you wanted to see how the mother measures up to the daughter?</i>\"\n\n"); 
-			
+				if (flags[kFLAGS.LOPPE_PC_MET_UMA] == 0) outputText("\"<i>Why, if it isn't my little girl's special someone.  What brings you here, hmm?  Wanted to try my services?  A friendly little chat?  Or...</i>\" She saunters confidently over to you and gives you a knowing grin.  \"<i>I bet my loose-lipped little Loppe has hinted that I'm not currently seeing anybody, hmm?  Is that why you're here - you wanted to see how the mother measures up to the daughter?</i>\"\n\n"); 
+				else outputText("\"<i>What brings you here, dear?  Wanted to try my services?  A friendly little chat?</i>\" She saunters confidently over to you and gives you a knowing smile.\n\n"); 
 				// ima change this to the minvalue required for sex scenes to be available methinks, or atleast lower it to around that bracket
 				if (player.femininity >= UMA_CONSIDER_PC_FEM)
 				{
@@ -198,13 +209,13 @@
 		{
 			if (noSex)
 			{
-				outputText("You sigh softly, but accept Uma's sexuality is the way it is and apologise for the problem.\n\n");
+				outputText("You sigh softly, but accept Uma's sexuality is the way it is and apologize for the problem.\n\n");
 				outputText("\"<i>Don't worry about that, it's nothing personal.  I just don't swing that way.  Although, if you were to make yourself a bit more feminine, I might consider it.  Maybe you could find yourself a nice little beauty salon somewhere?  I heard there are some treatments that can make you absolutely gorgeous.</i>\"\n\n");
 			}
 
 			menu();
 			addButton(0, "Massage", massageMenu);
-			addButton(1, "Acupunct.", acupunctureMenu);
+			addButton(1, "Acupuncture", acupunctureMenu);
 			addButton(2, "Talk", talkMenu);
 			
 			if (!noSex)
@@ -255,7 +266,7 @@
 		{
 			clearOutput();
 			
-			outputText("You apologise and tell Uma that you've changed your mind, you don't want a massage right now.\n\n");
+			outputText("You apologize and tell Uma that you've changed your mind, you don't want a massage right now.\n\n");
 			outputText("\"<i>Very well, dear.</i>\"  Uma takes the catalogue back.");
 			
 			menu();
@@ -381,14 +392,15 @@
 		public function massageMain(selectedMassage:int):void
 		{
 			clearOutput();
-			
 			outputText("The room is light, but not overwhelmingly bright, with cool breezes gently wafting through, tingling deliciously on your exposed [skin] and setting the chimes hanging from the rafters gently a-tinkle.  A number of large potted plants occupy the corners of the room, and there's even a tiny fountain with stones in it, the tumble of water over rocks creating a strangely soothing melody.  A small brazier produces a sweet, calming smell from incense burning in it.  The pride of the room is a sizable table, made from bamboo; it's covered in a white cloth, and has an upraised headboard with a hole in it that looks like it's big enough to fit your head through.\n\n");
-			outputText("\"<i>Before we get started, I'll have to ask you to hand over a few gems for my services, dear.  Even if you are my little Loppe's [boyfriend], this is still a business.</i>\"\n\n");
+			outputText("\"<i>Before we get started, I'll have to ask you to hand over a few gems for my services, dear." + (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1 ? " Even if you are my little Loppe's [boyfriend], this is still a business." : "") + "</i>\"\n\n");
 			outputText("You tell her that's alright, fishing in your belongings for the gems that the mare masseur needs for this particular service... which you remember she hasn't told you yet?\n\n");
-			outputText("Uma slaps her forehead.  \"<i>Sorry about that, dear.  Usually I charge 100 gems for this kind of service, but since you're my little horsey-hopper's [boyfriend], I'll give you a discount... how about 75 gems instead?</i>\"\n\n");
-
+			outputText("Uma slaps her forehead.  \"<i>Sorry about that, dear.  " + (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1 ? "Usually I charge 100 gems for this kind of service, but since you're my little horsey-hopper's [boyfriend], I'll give you a discount... how about 75 gems instead?" : "The usual price is 100 gems if that's okay with you?") + "</i>\"\n\n");
+			var massageCost:int = 100;
+			if (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1) massageCost -= 25;
+			
 			// Not enough cashmonies to pay for massage
-			if (player.gems < 75)
+			if (player.gems < massageCost)
 			{
 				outputText("You tell her that you don't have that many gems on you right now.\n\n");
 				outputText("Uma sighs and shakes her head.  \"<i>Sorry dear, but if you can't pay I can't treat you.</i>\"\n\n");
@@ -401,9 +413,9 @@
 			}
 			
 			outputText("You tell her that sounds fair, withdrawing the gems and handing them to her.\n\n");
-			player.gems -= 75;
+			player.gems -= massageCost;
 
-			outputText("\"<i>Thanks, dear,</i>\" Uma  beams, pocketing the gems and walking towards the table.  \"<i>Okay, get yourself stripped naked and lay down on the table, face up for me dear.</i>\"\n\n");
+			outputText("\"<i>Thanks, dear,</i>\" Uma beams, pocketing the gems and walking towards the table.  \"<i>Okay, get yourself stripped naked and lay down on the table, face up for me dear.</i>\"\n\n");
 			outputText("You promptly set about removing your [armorname], ");
 			
 			// If player is Exhibitionist
@@ -468,7 +480,7 @@
 	public static const MAX_MASSAGE_BONUS_DURATION:int = 24;			// Duration of the bonus
 		/**
 		 * Apply massage bonus. Bonuses are replaced when a new effect is placed on the player.
-		 * StatusAffects.UmasMassage for all bonuses
+		 * StatusEffects.UmasMassage for all bonuses
 		 * @param	selectedMassage
 		 */
 		public function applyMassageBonus(selectedMassage:int):void
@@ -479,13 +491,12 @@
 			}
 			else
 			{
-				var statIndex:int = player.findStatusAffect(StatusAffects.UmasMassage);
-				var bonusValue:*;
+				var bonusValue:Number;
 				
 				// Remove the old massage bonus if present
-				if (statIndex >= 0)
+				if (player.hasStatusEffect(StatusEffects.UmasMassage))
 				{
-					player.removeStatusAffect(StatusAffects.UmasMassage);
+					player.removeStatusEffect(StatusEffects.UmasMassage);
 				}
 				
 				if (selectedMassage == MASSAGE_RELIEF)
@@ -514,9 +525,9 @@
 					bonusValue = MASSAGE_POWER_BONUS;
 				}
 				
-				if (bonusValue != undefined)
+				if (bonusValue != 0)
 				{
-					player.createStatusAffect(StatusAffects.UmasMassage, selectedMassage, bonusValue, MAX_MASSAGE_BONUS_DURATION, 0);
+					player.createStatusEffect(StatusEffects.UmasMassage, selectedMassage, bonusValue, MAX_MASSAGE_BONUS_DURATION, 0);
 					flags[kFLAGS.UMA_TIMES_MASSAGED]++;
 				}
 			}
@@ -528,14 +539,10 @@
 		 */
 		public function updateBonusDuration(hours:int):void
 		{
-			var statIndex:int = player.findStatusAffect(StatusAffects.UmasMassage);
-			
-			if (statIndex >= 0)
-			{
-				player.statusAffect(statIndex).value3 -= hours;
-				
-				if (player.statusAffect(statIndex).value3 <= 0)
-				{
+			const effect:StatusEffectClass = player.statusEffectByType(StatusEffects.UmasMassage);
+			if (effect!=null) {
+				effect.value3 -= hours;
+				if (effect.value3 <= 0) {
 					bonusExpired();
 				}
 			}
@@ -548,7 +555,7 @@
 		{
 			outputText("\n<b>You groan softly as a feeling of increased tension washes over you, no longer as loose as you were before.  It looks like the effects of Uma's massage have worn off.</b>\n");
 			
-			player.removeStatusAffect(StatusAffects.UmasMassage);
+			player.removeStatusEffect(StatusEffects.UmasMassage);
 		}
 		
 		/**
@@ -664,13 +671,15 @@
 		public function needleworkUndoCost():int
 		{
 			var baseCost:int = 125;
-			
-			if (flags[kFLAGS.UMA_TIMES_ACUPUNCTURE_UNDO] != 0)
-			{
-				// 25 per undo?
-				baseCost += (25 * flags[kFLAGS.UMA_TIMES_ACUPUNCTURE_UNDO]);
+			if (flags[kFLAGS.UMA_TIMES_ACUPUNCTURE_UNDO] != 0) {
+				baseCost += (25 * flags[kFLAGS.UMA_TIMES_ACUPUNCTURE_UNDO]); // 25 per undo?
 			}
+			//Cap price at 1000 gems
 			if (baseCost > 1000) baseCost = 1000;
+			//Not a boy/girlfriend of Loppe? Be charged the full price.
+			if (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1) {
+				baseCost *= 2;
+			}
 			return baseCost;
 		}
 		
@@ -764,14 +773,14 @@
 			outputText("You tell her that you want to try one of those acupuncture sessions of hers.\n\n");
 			
 			var sessionCost:int = 125;
+			if (flags[kFLAGS.LOPPE_PC_MET_UMA] == 0) sessionCost *= 2;
 			
 			if (hasNeedleworkPerk())
 			{
 				sessionCost = this.needleworkUndoCost();
 				outputText("\"<i>Well, since I have already modified your chi in the past, we would first have to undo those changes... I cannot predict how further modifications to the natural flow through your body could interact.  Reversing past changes becomes increasingly more complex, so I have to warn you that it can become a costly process.</i>\"\n\n");
 				outputText("You tell her that you understand what she's saying, and consider the decision carefully.  You ask her how difficult she estimates the process would be, given the past sessions you have endured.\n\n");
-				outputText("The mare takes a moment to inspect you carefully, seeming to look through rather than at you.  \"<i>This could be quite a challenge, even for my skills... but, seeing as you're my little hoppers special someone, just for you I will have to ask for " + String(sessionCost) + " gems.  That's half the price of what I'd usually charge for work this difficult.</i>\"\n\n");
-				
+				outputText("The mare takes a moment to inspect you carefully, seeming to look through rather than at you.  \"<i>This could be quite a challenge, even for my skills... " + (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1 ? "but, seeing as you're my little hoppers special someone, just for you I will have to ask for " + String(sessionCost) + " gems. That's half the price of what I'd usually charge for work this difficult." : "I will have to ask for " + String(sessionCost) + " gems.") + "</i>\"\n\n");
 				menu();
 				addButton(0, "Undo", needleworkSession, NEEDLEWORK_UNDO);
 			}
@@ -803,7 +812,7 @@
 			// Cashmonies time
 			if (player.gems < sessionCost)
 			{
-				outputText("You click your tongue and apologise to Uma, but you don't have enough gems to pay for your treatment...\n\n");
+				outputText("You click your tongue and apologize to Uma, but you don't have enough gems to pay for your treatment...\n\n");
 				outputText("Uma sighs, \"It's okay, dear.  Just come back when you do, my doors are always open.\"");
 				
 				menu();
@@ -923,8 +932,8 @@
 			
 			addButton(0, "Job", talkJob);
 			addButton(1, "Sexuality", talkSexuality);
-			addButton(2, "Loppe", talkLoppe);
-			addButton(3, "Loppe's Dad", talkLoppesDad);
+			if (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1) addButton(2, "Loppe", talkLoppe);
+			if (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1) addButton(3, "Loppe's Dad", talkLoppesDad);
 			addButton(14, "Back", enterClinic, true);
 		}
 		
@@ -948,7 +957,7 @@
 			outputText("You nod your head thoughtfully, digesting what you have been told.\n\n");
 			outputText("\"<i>Another key point, is that acupuncture is much more disruptive to the flow of chi than do-in.  Usually, in order to make something better, or different, something else has to change... and not always for the better.  I could make you faster, able to move better, but that would seal some of the chi going into your muscles, which means you would never be as strong as you were meant to be...  though sometimes, depending on what you're trying to achieve, that could actually benefit you.</i>\"  Uma smiles.\n\n");
 			outputText("You tell her that you appreciate her taking the time to explain her job to you; maybe at some point in the future you'll have a need for her special skills, but, right now, you think you've taken enough of her time.\n\n");
-			outputText("\"<i>It's always pleasure speaking to the [man] that wooed my little Loppe, dear.  Come visit soon, will you?</i>\"\n\n");
+			outputText("\"<i>" + (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1 ? "It's always pleasure speaking to the [man] that wooed my little Loppe, dear. " : "") + "Come visit soon, will you?</i>\"\n\n");
 			outputText("You promise you'll try, and then head back to camp.");
 
 			menu();
@@ -975,7 +984,7 @@
 			outputText("That makes you think, and you ask how much effort Uma has to put into keeping her little tete-a-tetes discrete? After all, you don't think too many boyfriends, husbands or fathers would be happy to hear about her seducing their girlfriends, wives or daughters.\n\n");
 			outputText("Uma smiles at you mischievously.  \"<i>On the contrary, my naive little friend.  This is an oriental clinic, and there are many types of therapy, for various problems, including sex life.  Some of the women I seduce are actually straight, and let's just say sometimes they need to be reminded of what a good penis can do for them.  And the only way to do that, well... is by making them want one in the first place.  A caress here, a press there, a little lick later... and they are practically on fire, orgasming time and again, begging me to fuck them.  The only problem is that I don't have the equipment.</i>\"  Uma winks at you.  \"<i>Once they leave my clinic, they're satisfied and much hornier than usual.  So the first thing they do is go home to share their pleasure with their husbands.</i>\"\n\n");
 			outputText("You can't resist the wry grin as you comment that it must do wonders for the reputation of her business.\n\n");
-			outputText("Uma nods.  \"<i>It does, but as you can see, the clinic is pretty empty most of the time.  It just so happens that we're really expensive, especially considering our... extra services.  But don't worry, [name].  Since you're my little Loppe's [boyfriend], I'll be happy to give you a pretty good discount on our services.</i>\"\n\n");
+			outputText("Uma nods.  \"<i>It does, but as you can see, the clinic is pretty empty most of the time.  It just so happens that we're really expensive, especially considering our... extra services." + (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1 ? "  But don't worry, [name].  Since you're my little Loppe's [boyfriend], I'll be happy to give you a pretty good discount on our services." : "") + "</i>\"\n\n");
 			outputText("You laugh at that, thanking her for her generosity and her time, and then tell her it's time for you to go.  Uma smiles at you and says, \"<i>Come visit me again soon.</i>\"\n\n");
 			outputText("You promise that you will, and then head out of the quaint little clinic and back to camp.\n\n");
 
@@ -1020,14 +1029,14 @@
 			outputText("You're not quite sure what Uma's getting at and tell her as much, but finally declare that you'd probably call her girly.  A little on the tomboyish side, but, given she's a herm that only seems reasonable; it's hard to say what gender traits would be best for a person who is functionally both male and female.\n\n");
 			outputText("\"<i>That's true, but what you probably don't know is Loppe was a lot more troublesome when she was just a little hopper.  She was a lot more boyish, and if anyone called her a girl she'd happily start an all out brawl at a moments notice.</i>\"\n\n");
 			outputText("You think it over and note that makes sense; when she was that age, well, she'd hardly have been able to really tell the difference between the genders, and it's not like she would have had any problems convincing the boys she was one of them, right?\n\n");
-			outputText("\"<i>Yes, especially since she was flat-chested back then... but she was quite a handful. The eldar would call for me regularly to discuss my little hoppers behaviour. I guess she was kind of a bully, so I had to discipline her many times.</i>\"\n\n");
+			outputText("\"<i>Yes, especially since she was flat-chested back then... but she was quite a handful. The elder would call for me regularly to discuss my little hoppers behaviour. I guess she was kind of a bully, so I had to discipline her many times.</i>\"\n\n");
 			outputText("You note that's more of a surprise to you than Loppe being a tomboy; she's always so sweet and kindly when you're around her.  You can't deny that she's a little on the horny side, but still, she's a nice person.\n\n");
 			outputText("\"<i>That's because she underwent a very radical change when she finally hit puberty.  Most children get a little rebellious, but not my Loppe, oh no.  If anything she became obedient, almost to a fault. In fact... for a while I thought she was actually sick or worried about something.  But she assured me she was just tired of sitting through my scoldings, and didn't see a reason to challenge me anymore.  It was kind of cute too, she started asking me all kinds of questions, especially why she had both genders.</i>\"\n\n");
 			outputText("You note that it must have been a troubling time in her life; you remember going through puberty, and you can't imagine how hard it must have been to go through the hassles of things like the first period <i>and</i> uncontrollable erections simultaneously.  Though being the mother to a herm in puberty can't have been a picnic either...\n\n");
 			outputText("\"<i>It wasn't, but I enjoyed it either way.  Loppe and I grew a lot closer then.  I guess she just finally got tired of trying to be a boy and decided to embrace her femininity.  She had me teach her how to act as a girl, and for the most part she does fine, but I wouldn't be surprised if she slips up every once in awhile.</i>\"\n\n");
 			outputText("Slips up?\n\n");
 			outputText("\"<i>Sometimes she'll let loose the foulest belches in public, or... </i>readjust<i> herself in public</i>\" replies Uma, her hand cupping an imaginary bulge at her crotch.  \"<i>She does things that a lady wouldn't let herself get caught dead doing when she forgets about her desire to appear lady-like.</i>\"\n\n"); // Changed this line pretty significantly, might wanna compare it etc
-			outputText("Well, you can't say you've ever caught her doing anything like that... except for her tendency to wrestle you into bed, or having to nurse a very noticable erection in public, you joke.  You really can't see Loppe as the type to burp at all, though you admit she's a bit more a glutton than you would have expected such a dainty-looking lady like her to be.\n\n");
+			outputText("Well, you can't say you've ever caught her doing anything like that... except for her tendency to wrestle you into bed, or having to nurse a very noticeable erection in public, you joke.  You really can't see Loppe as the type to burp at all, though you admit she's a bit more a glutton than you would have expected such a dainty-looking lady like her to be.\n\n");
 			outputText("\"<i>Oh, but she of course you wouldn't catch her doing any of that, she's extra careful around you... believe me, I've seen her when she gets home after a date with you.  She's at least twice as tired as she usually is, no doubt due to keeping her boyish tendencies in check.</i>\"\n\n");
 			outputText("You wonder if maybe you should tell her that she doesn't have to try so hard to impress you; you want to be able to say you like her for who she is, the real her, not some act she forces herself to go through.  You don't realize you've been musing aloud until Uma responds.\n\n");
 			outputText("\"<i>Dear, that wouldn't help at all.  She wouldn't be with you if she thought you would leave her if she was rude, but she owes it to herself to act like a proper lady around you.  So the best you can do is pretend to buy into her act.</i>\"\n\n");
@@ -1052,7 +1061,7 @@
 			outputText("You nod, proclaiming that it's a little cliché.  So, why is Uma talking about vegetables?\n\n");
 			outputText("Uma grins mischievously at you.  \"<i>Did you know my little Loppe loves carrots so, so much... that she tried to have sex with one?</i>\"\n\n");
 			outputText("...Okay, that's a story that you feel you need to hear, and you tell this to the dirty old mare who calls herself Loppe's mother.\n\n");
-			outputText("Uma smiles knowingly. \"<i>I thought that might pique your interest.  Well... Loppe was in a experimentative mood, and I'm pretty good at hiding my toys, so she couldn't find anything to sate her curiosity.  That is until she found a piece of carrot, and let's just say it had a pretty familiar shape... you know what I'm getting at?</i>\"\n\n");
+			outputText("Uma smiles knowingly. \"<i>I thought that might pique your interest.  Well... Loppe was in an experimentative mood, and I'm pretty good at hiding my toys, so she couldn't find anything to sate her curiosity.  That is until she found a piece of carrot, and let's just say it had a pretty familiar shape... you know what I'm getting at?</i>\"\n\n");
 			outputText("You can't resist the wry grin; did she really...?\n\n");
 			outputText("Uma nods.  \"<i>And I caught her going at it too.  Silly little Loppe, she thought she could hide the facts from her mother...</i>\"  Uma shakes her head in mock disapproval.  \"<i>She slipped the carrot out of herself as fast as she could manage and pretended she was just having a snack in the tub.  Judging by the look on her face when she took a bite, I could easily see she wasn't used to taste of carrot with her own... sauce...</i>\"  Uma chuckles to herself.\n\n");
 			outputText("You ask in disbelief if Uma actually made her daughter eat her own carrot dildo?\n\n");
@@ -1118,7 +1127,7 @@
 			outputText("\"<i>Good answer.</i>\"  Uma snorts.\n\n");
 			outputText("So, Uma really thinks dealing with Loppe's puberty wasn't so bad, you ask?  If Loppe's father had stayed, would she have been willing to go through it again with her next daughter?  And would she have been so cheerful if her rabbit lover had given her a bellyful of twins or triplets instead of just one lonely little Loppe kit?\n\n");
 			outputText("Uma looks distant for a moment, but quickly focuses back on you.  \"<i>Dear, when you've been through what I have, you learn not to dwell on what could have been... and instead focus on what is and its blessings.  I'm very fond of Loppe and I wouldn't mind if she had brothers or sisters.  Usa-chan might have disappeared, but her parting gift wasn't so bad, I think.  She left me with a bundle of hope I named Loppe, and I'm thankful for having my little laquine in my life.</i>\"\n\n");
-			outputText("You apologise for sticking your foot in your mouth, and tell Uma you've clearly kept her talking long enough.\n\n");
+			outputText("You apologize for sticking your foot in your mouth, and tell Uma you've clearly kept her talking long enough.\n\n");
 			outputText("\"<i>Oh, it's always a pleasure to talk to my little Loppe's [boyfriend].</i>\"  Uma smiles at you happily.  \"<i>Though call me old again and I'll make your life a living hell.</i>\"  She adds, still smiling happily.\n\n");
 			outputText("You get your things and get ready to leave - before you can bring yourself to go, however, you can't resist asking; Uma said the other kids in the village where Loppe grew called her \"<i>Furutama</i>\". What does that mean?\n\n");
 			outputText("\"<i>It means full balls, dear.</i>\"  Uma states matter of factly.\n\n");
@@ -1161,7 +1170,7 @@
 			outputText("\"<i>Can I help you, dear?</i>\"  The cat behind the counter asked.\n\n"); 
 			outputText("\"<i>Oh, umm, no thanks miss, just browsing, that's all.</i>\"  Loppe smiled.\n\n");
 			outputText("The elderly cat smiled and replied, \"<i>Aren't you a cute little thing?  If you see anything you'd like, don't hesitate to call.</i>\"\n\n");
-			outputText("Loppe nodded and continued to browse... until her eyes set upon a wonderful sight; a slice of carrot cake, fresh from the oven.  Being part rabbit and part horse, two species known to love carrots, Loppe's mouth instantly watered. She eagerly looked into her small purse, but she only had a few coins, not nearly enough to buy the cake.  Loppe sighed, well... best not dwell... maybe when she made it home her mother would be willing to reward her with some coins for her service?\n\n");
+			outputText("Loppe nodded and continued to browse... until her eyes set upon a wonderful sight; a slice of carrot cake, fresh from the oven.  Being part rabbit and part horse, two species known to love carrots, Loppe's mouth instantly watered. She eagerly looked into her small purse, but she only had a few gems, not nearly enough to buy the cake.  Loppe sighed, well... best not dwell... maybe when she made it home her mother would be willing to reward her with some gems for her service?\n\n");
 			outputText("With that in mind, Loppe made her way towards the carpenter...\n\n");
 			outputText("Puff was on the prowl, trained eyes of a master quickly scanning the crowd for any potential customer. Heck, she'd settle for just a tryst.  She was getting so desperate for a quick shag she might seriously contemplate working for free.  But everyone seemed to be so busy, no one even turned their heads to look at her. The only one not busy was that young bunny browsing the cake shop...\n\n");
 			outputText("Puff sighed.  Yep, ol' thrusty was going to see some action today.  She was about to turn and head home when a sudden gust of wind hit her right in the face with a stray piece of paper.  Struggling to remove the offending litter with a growl, she saw... it was as if Marae herself had answered her pleas.  Fourteen inches of equine deliciousness, with a pair of heavy, cum churning balls swinging under it, it was enough to make her lick her lips with a wolfish smile, and who was it attached to?  Slowly looking up - what the? - That was the young bunny girl she saw browsing the bakery earlier! The young bunny quickly used her hands to push her short robes down and hide her package, looking left and right to see if anyone had spotted her, then sighing with relief. That must have been embarrassing... But luckily someone did spot her!\n\n");
@@ -1215,7 +1224,7 @@
 			outputText("Loppe swallows hard, at once loving and hating the foot-long cock already beginning to form itself into a tell-tale bulge in her dress, eyes fixed on the scantily clad form of her soon-to-be lover.  She greedily drinks in the sight of the wolfess' plump, kissable, cock-sucking lips framing her gorgeous face, her beautiful orange eyes hooded in sultry anticipation.  Down her gaze sweeps, over the mighty swell of Puff's bosom, the great mammary orbs covered in her beautiful coffee-cream fur, past her breeder's hips and oh-so-fuckable ass to the swollen, greedy, fem-slime-seeping netherlips from which the whore takes her street name.  Loppe's nose twitches, eagerly drinking in the heady, intoxicating scent of Puff's arousal until she feels drunk on smell alone.\n\n");
 			outputText("\"<i>See something you like?</i>\"  Puff asks, grinning seductively.  \"<i>I can tell you want me, that longing gaze of yours... bet you caught a whiff of my scent, no?  Bet that bulge hidden under your clothes is bothering you too, no?  Want to touch me?  Want some S-E-X?  Maybe see why I'm called Puffy Lips?</i>\"  Puff teases the young laquine, trying to entice some courage into the nervous Loppe.\n\n");
 			outputText("Mindlessly, Loppe shrugs off her dress, letting it fall abandoned to the floor.  Cock thrusting before her like a spear, the rabbit-horse herm strides towards the wolfess with an incongruously predatory air.  Her only thought in mind was to bury her shaft into Puff's waiting hole.\n\n");
-			outputText("\"<i>Oh, is that for me?  Lovely!  I love it!  I want to take it for a test drive right now!</i>\"  The wolfess giggles, falling back onto Loppe's bed and spreading her legs wide to allow the laquine's throbbing member easy access to her own plump, well-used vagina.\n\n");
+			outputText("\"<i>Oh, is that for me?  Lovely!  I love it!  I want to take it for a test drive right now!</i>\"  The wolfess giggles, falling back onto her bed and spreading her legs wide to allow the laquine's throbbing member easy access to her own plump, well-used vagina.\n\n");
 			outputText("With a mighty spring of her powerful rabbit legs, Loppe pounces bodily upon the wolfess, kissing her so fiercely she might as well be biting her in spirit.  With the clumsiness of an eager virgin, she grinds her cock into Puff's muff, too impatient and unsure of herself to properly slot herself into place.\n\n");
 			outputText("Puff, being an experienced lover, takes hold of Loppe's rock-hard horse-prick and gives it a squeeze, drawing an excited gasp from the eager laquine.  \"<i>This looks painful... better do something about it!</i>\" Puff teases, aligning the shaft with her own throbbing pussy.\n\n");
 			outputText("\"<i>P-please!</i>\" Loppe begs, grinding and thrusting herself into the she-wolf's hand.  All sanity is gone; all that remains is the need to fuck and breed, to strip herself of her masculine virginity at last.  Puff simply releases the laquine's member and grins at her.  \"<i>No one is stopping you dear, all you gotta do is hit the right spot!</i>\"\n\n");
@@ -1269,7 +1278,7 @@
 			outputText("Having done it with her for real meant the dreams were no longer as interesting? You suggest.\n\n");
 			outputText("\"<i>I don't really know... perhaps that is what happened, or maybe finding out what happened to Puff is what put her off.  I can't tell.</i>\"\n\n");
 			outputText("What happened to Puff? You repeat, warily.  So, something happened between them?\n\n");
-			outputText("\"<i>No, nothing happened between then.  Puff wasn't the type of person to take a girlfriend or have anything to do with anyone... she's always been a free spirit in that regard.  I mean, she wasn't the only prostitute around, she was just the most notorious one.  Being a nymphomaniac had a hand in that, I suppose. But back to the question at hand.  Several days after Loppe's little tryst with Puffy Lips I head an interesting bit of gossip from a client.  I heard Puff had joined the local convent.</i>\"  Uma grins.\n\n");
+			outputText("\"<i>No, nothing happened between them.  Puff wasn't the type of person to take a girlfriend or have anything to do with anyone... she's always been a free spirit in that regard.  I mean, she wasn't the only prostitute around, she was just the most notorious one.  Being a nymphomaniac had a hand in that, I suppose. But back to the question at hand.  Several days after Loppe's little tryst with Puffy Lips I heard an interesting bit of gossip from a client.  I heard Puff had joined the local convent.</i>\"  Uma grins.\n\n");
 			outputText("You can only blink at that and flatly ask why; as startling as it probably was the first time around, you would have thought someone like Puff would, after she had recovered, jump at the chance to keep Loppe as her permanent personal fuck-toy.\n\n");
 			outputText("Uma chuckled to herself.  \"<i>Apparently Puff was cured of her nymphomania, so she no longer cared that much about sex.  She became a real upstanding citizen too, doing charity, caring for the orphaned children, basically she became an exemplary nun.  I guess having sex with my little Loppe was too much for her... serves her right for trying to seduce my little hopper!</i>\"\n\n");
 			outputText("You can only shake your head and tell her that you find that hard to believe.  After all, you and Loppe are still going out, and you've had sex more than once, haven't you?  But, regardless, you can't help but feel sorry for Loppe; that must have been a real kick to the ego.\n\n");
@@ -1280,7 +1289,7 @@
 			outputText("Uma shakes her head lightly.  \"<i>I don't know what it is, dear.  But you're able to keep up with my little Loppe, while no other person that we've met so far can.  I suppose that's also part of the reason she chose to make you her official [boyfriend].  Much to the chagrin of her admirers.</i>\"  Uma chuckles.\n\n");
 			outputText("You can't resist a wry joke about Loppe having admirers when she's known to be so untameable in bed.\n\n");
 			outputText("\"<i>You'd be surprised with how much people actually enjoy Loppe's stamina.  Though anything more than a one night stand with her would probably put them in a coma for a few days.</i>\"  Uma chuckles.\n\n");
-			outputText("You thank Uma for telling you about her daughter's life and then apologise, as it's time for you to head back to camp.\n\n");
+			outputText("You thank Uma for telling you about her daughter's life and then apologize, as it's time for you to head back to camp.\n\n");
 			outputText("\"<i>Not a problem, dear.  I hope you will continue to maintain a healthy relationship with my daughter.</i>\" Uma chuckles.\n\n");
 			outputText("You promise her that you'll try, gather yourself together, and then politely head back to camp.\n\n");
 
@@ -1315,7 +1324,7 @@
 			outputText("\"<i>No, silly.  He asked her out.</i>\"\n\n");
 			outputText("Well, that's a surprise, you say; you didn't think people still took it that slow in Mareth.\n\n");
 			outputText("\"<i>Not everyone is crazy about getting into each other's pants all the time dear</i>\" Uma scolds you.  \"<i>If we did that all the time we wouldn't have to do anything but sleep with each other all the time, you know?</i>\"\n\n"); // I dont even know.
-			outputText("You apologise; there's so many monsters out in the wilderness who do think precisely that way that it's hard to remember there are still normal people, sometimes.\n\n");
+			outputText("You apologize; there's so many monsters out in the wilderness who do think precisely that way that it's hard to remember there are still normal people, sometimes.\n\n");
 			outputText("\"<i>It wasn't always like this, back then we were just simple people trying to live simple lives.</i>\"\n\n");
 			outputText("You admit that, and tell her to continue.\n\n");
 			outputText("\"<i>So they started dating.  And as is normal for a young couple, one day, after they had come back from a nice dinner, he suggested that he wanted to see Loppe naked.</i>\"\n\n");
@@ -1341,7 +1350,7 @@
 			outputText("Hyou chuckles.  \"<i>I thought you were never going to ask!</i>\"  He slowly strips himself, dancing and prancing as he removes each piece of his garments until, with a flourish, he finally peels off his underwear and carelessly disposes of it, tossing it away.  \"<i>And this is my birthday suit.</i>\"  He grins.\n\n");
 			outputText("Loppe's eyes lock onto his nakedness like a starving wolf onto a bloody steak, greedily drinking in the sight of him, particularly focusing with eagerness on his jutting, spiky-looking cat-dick.\n\n");
 			outputText("Hyou looks between his erect kitty-prick and Loppe's own horse-cock, noting the obvious difference in size.  \"<i>Well well... not only are you taller than I am, you're also bigger in that department too.  I guess it's to be expected, I am competing with a horse-bunny after all.</i>\"  He winks at Loppe.\n\n");
-			outputText("The aforementioned \"<i>horse-bunny</i>\" blinks in confusion, then realises that the shaft she's been staring at is anywhere from one-third to one-half the length of her own, and she claps her hands over her mouth aghast.  \"<i>Hyou, I'm sorry, I...</i>\"  She begins, half-expecting a rejection.\n\n");
+			outputText("The aforementioned \"<i>horse-bunny</i>\" blinks in confusion, then realizes that the shaft she's been staring at is anywhere from one-third to one-half the length of her own, and she claps her hands over her mouth aghast.  \"<i>Hyou, I'm sorry, I...</i>\"  She begins, half-expecting a rejection.\n\n");
 			outputText("\"<i>Sorry for what?</i>\"  Hyou interjects.  \"<i>I knew what I was getting into when we started dating.  Relax Loppe.  When I said you were beautiful, I meant all of you, even this hefty pony you carry between your legs.</i>\"  He grins happily.\n\n");
 			outputText("Loppe smiles softly.  \"<i>You are such a flatterer, you know that?  But, enough with the foreplay - when do we get to the real action?</i>\" She mock-whines.\n\n");
 			outputText("\"<i>Action?</i>\"  Hyou asks in mock confusion.  \"<i>Whatever do you mean bun?</i>\"\n\n");
@@ -1403,7 +1412,7 @@
 			outputText("Figuring it's pointless to argue with Loppe in her current state, he takes Loppe's cock in his hands and bends over to give it a lick; a task that proves easy, given his feline flexibility.\n\n");
 			outputText("Loppe moans and shudders, wriggling with pleasure as a spurt of pre oozes from her flared tip to splatter onto her feline lover's face.\n\n");
 			outputText("Hyou smiles and slurps the top of Loppe's equine member into his mouth, sucking on it like a lollipop.\n\n");
-			outputText("Mouth opening and closing wordlessly like a fish, the laquine's eyes roll in her head as she is overwhelmed by the delicate touches to her sensetive shaft.\n\n");
+			outputText("Mouth opening and closing wordlessly like a fish, the laquine's eyes roll in her head as she is overwhelmed by the delicate touches to her sensitive shaft.\n\n");
 			outputText("Finally, with one last slurp he lets go of Loppe's cock and, smiling, asks,  \"<i>You sure you don't want to take me instead?</i>\"\n\n");
 			outputText("\"<i>I - okay... but, how do I do that?</i>\"  The bewildered bunny asks. \"<i>You don't have a pussy, unless you've been hiding something from me, and I don't want to just have you suck and lick on me; that's no fun for you, then.</i>\" She notes.\n\n");
 			outputText("\"<i>Silly girl,</i>\" he remarks.  \"<i>Mind getting off me for an instant?</i>\" he asks, innocently.\n\n");
@@ -1433,7 +1442,7 @@
 			
 			outputText("You can't resist dryly pointing out that maybe it wasn't so much the girl part of Loppe that Hyou was interested in when he started dating the young dickgirl.  You would not be too surprised if Uma told you that the \"next time\" never came - or, at least, the version of it that Loppe wanted never came.\n\n");
 			outputText("\"<i>Yes, dear.  I'm afraid that's true... Hyou is as manly as a harpy, I'm afraid.</i>\"  She chuckles.  \"<i>Now you see why there would never have been anything between the two of us, huh?</i>\"\n\n");
-			outputText("A gay man and a gay woman; the very opposite of compatibilities.  So, you ask, raising an eyebrow for emphasis; in denial, or just didn't realise it until that first night?\n\n");
+			outputText("A gay man and a gay woman; the very opposite of compatibilities.  So, you ask, raising an eyebrow for emphasis; in denial, or just didn't realize it until that first night?\n\n");
 			outputText("\"<i>He never really fancied any girls before my Loppe, though he was friends with plenty of them, and I know for a fact he used to get plenty of love letters too.  So I would bet on him not knowing it.  Plus it was kinda unexpected, you know?  He was the son of village's most renowned hunter, a well-known womanizer</i>\"  Uma chuckles.  \"<i>I suppose he really didn't take after his father.</i>\"\n\n");
 			outputText("Same attitude, different sex on the receiving end, you suggest?\n\n");
 			outputText("\"<i>After that night, yes.  He came out to Loppe too.  She took it nicely, I think.  They continued to date for a while, though Loppe often had to coax him into using her pussy too, if I remember what my little ears heard right.</i>\"  She flicks her ears for emphasis.  \"<i>Those coaxings would involve the ravishing of Hyou's ass via horse-cock.</i>\"\n\n");
@@ -1465,7 +1474,7 @@
 			outputText("Uma nods.  \"<i>She was the love of my life.  Unfortunately, it wasn't meant to be.  She left even before I found out I was pregnant with my little Loppe. Still... I enjoyed my time with her, and if we met again, I would love to spend more time with her.</i>\"  Uma smiles, though you detect a hint of sadness in her equine features.\n\n");
 			outputText("You ask who 'Usagi' was, as a person?  You know she was a herm bunny-morph and that she fathered Loppe, but how did she and Uma meet, and take their relationship that far?\n\n");
 			outputText("Uma smiles and looks to the distance.  \"<i>Usa-chan was a wandering warrior, always honorable and true, her skill with a sword was nothing short of amazing.  I don't think there's a single person alive able to match her.  She lived by the sword, back then, always challenging other warriors to hone her skill and travelling from village to village to find better, stronger, opponents.</i>\"  Uma sighs.\n\n");
-			outputText("\"<i>When I met her, she was just passing through our village, and had been suffering from chronic pain in her neck, so she came to me to request my services and, well, it was love at first sight.  After our session, she asked me out of a date and I accepted.  There wasn't a single night we didn't go out and make love under the stars.  But unfortunately Usa-chan left after a week.  She left me a note apologising for her departure and said that she couldn't stay, lest she mellow and lose her edge as a warrior.  And that was the last I saw of her.</i>\"  Uma sighs again.\n\n");
+			outputText("\"<i>When I met her, she was just passing through our village, and had been suffering from chronic pain in her neck, so she came to me to request my services and, well, it was love at first sight.  After our session, she asked me out of a date and I accepted.  There wasn't a single night we didn't go out and make love under the stars.  But unfortunately Usa-chan left after a week.  She left me a note apologizing for her departure and said that she couldn't stay, lest she mellow and lose her edge as a warrior.  And that was the last I saw of her.</i>\"  Uma sighs again.\n\n");
 			outputText("So, you're guessing Uma found out Usagi had left her a little going-away present some time after the rabbit warrior had left, you suggest?\n\n");
 			outputText("\"<i>Yes.  My morning sickness didn't start until a fortnight after Usagi had moved on.  Jolted the sadness right out of me too.  I hadn't even opened my clinic in those two weeks, and my friends were very worried. Loppe was just what I needed to pick up the pieces of my broken heart.</i>\"  She smiles, a motherly smile that makes her look absolutely stunning.\n\n");
 			outputText("You ask if Uma ever tried to send a message after Usagi, let her know about her fatherhood?\n\n");
@@ -1571,15 +1580,20 @@
 			addButton(0, "EroMassage", sexEroticMassage);
 			addButton(1, "Eat Her Out", sexEatHerOut);
 
-			if (player.gender >= 2 && player.lowerBody != 4) // Vaginas & not centaurs
+			if (player.hasVagina() && !player.isTaur()) // Vaginas & not centaurs
 			{
 				addButton(2, "Fingerbang", sexGetFingered);
+			} else {
+				addDisabledButton(2, "Fingerbang", "This scene requires you to have vagina. It can't accommodate taurs.");
 			}
 
 			if (player.hasCock()) // Has a dick
 			{
 				addButton(3, "Handjob", sexHandjob);
 				addButton(4, "Get Blown", sexGetABJFromDisMilfyLesboSlut);
+			} else {
+				addDisabledButton(3, "Handjob", "This scene requires you to have cock.");
+				addDisabledButton(4, "Get Blown", "This scene requires you to have cock.");
 			}
 			addButton(14,"Back",buildCoreMenu);
 		}
@@ -1608,7 +1622,7 @@
 			outputText("When you turn, you notice Uma behind you, standing stark naked and holding her folded kimono in hand.  \"<i>Move over, dear.</i>\"  You politely step aside, and reach out to take Uma's clothes from her so that you can put them in the cupboard for her.  \"<i>Thank you, dear,</i>\" she replies, handing over her clothes.  You place them inside and ask what she would like you to do next?\n\n");
 			outputText("\"<i>Just get on my table, belly up, and we can get started,</i>\" she pats her table, waiting patiently.  You nod your head in understanding, approach and position yourself on the table as she instructed, bare [skin] prickling with anticipation at what's to come.  The mare cracks her knuckles and positions her hands over your body.  \"<i>Now, just sit back and enjoy dear.  Let my nimble hands care for this beautiful body of yours.</i>\"  \n\n");
 			outputText("You smile at her and let her know you're ready to start whenever she is.  The mare starts out by caressing your whole body, over your belly, your [chest], your arms and your [legs].  Then she begins pressing a few spots, searching for knots in your muscles and quickly treating those with her expert fingers.  \"<i>Seems like you're enjoying it so far,</i>\" the mare chuckles.\n\n");
-			outputText("Even as Uma says this, you realise just how incredibly ");
+			outputText("Even as Uma says this, you realize just how incredibly ");
 
 			if (player.gender == 1) outputText("hard ");
 			else if (player.gender == 2) outputText("wet ");
@@ -1727,8 +1741,8 @@
 				if (player.hasCock()) outputText(", your forgotten cock spraying cum in a pearlescent arc to splatter onto the floor");
 				outputText(".\n\n");
 
-				outputText("\"<i>Oh, deary.  You're so cute I could just squeeze you all day!</i>\"  Uma laughs happily as she pumps her fingers inside you one more time, drawing one last discharge before you finally slump on the older mare's lap.  The mare removes her hand from your sensitive pussy and brings it close to her mouth, promptly licking your juices off her hand, close to your ear to ensure you hear every single lewd sound she makes as she cleans your orgasm from her hand.  \"<i>Hmm, virgins definitely have the best taste.  Sweet, slick and unclaimed.  Be sure to warn Loppe to go easy on you when you finally decide to work with her equine pride, though I wonder if she'll be able to restrain herself with such a cutie like you,</i>\" Uma says as she kisses the back of your neck once more before returning to her cleaning duty.\n\n");
-				outputText("You take a few moments to regain control of your [legs], but get up and start helping to clean up the mess - after all, you made it.  Once it's all clean, you kiss Uma on the cheek as a thank you before saying you have to be going.  \"<i>See you soon, dear.  I'd love to have given you more of an workout, but I think my daughter will appreciate your inexperience.  So make sure you come prepared next time, so we can have some more fun.</i>\" she informs you, as her fingers begin to prod at her own snatch.\n\n");
+				outputText("\"<i>Oh, deary.  You're so cute I could just squeeze you all day!</i>\"  Uma laughs happily as she pumps her fingers inside you one more time, drawing one last discharge before you finally slump on the older mare's lap.  The mare removes her hand from your sensitive pussy and brings it close to her mouth, promptly licking your juices off her hand, close to your ear to ensure you hear every single lewd sound she makes as she cleans your orgasm from her hand.  \"<i>Hmm, virgins definitely have the best taste.  Sweet, slick and unclaimed" + (flags[kFLAGS.LOPPE_PC_MET_UMA] >= 1 ? ". Be sure to warn Loppe to go easy on you when you finally decide to work with her equine pride, though I wonder if she'll be able to restrain herself with such a cutie like you," : ",") + "</i>\" Uma says as she kisses the back of your neck once more before returning to her cleaning duty.\n\n");
+				outputText("You take a few moments to regain control of your [legs], but get up and start helping to clean up the mess - after all, you made it.  Once it's all clean, you kiss Uma on the cheek as a thank you before saying you have to be going.  \"<i>See you soon, dear.  I'd love to have given you more of a workout, but I think my daughter will appreciate your inexperience.  So make sure you come prepared next time, so we can have some more fun.</i>\" she informs you, as her fingers begin to prod at her own snatch.\n\n");
 				outputText("You can't resist a smile as you promise to remember that, redress yourself, and head back to camp.\n\n");
 			}
 			else if (player.looseness() == 0) // Tight
@@ -1738,7 +1752,7 @@
 				outputText("\"<i>Oh, but this is where you're mistaken my dear.  Loppe is pretty bad and I should know.  She got that from me,</i>\" the mare laughs lightly, adding another finger to massage your opening.\n\n");
 				outputText("You moan loudly, wriggling in your seat to allow Uma better access to your more sensitive spots.  Mmm, she's good at this...\n\n");
 				outputText("\"<i>Thanks dear, but we are just about to get started with the real thing,</i>\" she replies with a chuckle.  Uma begins massaging your inner walls while she roams your insides, trying to find something.\n\n"); 
-				outputText("You quickly realise what the mare is searching for, her expertise in matters of pleasure clear as your G-Spot is teased, crying out in delight as she sends the most delicious wave of pleasure rippling through your loins, doing your best to squeeze her fingers with your experienced but still-tight cunt.\n\n");
+				outputText("You quickly realize what the mare is searching for, her expertise in matters of pleasure clear as your G-Spot is teased, crying out in delight as she sends the most delicious wave of pleasure rippling through your loins, doing your best to squeeze her fingers with your experienced but still-tight cunt.\n\n");
 				outputText("\"<i>Aha!  Found it!</i>\" the mare says with delight, \"<i>Now I can finally get started on removing all of this bad tension you've been accumulating, dear.</i>\"  She starts pumping her fingers inside you, making sure to tease your G-Spot with careful touches at every pump.\n\n");
 				outputText("You gasp and moan as the mare masseur's expert fingers tease you in all the right ways, slightly bucking in place to properly enjoy your finger-fucking, that oh-so-familiar and wonderful tightness building up in your belly before, with a cry of lust, you give in and ride the resultant crescendo of orgasm.  You give yourself over to the bliss of cumming into Uma's hand, slumping down in relaxed stupor after you finish emptying yourself.\n\n");
 				outputText("Removing her hand from your privates, the mare lifts her wet hand to her face and begins licking it clean.  \"<i>Hmm, I see that my daughter is right to call you sugar.  You really are sweet,</i>\" she chuckles.  \"<i>So how'd you like your... massage?</i>\"\n\n");
@@ -1757,7 +1771,7 @@
 				outputText("It's not easy for her, you're looser than most, but you enjoy her efforts all the same, playfully teasing and encouraging her as she strokes and fondles and fiddles.  Finally, almost by accident, her finger brushes up against that part you love so much and you moan your delight, letting her know she's hit the jackpot.\n\n");
 				outputText("\"<i>Hmm, that took longer than usual, but I see I still have the touch.  Now to make this as good as possible for my future daughter-in-law,</i>\" Uma teases you, adding her last finger to your [vagina], shoving her entire hand inside.  She massages your innards as she begins pumping her hand, touching, massaging, teasing and squelching.  Every time that wonder hand of hers drives itself inside you, you feel jolts of electricity run up along your body as each finger of hers takes a turn dancing, teasing and pinching that special spot within your treasure.\n\n");
 				outputText("It's a little different to being filled with cock, but it's not a bad substitute either, and you do your best to wring as much pleasure from it as you can.  It still takes a little longer to build up that delicious pressure inside of you before, with a cry of lust fulfilled, you cum, soaking your lap and Uma's alike with your climax.\n\n");
-				outputText("\"<i>Oh dear, such a small orgasm.  I was hoping for more from a experienced woman like yourself,</i>\" the mare declares, moving her hand a few more times.  \"<i>How about if I do... this!</i>\"  She grips your G-Spot tightly, while teasing your [clit] with her other hand.  You squeal and writhe, your oversensitized flesh burning with pleasure as she continues playing - it takes only seconds before you dredge up a second orgasm, just as full as the first, and then slump back against her, worn out.\n\n");
+				outputText("\"<i>Oh dear, such a small orgasm.  I was hoping for more from an experienced woman like yourself,</i>\" the mare declares, moving her hand a few more times.  \"<i>How about if I do... this!</i>\"  She grips your G-Spot tightly, while teasing your [clit] with her other hand.  You squeal and writhe, your oversensitized flesh burning with pleasure as she continues playing - it takes only seconds before you dredge up a second orgasm, just as full as the first, and then slump back against her, worn out.\n\n");
 				outputText("Uma chuckles to herself, \"<i>Now, that's more like it.  Satisfied yet, dear?  I could always give you another...</i>\" She suggests.\n\n");
 				outputText("No, you think you've had enough for a while, you tell her.  \"<i>Spoilsport...</i>\" the mare comments, licking the back of your neck.  \"<i>I always enjoy making experienced girls like you see new ways to achieve greater orgasms, and I hope our time together's been as pleasurable as it looked.</i>\" she chuckles.  \"<i>Now then... just rest up and get up when you can... but please don't take too long?  This last tryst of ours has left me... wanting.</i>\"\n\n");
 				outputText("You chuckle at her, painstakingly hauling yourself up, and get dressed.  Thanking Uma for showing you her magic fingers, you blow her a teasing kiss and then head back to camp.\n\n");
@@ -1852,26 +1866,26 @@
 		{
 			//Aim for something right around the biggest she can take, otherwise just take smallest.
 			var x:int = player.cockThatFits(25);
-			if(x < 0) x = player.smallestCockIndex();
+			if (x < 0) x = player.smallestCockIndex();
 			clearOutput();
 			outputText("Fidgeting in place, very much aware of the cum-filled cock");
-			if(player.cockTotal() > 1) outputText("s");
+			if (player.cockTotal() > 1) outputText("s");
 			outputText(" in your pants, you ask whether Uma would be willing to give you a little intimate release.");
 			outputText("\n\nUma arches an eyebrow, \"<i>Sorry, [name], but when it comes to cocks, my pussy and ass are both off-limits... I suppose that, for you, though, I could give you a blowjob - just because you’re my little Loppe’s special someone, though.</i>\"");
 			outputText("\n\nYou ");
-			if(player.lust >= 75) outputText("eagerly ");
+			if (player.lust100 >= 75) outputText("eagerly ");
 			outputText("tell her that would be plenty, and thank her for her consideration.  \"<i>Okay, follow me then.</i>\"  The mare leads you away, out her office and down the corridor towards the far back of the clinic. Her enticing equine tail swishes lazily side to side the entire way, an organic magnet for your roving eyes.  You follow closely in her wake, looking forward to her “special treatment” with such ardor that you give up on concealing the tenting mass under your [armor]. It makes walking a little more difficult, but the feeling of your length");
-			if(player.cockTotal() > 1) outputText("s");
+			if (player.cockTotal() > 1) outputText("s");
 			outputText(" grinding and growing is well-worth the obvious discomfort.");
 			
 			outputText("\n\nThe room she leads you to is quite simple: wooden walls and floor, a couple of drains set in the boards that are probably for the more... fluid generous clientele, ");
-			if(kGAMECLASS.urta.urtaLove()) outputText("something that makes you wonder if Urta would like to come and take a spin here, ");
+			if (kGAMECLASS.urta.urtaLove()) outputText("something that makes you wonder if Urta would like to come and take a spin here, ");
 			outputText("and a sizable bamboo table.  It's covered in a white cloth and has an upraised board with a hole in it that looks like it’s big enough to fit your head through.  It is the only piece of furniture in the room apart from a small cupboard in the corner. Though spartan in its layout, this odd chamber is quite comfortably warm.");
 			
 			outputText("\n\n\"<i>Strip, dear,</i>\" Uma says cheerfully while beginning to strip herself.  You need no further encouragement, eagerly getting naked ");
-			if(flags[kFLAGS.PC_FETISH] >= 1) {
+			if (flags[kFLAGS.PC_FETISH] >= 1) {
 				outputText(", unable to resist either the tingle of lust that runs through you at being naked in front of Uma or the urge to flaunt your feminine physique for her own gratification.  Gathering your clothes up is a bit of an afterthought, but you make sure to bend over and proudly present your [butt]");
-				if(player.balls > 0) outputText(" and [balls]");
+				if (player.balls > 0) outputText(" and [balls]");
 				outputText(".");
 			}
 			else outputText(", gathering your clothes up in your arms as you do so.");
@@ -1883,125 +1897,125 @@
 			
 			outputText("\n\nThe motherly mare kneels before you, examining your shaft.  ");
 			//VARIANTS NEEDED
-			if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("It’s clear that she doesn’t really enjoy the notion that much, considering the way she’s looking at you.  \"<i>All right, let’s get this over with.</i>\"  ");
-			else if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) outputText("She actually seems to be smiling a little as she looks at you.  \"<i>All right, time to see if I can handle this brutish thing.</i>\"  ");
+			if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("It’s clear that she doesn’t really enjoy the notion that much, considering the way she’s looking at you.  \"<i>All right, let’s get this over with.</i>\"  ");
+			else if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) outputText("She actually seems to be smiling a little as she looks at you.  \"<i>All right, time to see if I can handle this brutish thing.</i>\"  ");
 			else outputText("It's clear that she doesn't mind doing this for you at all. In fact, she's even smiling down at you as she fondles you one-handed.  \"<i>Time to see if I can make you squirm as hard as Loppe does.</i>\"  ");
 			outputText("She opens her mouth wide and takes ");
-			if(player.cockTotal() == 1) outputText("your");
+			if (player.cockTotal() == 1) outputText("your");
 			else outputText("a single");
 			outputText(" dick into her mouth, slurping on it.");
 			
 
 			outputText("\n\nIt's immediately apparent how her longer, equine-style face affords many advantages when it comes to oral pleasure.  Her capacitive mouth takes inch after inch after inch, long past when you would be normally threatening a gag-reflex, sliding you along her long, flat tongue as she goes.  Her efforts are far from expert, and you can tell that her heart isn't truly in this.  She stops her ministrations, adjusting her hair and saying, \"<i>Sorry dear.  I haven't gotten much practice at these.  They're not really my thing, normally");
-			if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] >= 2) outputText(", but I guess you're changing that, aren't you?");
+			if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] >= 2) outputText(", but I guess you're changing that, aren't you?");
 			else outputText(".");
 			outputText("</i>\"  Then, she playfully licks along the underside of your cock, putting that lengthy tongue to work. \"<i>");
-			if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("You don't taste bad, all things considered.");
-			else if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) outputText("I think I'm starting to get used to your taste, [name].");
+			if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("You don't taste bad, all things considered.");
+			else if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) outputText("I think I'm starting to get used to your taste, [name].");
 			else outputText("Mmmm...  Don't tell anyone, but I think I'm starting to like helping you like this.");
 			outputText("</i>\"");
 			
-			outputText("\n\nGrunting softly at her ministrations, you let your [hips] shiver as she passes over your " + cockHead(x) + " once more.  Her tightly sealed lips glide over your spit-slicked length at an even, nerve-tickling pace");
-			if(player.cocks[x].cockLength < 9) outputText(" until she hits your [sheath]");
+			outputText("\n\nGrunting softly at her ministrations, you let your [hips] shiver as she passes over your " + player.cockHead(x) + " once more.  Her tightly sealed lips glide over your spit-slicked length at an even, nerve-tickling pace");
+			if (player.cocks[x].cockLength < 9) outputText(" until she hits your [sheath]");
 			else outputText(" until she has her mouth as full as she can handle");
-			outputText(".  She holds you like that, letting you feel her hot breath wash over the [skinFurScales] of your crotch.  Her tongue wags back and forth underneath you, slipping and sliding against you. Inside her mouth, your " + cockDescript(x) + " twitches and jumps in her maw.  Beads of pre-cum are beading and dripping out onto her busy organ.");
+			outputText(".  She holds you like that, letting you feel her hot breath wash over the [skinFurScales] of your crotch.  Her tongue wags back and forth underneath you, slipping and sliding against you. Inside her mouth, your " + player.cockDescript(x) + " twitches and jumps in her maw.  Beads of pre-cum are beading and dripping out onto her busy organ.");
 			
 			outputText("\n\nUma's shaft-muffled voice mumbles, \"<i>");
-			if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("Girls taste better.");
-			else if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) outputText("Not too bad.");
+			if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("Girls taste better.");
+			else if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) outputText("Not too bad.");
 			else outputText("Hmmm, give me more, [name].");
 			outputText("</i>\"");
 
 			//Bonus handjobbies?
-			if(player.cockTotal() > 1)
+			if (player.cockTotal() > 1)
 			{
 				outputText("\n\nYou politely suggest she put ");
-				if(player.cockTotal() == 2) outputText("one of ");
+				if (player.cockTotal() == 2) outputText("one of ");
 				outputText("her hands to work on your spare prick");
-				if(player.cockTotal() > 2) outputText("s");
+				if (player.cockTotal() > 2) outputText("s");
 				outputText(".  The curvacious mare hums at the thought, inadvertently sending pleasant shockwaves through your length as she considers.  Making up her mind, ");
-				if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 3) outputText("perhaps thinking it will end this sooner");
+				if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 3) outputText("perhaps thinking it will end this sooner");
 				else outputText("perhaps encouraged by the way you swell in her mouth");
 				outputText(", she wraps ");
-				if(player.cockTotal() == 2) outputText("one hand around your girthy tool and starts pumping");
+				if (player.cockTotal() == 2) outputText("one hand around your girthy tool and starts pumping");
 				else outputText("both hands around your girthy tools and starts pumping");
 				outputText(", stroking up and down with firm twists of her practiced hand");
-				if(player.cockTotal() > 2) outputText("s");
+				if (player.cockTotal() > 2) outputText("s");
 				outputText(".  Her soft palm");
-				if(player.cockTotal() > 2) outputText("s are");
+				if (player.cockTotal() > 2) outputText("s are");
 				else outputText(" is");
 				outputText(" the perfect mate to your spare length");
-				if(player.cockTotal() > 2) outputText("s");
-				outputText(", and soon you are dribbling and dripping from all of your " + multiCockDescriptLight() + ".");
+				if (player.cockTotal() > 2) outputText("s");
+				outputText(", and soon you are dribbling and dripping from all of your " + player.multiCockDescriptLight() + ".");
 			}
 			
 			outputText("\n\nWhile the steady pleasure her mouth and tongue gives you has you feeling very, very good, it isn't quite bringing you towards the orgasm you came here craving.  You suggest she begin to bob up and down on you. \"<i>Cocks need to feel like they're fucking something,</i>\" you ");
-			if(player.cor <= 33) outputText("pleasantly explain");
-			else if(player.cor <= 66) outputText("explain");
+			if (player.cor <= 33) outputText("pleasantly explain");
+			else if (player.cor <= 66) outputText("explain");
 			else outputText("harshly explain");
 			outputText(".  ");
-			if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("You can feel her nod in agreement through your pole, and soon after, she's plunging rhythmically up and down.");
+			if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) outputText("You can feel her nod in agreement through your pole, and soon after, she's plunging rhythmically up and down.");
 			else outputText("Before you can even finish, she's plunging up and down along your length, letting you know that she's learned this particular song and dance quite well under your tutelage.");
 			
 			outputText("\n\nYou give up a moan of pleasure as your [hips] lift off the table's coverings.  The building ecstasy within you is rolling around your abdomen like an ingot of molten metal, bubbling and ready to explode.  It's all you can do to stop yourself from thrashing against Uma's tongue in an effort to bring that release on as quickly as possible.  You steady yourself, and with a gasp of pleasure, feel [eachCock] swell, as big and hard as it can get without exploding from the pressure.  Uma slows her fucking motions and starts to suck with the languid blowjob, getting more and more pre-cum on her tongue with each slide down.  Quiet, excited noises slip out of your throat, one after another as you come to the very edge of orgasm.");
 			
 			//{Less than five blowjobs}
-			if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5)
+			if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5)
 			{
 				outputText("\n\nUma pulls off just as your flow of juices goes white and salty, the inevitable prelude to the first discharge of an orgasm.  A slightly sour expression is painted across her face from the sudden change and she looks on in shock as your length");
-				if(player.cockTotal() > 1) outputText("s erupt");
+				if (player.cockTotal() > 1) outputText("s erupt");
 				else outputText(" erupts");
 				outputText(".  Even though you are no longer enclosed in that wonderfully warm, wet hole, you still shoot long, powerful lances of cum.  Uma catches the first across her face before she can move. The second splatters across the breasts that once nursed Loppe, some even falling into the valley of her cleavage.");
-				if(player.cumQ() >= 500) outputText("  She gets out of the way after that, leaving you to lie there, spraying your seed like a perverted sprinkler.");
-				if(player.cumQ() >= 1500) outputText("  The massive cumsprays that land on you slowly slough off down towards the drains.  It's hard not to bliss at the sound of your loud noisily draining away.");
+				if (player.cumQ() >= 500) outputText("  She gets out of the way after that, leaving you to lie there, spraying your seed like a perverted sprinkler.");
+				if (player.cumQ() >= 1500) outputText("  The massive cumsprays that land on you slowly slough off down towards the drains.  It's hard not to bliss at the sound of your loud noisily draining away.");
 			}
 			//{More than five blowjobs!}
 			else {
-				outputText("\n\nUma valiantly holds herself in place on your " + cockDescript(x) + ", just in time for the flow of your juices to turn white and salty, an inevitable prelude to the coming discharge of your orgasm.  She noisily slurps, emptying her mouth of precum to make room, and in the process, inadvertently provides you with even more impetus to unload.  ");
-				if(player.cumQ() <= 25) outputText("She dutifully swallows every drop of your average-sized load, her long tongue slipping and sliding around your shaft as she ensures it is completely cleaned.");
-				else if(player.cumQ() <= 100) 
+				outputText("\n\nUma valiantly holds herself in place on your " + player.cockDescript(x) + ", just in time for the flow of your juices to turn white and salty, an inevitable prelude to the coming discharge of your orgasm.  She noisily slurps, emptying her mouth of precum to make room, and in the process, inadvertently provides you with even more impetus to unload.  ");
+				if (player.cumQ() <= 25) outputText("She dutifully swallows every drop of your average-sized load, her long tongue slipping and sliding around your shaft as she ensures it is completely cleaned.");
+				else if (player.cumQ() <= 100) 
 				{
 					outputText("She dutifully attempts to swallow every drop, but your load is a little bigger than average, and she's forced to let some of the frothy spit and jizz mixture wash back out over your length.");
-					if(player.balls > 0) outputText("  It rolls down to your [sack], coating it in warm, wet cum-shine.");
+					if (player.balls > 0) outputText("  It rolls down to your [sack], coating it in warm, wet cum-shine.");
 				}
 				else {
 					outputText("She dutifully attempts to swallow, but your load is so massive that the first shot has her cheeks bulging.  She's used to dealing with you, though.  The canny mother relaxes the seal of her lips and begins to stroke you with her tongue once more, using your massive ejaculations as lubrication.  She pumps up and down, faster and faster, letting your jizz wash back out her lips and over your crotch, making this orgasm one of the biggest and messiest you've had in a while.");
-					if(player.cumQ() >= 1000) {
+					if (player.cumQ() >= 1000) {
 						outputText("  By the time you finish shooting, the drains are noisily gurging as they struggle to handle the ");
-						if(player.cumQ() <= 2000) outputText("pool");
-						else if(player.cumQ() <= 30000) outputText("bathtub worth");
+						if (player.cumQ() <= 2000) outputText("pool");
+						else if (player.cumQ() <= 30000) outputText("bathtub worth");
 						else outputText("lake");
 						outputText(" of semen you've produced.");
 					}
 					outputText("  Your crotch is absolutely glazed with the stuff.");
 				}
 				//Bonus dicks
-				if(player.cockTotal() > 1) {
+				if (player.cockTotal() > 1) {
 					outputText("\n\nAngled off to the side");
-					if(player.cockTotal() > 2) outputText("s");
+					if (player.cockTotal() > 2) outputText("s");
 					outputText(", your other erection");
-					if(player.cockTotal() > 2) outputText("s release");
+					if (player.cockTotal() > 2) outputText("s release");
 					else outputText(" releases");
 					outputText(" all over the floor, fitfully sagging, then thickening with each shot.  ");
-					if(player.cockTotal() == 2) outputText("Its ");
+					if (player.cockTotal() == 2) outputText("Its ");
 					else outputText("Their ");
 					outputText("lewd dance continues on in imitation of your main member's pleasure.  ");
-					if(player.cockTotal() == 2) outputText("It's ropes");
+					if (player.cockTotal() == 2) outputText("It's ropes");
 					else outputText("Their ropes");
 					outputText(" aren't anywhere near as thick.");
 				}
 			}
 			//epilogue
 			//Came on her face
-			if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) 
+			if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 2) 
 			{
 				outputText("\n\nUma wipes her face off some of your seed.  \"<i>I’m fine.  Sorry about that, dear... but blowing is not really my thing, you know?  The only other person I did this for was Loppe’s father, and even then I didn’t like it so much... maybe you should have gone to Loppe instead?</i>\"");
 				outputText("\n\nYou tell her you’ll remember that, ");
-				if(player.cor <= 40) outputText(" apologise, and ");
+				if (player.cor <= 40) outputText(" apologize, and ");
 				outputText("get up to start getting dressed before quietly heading back to camp.");
 			}
 			//Came on her face after second time:
-			else if(flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) 
+			else if (flags[kFLAGS.UMA_TIMES_SUCKED_YOU] < 5) 
 			{
 				outputText("\n\nUma wipes her face off some of your seed.  \"<i>I’m fine.  Sorry about that, dear... I'm trying but to be honest, the idea of having a male member go off in my mouth like that startles me.  The gush of a wet pussy on your lips is just so much more understandable.  I bet Loppe wouldn't mind doing this for you, you know.</i>\"  She suddenly smirks, \"<i>Unless you've got some kind of fetish for letting older mares milk you?</i>\"");
 				outputText("\n\nYou give her a wink and a smile as you depart.  She's getting better at this.");
@@ -2011,7 +2025,7 @@
 			{
 				outputText("\n\nUma slowly licks your cockslime from her lips and swallows, opening up her mouth to show you just how good she's getting at swallowing your goo.  \"<i>I never would have thought that I'd be looking forward to bending over and taking a penis in my mouth, but... there's something special about you, [name].  I can see why Loppe fell for you so quickly.</i>\"  She licks her lips once more, this time running her tongue along her teeth to collect every little drop of your jism.  \"<i>It's just nice, feeling you twitch inside me like that, trusting my mouth to please you so.  It's so different from a massage or a handjob - more intimate I suppose.</i>\"  The smell of feminine arousal is faint in the air under the musky aroma of your spunk.");
 				//Higher cum quantity epilogue.
-				if(player.cumQ() > 25) {
+				if (player.cumQ() > 25) {
 					outputText("\n\nShe extends a towel to you.  \"<i>Just because your cum is starting to taste okay doesn't mean I'm licking all that up.  Get clean, dear.</i>\"");
 					outputText("\n\nYou wipe up with a rueful smile while Uma gets dressed.  She comes back with your clothes and helps you into them, giving your package an appreciative squeeze \"to make sure it emptied\" before sending you on your way to camp.");
 				}

@@ -52,7 +52,7 @@ package classes.Scenes.Areas.HighMountains
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
 			flags[kFLAGS.IZUMI_TIMES_LOST_FIGHT]++;
-			if (player.findStatusAffect(StatusAffects.Titsmother) >= 0)
+			if (player.hasStatusEffect(StatusEffects.Titsmother))
 			{
 				this.cleanup();
 				game.highMountains.izumiScenes.deathBySnuSnuIMeanGiantOniTits();
@@ -70,13 +70,13 @@ package classes.Scenes.Areas.HighMountains
 		override protected function performCombatAction():void
 		{
 			// Handle chokeslam mechanics
-			if (player.findStatusAffect(StatusAffects.Chokeslam) >= 0)
+			if (player.hasStatusEffect(StatusEffects.Chokeslam))
 			{
-				if (combatDebug) trace("ChokeSlam Rounds to Damage: " + player.statusAffectv1(StatusAffects.Chokeslam));
+				if (combatDebug) trace("ChokeSlam Rounds to Damage: " + player.statusEffectv1(StatusEffects.Chokeslam));
 				
-				player.addStatusValue(StatusAffects.Chokeslam,1,-1);
+				player.addStatusValue(StatusEffects.Chokeslam,1,-1);
 				
-				if (player.statusAffectv1(StatusAffects.Chokeslam) <= 0)
+				if (player.statusEffectv1(StatusEffects.Chokeslam) <= 0)
 				{
 					chokeSlamDamage();
 					cleanupChokeslam();
@@ -87,18 +87,18 @@ package classes.Scenes.Areas.HighMountains
 			}
 			
 			// Handle groundpound
-			if (player.findStatusAffect(StatusAffects.Groundpound) >= 0)
+			if (player.hasStatusEffect(StatusEffects.Groundpound))
 			{
-				player.addStatusValue(StatusAffects.Groundpound,1,-1);
+				player.addStatusValue(StatusEffects.Groundpound,1,-1);
 				
-				if (player.statusAffectv1(StatusAffects.Groundpound) <= 0)
+				if (player.statusEffectv1(StatusEffects.Groundpound) <= 0)
 				{
 					cleanupGroundpound();
 				}
 			}
 			
 			// Handle titsmother
-			if (player.findStatusAffect(StatusAffects.Titsmother) >= 0)
+			if (player.hasStatusEffect(StatusEffects.Titsmother))
 			{
 				combatRoundOver();
 				return;
@@ -107,24 +107,24 @@ package classes.Scenes.Areas.HighMountains
 			// Titsmother toggle; gonna need to play with this, it should only be used once per fight
 			if (this.HPRatio() <= 0.25)
 			{
-				if (this.findStatusAffect(StatusAffects.UsedTitsmother) <= -1)
+				if (!hasStatusEffect(StatusEffects.UsedTitsmother))
 				{
 					trace("Could use titsmother...");
 				}
 			}
 			
-			if ((this.HPRatio() <= 0.25) && (this.findStatusAffect(StatusAffects.UsedTitsmother) <= -1))
+			if ((this.HPRatio() <= 0.25) && (hasStatusEffect(StatusEffects.UsedTitsmother)))
 			{
 				if (combatDebug) trace("Using Titsmother!");
 				titSmother();
-				this.createStatusAffect(StatusAffects.UsedTitsmother, 0, 0, 0, 0);
+				this.createStatusEffect(StatusEffects.UsedTitsmother, 0, 0, 0, 0);
 				return;
 			}
 			else
 			{
 				var actions:Array = [straightJab, straightJab, straightJab, roundhouseKick, roundhouseKick, roundhouseKick, chokeSlam]; 
 				
-				if (player.findStatusAffect(StatusAffects.Groundpound) <= -1)
+				if (!player.hasStatusEffect(StatusEffects.Groundpound))
 				{
 					actions.push(groundPound);
 					actions.push(groundPound);
@@ -151,7 +151,7 @@ package classes.Scenes.Areas.HighMountains
 			outputText("Quick as a flash, Izumi lashes out with her free hand, aiming for your head.");
 
 			var damage:int = int((str + 175) - rand(player.tou) - player.armorDef);
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect())
+			if (player.getEvasionRoll())
 			{
 				outputText("  You deftly dodge under the lightning-quick punch.");
 			}
@@ -181,13 +181,13 @@ package classes.Scenes.Areas.HighMountains
 			{
 				outputText("You fall backwards and stagger away, already feeling a flush of warmth colouring your cheeks, trying to drag your mind back to the fight and away from... other things.");
 
-				game.dynStats("lus", 10 + player.lib / 10);
+				player.takeLustDamage(10 + player.lib / 10, true);
 			}
 			else
 			{
 				outputText("You furrow a brow at the Oni's ineffectual attack, not entirely sure if she was intending to hurt you or turn you on.  Her thighs did look rather tantalizing though...");
 
-				game.dynStats("lus", 5 + player.lib / 20);
+				player.takeLustDamage(5 + player.lib / 20, true);
 			}
 
 			combatRoundOver();
@@ -197,14 +197,14 @@ package classes.Scenes.Areas.HighMountains
 		// On escape, Izumi takes some damage
 		public function chokeSlam():void
 		{
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect())
+			if (player.getEvasionRoll())
 			{
 				outputText("Izumi surges towards you, closing the distance between you within the blink of an eye. You narrowly avoid her crushing grip, twisting away from her grasp at the last moment.  The enormous Oni lets loose a deep, satisfied laugh.");
 			}
 			else
 			{
 				outputText("Izumi surges towards you, smashing aside your guard and seizing you by the throat in the blink of an eye.  Lifting you above her head, you can only struggle to breathe as the enormous Oni grins at you like some sort of prize.");
-				player.createStatusAffect(StatusAffects.Chokeslam, 3, 0, 0, 0);
+				player.createStatusEffect(StatusEffects.Chokeslam, 3, 0, 0, 0);
 				
 				if (combatDebug) trace("Applied Chokeslam effect");
 			}
@@ -252,8 +252,8 @@ package classes.Scenes.Areas.HighMountains
 			
 			if (flags[kFLAGS.PC_FETISH] >= 2)
 			{
-				outputText(" and to be honest, the grip isn't an entirely unplesent experience, either.  If only Izumi would stop playing around and just <i>take you</i> already.");
-				game.dynStats("lus", 5);
+				outputText(" and to be honest, the grip isn't an entirely unpleasant experience, either.  If only Izumi would stop playing around and just <i>take you</i> already.");
+				player.takeLustDamage(5, true);
 			}
 			else
 			{
@@ -299,11 +299,11 @@ package classes.Scenes.Areas.HighMountains
 		// Remove the effect post-combat
 		public function cleanupChokeslam():void
 		{
-			if (player.findStatusAffect(StatusAffects.Chokeslam) >= 0)
+			if (player.hasStatusEffect(StatusEffects.Chokeslam))
 			{
 				trace("Removing chokeslam");
 				
-				player.removeStatusAffect(StatusAffects.Chokeslam);
+				player.removeStatusEffect(StatusEffects.Chokeslam);
 			}
 		}
 		
@@ -312,7 +312,7 @@ package classes.Scenes.Areas.HighMountains
 		{
 			outputText("Izumi raises one mighty foot and slams it to the ground with a victorious yell.  The ground itself actually shakes below your feet, threatening to knock you off balance.\n\n");
 			
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) // TODO: ensure this is correct
+			if (player.getEvasionRoll()) // TODO: ensure this is correct
 			{
 				outputText("Leaping to the side, you manage to steady yourself against the wall, keeping your footing.");
 			}
@@ -321,7 +321,7 @@ package classes.Scenes.Areas.HighMountains
 				outputText("The rumbling actually knocks you off your feet, sprawling on the ground and banging your head.  As the shaking subsides, you pull yourself upright, but you feel a little unsteady on your [feet] after the disorienting impact.");
 				
 				var spdReducedBy:int = int(player.spe * 0.25);
-				player.createStatusAffect(StatusAffects.Groundpound, 3, spdReducedBy, 0, 0);
+				player.createStatusEffect(StatusEffects.Groundpound, 3, spdReducedBy, 0, 0);
 				game.dynStats("spe-", spdReducedBy);
 				
 				if (combatDebug) trace("Applying Groundslam slow");
@@ -333,13 +333,13 @@ package classes.Scenes.Areas.HighMountains
 		// Remove the effect post-combat, fixup stats
 		public function cleanupGroundpound():void
 		{
-			if (player.findStatusAffect(StatusAffects.Groundpound) >= 0)
+			if (player.hasStatusEffect(StatusEffects.Groundpound))
 			{
 				// Can't use dynStats to achieve this, as it can give back more speed than we originally took away due to perks
-				player.spe += player.statusAffectv2(StatusAffects.Groundpound);
+				player.spe += player.statusEffectv2(StatusEffects.Groundpound);
 				if (player.spe > player.getMaxStats("spe")) player.spe = player.getMaxStats("spe");
 				
-				player.removeStatusAffect(StatusAffects.Groundpound);
+				player.removeStatusEffect(StatusEffects.Groundpound);
 				
 				trace("Removing Groundpound slow effect");
 			}
@@ -357,17 +357,17 @@ package classes.Scenes.Areas.HighMountains
 			else outputText(" face-");
 			outputText("first into Izumi - specifically, into her chest.  Shocked by suddenly having your face rammed into the pillowy soft expanse of Izumi’s bust, you rear back only to be slammed straight back into the mountainous expanse by Izumi’s arm.");
 			
-			player.createStatusAffect(StatusAffects.Titsmother, 0, 0, 0, 0);
-			game.dynStats("lus", (player.lib / 15) + 5 + rand(5));
+			player.createStatusEffect(StatusEffects.Titsmother, 0, 0, 0, 0);
+			player.takeLustDamage((player.lib / 15) + 5 + rand(5), true);
 			combatRoundOver();
 		}
 		
 		// Remove the effect post-combat
 		public function cleanupTitsmother():void
 		{
-			if (player.findStatusAffect(StatusAffects.Titsmother) >= 0)
+			if (player.hasStatusEffect(StatusEffects.Titsmother))
 			{
-				player.removeStatusAffect(StatusAffects.Titsmother);
+				player.removeStatusEffect(StatusEffects.Titsmother);
 				if (combatDebug) trace("Removing Titsmother");
 			}
 		}
@@ -414,15 +414,14 @@ package classes.Scenes.Areas.HighMountains
 						else outputText(" erection throbs");
 						outputText(", pressed up against Izumi’s stomach muscles.  Her muscles ripple and undulate as she struggles to keep you in her grip, abs flexing, bumping, encircling your insistent erection");
 						if (player.totalCocks() > 1) outputText("s");
-						outputText(", stimulating you even further.  You realise in a flash of panic that if you don’t get out of this soon, you may actually... ");
+						outputText(", stimulating you even further.  You realize in a flash of panic that if you don’t get out of this soon, you may actually... ");
 					}
 					else
 					{
 						outputText("Izumi’s bust encloses you on all sides, leaving you feeling like you’re trapped in some kind of breast sarcophagus.  The heat radiating from the soft flesh combines with the scent of whatever strange drug Izumi had been smoking, now hanging around her like some heady perfume.");
 					}
 				}
-				
-				game.dynStats("lus", player.lib / 15 + 5 + rand(5));
+				player.takeLustDamage(player.lib / 15 + 5 + rand(5), true);
 				doAI();
 			}
 		}
@@ -468,12 +467,12 @@ package classes.Scenes.Areas.HighMountains
 			
 			outputText("With your face crushed into the Oni's cleavage, you can't help but wonder; why bother resisting?  She's just so <i>strong</i>, and her breasts feel so lushious against your [face]...");
 			
-			game.dynStats("lus", player.lib / 10 + 5 + rand(5));
+			player.takeLustDamage(player.lib / 10 + 5 + rand(5), true);
 			
 			if (flags[kFLAGS.PC_FETISH] >= 2)
 			{
-				outputText(" and to be honest, her grip isn't an entirely unplesent experience, either.  If only Izumi would stop playing around and just <i>take you</i> already.");
-				game.dynStats("lus", 5);
+				outputText(" and to be honest, her grip isn't an entirely unpleasant experience, either.  If only Izumi would stop playing around and just <i>take you</i> already.");
+				player.takeLustDamage(5, true);
 			}
 			else
 			{

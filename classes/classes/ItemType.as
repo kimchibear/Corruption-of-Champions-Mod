@@ -3,18 +3,29 @@
  */
 package classes
 {
+	import classes.internals.Utils;
 	import flash.utils.Dictionary;
 
-	public class ItemType
+	public class ItemType extends Utils
 	{
 		private static var ITEM_LIBRARY:Dictionary = new Dictionary();
 		private static var ITEM_SHORT_LIBRARY:Dictionary = new Dictionary();
 		public static const NOTHING:ItemType = new ItemType("NOTHING!");
 
+		/**
+		 * Looks up item by <b>ID</b>.
+		 * @param	id 7-letter string that identifies an item.
+		 * @return  ItemType
+		 */
 		public static function lookupItem(id:String):ItemType{
 			return ITEM_LIBRARY[id];
 		}
 
+		/**
+		 * Looks up item by <b>shortName</b>.
+		 * @param	shortName The short name that was displayed on buttons.
+		 * @return  ItemType
+		 */
 		public static function lookupItemByShort(shortName:String):ItemType{
 			return ITEM_SHORT_LIBRARY[shortName];
 		}

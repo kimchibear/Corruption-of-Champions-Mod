@@ -15,10 +15,10 @@ package classes.Scenes.Quests.UrtaQuest
 
 		override protected function performCombatAction():void
 		{
-			if (HP < 300 && statusAffectv1(StatusAffects.MinoMilk) < 4 && flags[kFLAGS.URTA_QUEST_STATUS] == 0.75) minotaurDrankMalk();
+			if (HP < 300 && statusEffectv1(StatusEffects.MinoMilk) < 4 && flags[kFLAGS.URTA_QUEST_STATUS] == 0.75) minotaurDrankMalk();
 			else if (rand(4) == 0 && player.weaponName != "fists") minotaurDisarm();
-			else if (findStatusAffect(StatusAffects.Timer) < 0) minotaurLordEntangle();
-			else if (findStatusAffect(StatusAffects.MinotaurEntangled) >= 0) minotaurCumPress();
+			else if (!hasStatusEffect(StatusEffects.Timer)) minotaurLordEntangle();
+			else if (hasStatusEffect(StatusEffects.MinotaurEntangled)) minotaurCumPress();
 			else {
 				if (rand(2) == 0) minotaurPrecumTease();
 				else eAttack();
@@ -29,22 +29,22 @@ package classes.Scenes.Quests.UrtaQuest
 		{
 			outputText("The minotaur lord snorts audibly and turns to look at his mistress.  \"<i>What is it, Fido, boy?  You thirsty?</i>\"  The hulking minotaur nods.");
 			//Success:*
-			if (statusAffectv1(StatusAffects.MinoMilk) < 3) {
+			if (statusEffectv1(StatusEffects.MinoMilk) < 3) {
 				outputText("\"<i>Catch!</i>\"  The succubus throws a bottle containing a milky-white substance to the minotaur.  He grabs it and uncorks the bottle, quickly chugging its contents with obvious enjoyment.  After he is done he looks even more energetic and ready to fight, and his cock looks even harder!");
 				addHP(300);
 				lust += 10;
-				if (findStatusAffect(StatusAffects.MinoMilk) < 0)
-					createStatusAffect(StatusAffects.MinoMilk, 1, 0, 0, 0);
+				if (!hasStatusEffect(StatusEffects.MinoMilk))
+					createStatusEffect(StatusEffects.MinoMilk, 1, 0, 0, 0);
 				else
-					addStatusValue(StatusAffects.MinoMilk, 1, 1);
+					addStatusValue(StatusEffects.MinoMilk, 1, 1);
 			}
 			//Failure:*
 			else {
 				outputText("\"<i>Well too bad!  We're all out of milk... but don't worry, my dear pet, I'll let you drink as much as you want after you're done with this bitch.</i>\"  The succubus replies, idly checking her elongated nails.");
 				outputText("\n\nThe minotaur glares at you and snorts, obviously pissed at not getting his serving...");
-				addStatusValue(StatusAffects.MinoMilk, 1, 1);
+				addStatusValue(StatusEffects.MinoMilk, 1, 1);
 			}
-			kGAMECLASS.combatRoundOver();
+			combatRoundOver();
 		}
 
 		private function minotaurDisarm():void
@@ -55,31 +55,31 @@ package classes.Scenes.Quests.UrtaQuest
 				player.setWeapon(WeaponLib.FISTS);
 			}
 			else {
-				outputText("The giant of a minotaur raises his chain threateningly into the air, clearly intent on striking you down.  With your trained reflexes, you quickly move to block his blow with your halberd.  You recoil as the chain impacts your halberd with a loud clang, wrapping around it.  You smile triumphantly at the minotaur, only to glance at his smirk.  ");
+				outputText("The giant of a minotaur raises his chain threateningly into the air, clearly intent on striking you down.  With your trained reflexes, you quickly move to block his blow with your [weapon].  You recoil as the chain impacts your [weapon] with a loud clang, wrapping around it.  You smile triumphantly at the minotaur, only to glance at his smirk.  ");
 				if (player.weaponName != "fists") {
 					outputText("With a strong pull, he yanks your " + player.weaponName + " off your hands and into a corner of the room. Shit!");
 					flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID] = player.weapon.id;
 					flags[kFLAGS.PLAYER_DISARMED_WEAPON_ATTACK] = player.weaponAttack;
 					player.setWeapon(WeaponLib.FISTS);
-					player.createStatusAffect(StatusAffects.Disarmed, 2, 0, 0, 0);
+					player.createStatusEffect(StatusEffects.Disarmed, 2, 0, 0, 0);
 				}
 			}
-			kGAMECLASS.combatRoundOver();
+			combatRoundOver();
 		}
 
 		private function minotaurLordEntangle():void
 		{
 			outputText("The minotaur lord lashes out with his chain, swinging in a wide arc!\n");
-			createStatusAffect(StatusAffects.Timer, 2 + rand(4), 0, 0, 0);
+			createStatusEffect(StatusEffects.Timer, 2 + rand(4), 0, 0, 0);
 			//{dodge/whatever}
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("You leap over the clumsy swing, allowing the chain to fly harmlessly underneath you!");
 			}
 			else {
 				outputText("You try to avoid it, but you're too slow, and the chain slaps into your hip, painfully bruising you with the strength of the blow, even through your armor.  The inertia carries the back half of the whip around you, and in a second, the chain has you all wrapped up with your arms pinned to your sides and your movement restricted.");
 				if (flags[kFLAGS.URTA_QUEST_STATUS] == 0.75) outputText("\n\n\"<i>Hahaha!  Good boy, Fido!  Leash that bitch up!</i>\"  The succubus laughs with glee.");
 				outputText("\n\n<b>You're tangled up in the minotaur lord's chain, and at his mercy, unless you can break free!</b>");
-				createStatusAffect(StatusAffects.MinotaurEntangled, 0, 0, 0, 0);
+				createStatusEffect(StatusEffects.MinotaurEntangled, 0, 0, 0, 0);
 			}
 			combatRoundOver();
 		}
@@ -94,7 +94,7 @@ package classes.Scenes.Quests.UrtaQuest
 				outputText("you realize what you've been doing.  Your embarrassment gives you the strength to re-adopt your fighting pose, but it's hard with how ");
 				if (player.hasCock()) {
 					outputText("rigid");
-					if (player.lust >= 80) outputText(" and drippy");
+					if (player.lust100 >= 80) outputText(" and drippy");
 					outputText(" your cock has become.  ")
 					
 				}
@@ -106,7 +106,7 @@ package classes.Scenes.Quests.UrtaQuest
 				}
 				outputText("You want another taste...");
 			}
-			removeStatusAffect(StatusAffects.MinotaurEntangled);
+			removeStatusEffect(StatusEffects.MinotaurEntangled);
 			combatRoundOver();
 		}
 
@@ -115,7 +115,7 @@ package classes.Scenes.Quests.UrtaQuest
 			outputText("The minotaur smiles at you and lifts his loincloth, flicking it at you.  Thick ropes of pre-cum fly through the air in a swarm,");
 			if (rand(2) == 0) {
 				outputText(" slapping into your face before you can react!  You wipe the slick snot-like stuff out of your eyes and nose, ");
-				if (player.lust >= 70) outputText("swallowing it into your mouth without thinking.  You greedily guzzle the potent, narcotic aphrodisiac down, even going so far as to lick it from each of your fingers in turn, sucking every drop into your waiting gullet.");
+				if (player.lust100 >= 70) outputText("swallowing it into your mouth without thinking.  You greedily guzzle the potent, narcotic aphrodisiac down, even going so far as to lick it from each of your fingers in turn, sucking every drop into your waiting gullet.");
 				else outputText("feeling your heart hammer lustily.");
 				kGAMECLASS.dynStats("lus", 15 + player.lib / 8 + player.sens / 8);
 			}
@@ -126,9 +126,9 @@ package classes.Scenes.Quests.UrtaQuest
 				kGAMECLASS.dynStats("lus", 11 + player.lib / 10);
 			}
 			//(1)
-			if (player.lust <= 75) outputText("  You shiver with need, wanting nothing more than to bury your face under that loincloth and slurp out every drop of goopey goodness.");
+			if (player.lust100 <= 75) outputText("  You shiver with need, wanting nothing more than to bury your face under that loincloth and slurp out every drop of goopey goodness.");
 			else outputText("  <b>You groan and lick your lips over and over, craving the taste of him in your mouth.</b>");
-			kGAMECLASS.combatRoundOver();
+			combatRoundOver();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
@@ -169,7 +169,7 @@ package classes.Scenes.Quests.UrtaQuest
 			createBreastRow(0);
 			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
 			this.ass.analWetness = ANAL_WETNESS_NORMAL;
-			this.createStatusAffect(StatusAffects.BonusACapacity,50,0,0,0);
+			this.createStatusEffect(StatusEffects.BonusACapacity,50,0,0,0);
 			this.tallness = 132;
 			this.hipRating = HIP_RATING_AVERAGE;
 			this.buttRating = BUTT_RATING_AVERAGE+1;

@@ -25,14 +25,14 @@ package classes.Scenes.Quests.UrtaQuest
 			if (damage<=0) {
 				super.outputAttack(damage);
 			} else {
-				outputText("You misjudge his pattern and wind up getting slashed by a series of swipes from his sharpened nails.  He distances himself from you in order to avoid retaliation and glares at you with his piercing yellow eyes, a hint of a smile on his face. (" + damage + ")");
+				outputText("You misjudge his pattern and wind up getting slashed by a series of swipes from his sharpened nails.  He distances himself from you in order to avoid retaliation and glares at you with his piercing yellow eyes, a hint of a smile on his face. <b>(<font color=\"#800000\">" + damage + "</font>)</b>");
 			}
 		}
 
 		override protected function performCombatAction():void
 		{
 			var attack:int = rand(4);
-			if (player.findStatusAffect(StatusAffects.Blind) >= 0) attack = rand(3);
+			if (player.hasStatusEffect(StatusEffects.Blind)) attack = rand(3);
 			if (attack == 0) eAttack();
 			if (attack == 1) poisonBite();
 			if (attack == 2) manNagaTease();
@@ -48,7 +48,7 @@ package classes.Scenes.Quests.UrtaQuest
 				combatRoundOver();
 			}
 //Hit (Blind):
-			if (findStatusAffect(StatusAffects.Blind) >= 0) {
+			if (hasStatusEffect(StatusEffects.Blind)) {
 				outputText("  Though your vision is still blurry, you feel yourself being sucked into the golden depths of those pupils, making you forget all your worries, if only for an instant.  All you can focus on is your growing arousal as you sink deeper into his gaze.  You shake your head, clearing your mind of the hypnotising effects the snake-man's eyes seem to possess, though the arousal remains.");
 				kGAMECLASS.dynStats("lus", (5 + player.lib / 10 - player.inte / 20));
 			}
@@ -66,7 +66,7 @@ package classes.Scenes.Quests.UrtaQuest
 //{Hit:
 			if (spe / 20 + rand(20) + 1 > player.spe / 20 + 10) {
 				outputText("The vile spray hits your eyes and you scream in pain, clawing fiercely at your burning, watering, weeping eyes.  <b>You can't see!  It'll be much harder to fight in this state, but at the same time, his hypnosis won't be so effective...</b>");
-				player.createStatusAffect(StatusAffects.Blind, 3, 0, 0, 0);
+				player.createStatusEffect(StatusEffects.Blind, 3, 0, 0, 0);
 			}
 			//Miss:
 			else outputText("You quickly lean to the side, narrowly avoiding being blinded by the snake-man's spit!");
@@ -77,15 +77,14 @@ package classes.Scenes.Quests.UrtaQuest
 		{
 			outputText("With a loud and vicious hiss, Sirius suddenly lunges at you, mouth distended impossibly wide and revealing four needle-like fangs dripping with venom!  ");
 //Miss:
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("You dodge just in the nick of time, and deliver a punishing blow with the butt of your halberd as Sirius soars past, forcing him to slither past you to make himself ready to defend himself again.");
 				combatRoundOver();
 			}
 //Hit:
-			outputText("The snake-man moves too quickly for you to evade and he sinks long fangs into your flesh, leaving a wound that burns with horrific pain.");
+			outputText("The snake-man moves too quickly for you to evade and he sinks long fangs into your flesh, leaving a wound that burns with horrific pain. ");
 			var damage:Number = 40 + rand(20);
-			damage = player.takeDamage(damage);
-			outputText(" (" + damage + ")");
+			damage = player.takeDamage(damage, true);
 			combatRoundOver();
 		}
 
@@ -111,7 +110,7 @@ package classes.Scenes.Quests.UrtaQuest
 			createBreastRow(0);
 			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
 			this.ass.analWetness = ANAL_WETNESS_DRY;
-			this.createStatusAffect(StatusAffects.BonusACapacity,10,0,0,0);
+			this.createStatusEffect(StatusEffects.BonusACapacity,10,0,0,0);
 			this.tallness = 5*12+10;
 			this.hipRating = HIP_RATING_AMPLE+2;
 			this.buttRating = BUTT_RATING_LARGE;

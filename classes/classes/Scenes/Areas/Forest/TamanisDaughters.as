@@ -9,24 +9,25 @@ package classes.Scenes.Areas.Forest
 	{
 		private function midRoundMadness():void {
 			var selector:Number = rand(4);
-			if(selector == 0) {
-				outputText("A slender hand reaches inside your " + player.armorName + " and gives your ", false);
-				if(player.balls > 0) {
-					if(rand(2) == 0) outputText(player.multiCockDescriptLight(), false);
-					else outputText(player.ballsDescriptLight(), false);
+			if (selector == 0) {
+				outputText("A slender hand reaches inside your " + player.armorName + " and gives your ");
+				if (player.balls > 0) {
+					if (rand(2) == 0) outputText(player.multiCockDescriptLight());
+					else outputText(player.ballsDescriptLight());
 				}
-				else outputText(player.multiCockDescriptLight(), false);
-				outputText(" a gentle squeeze.  You twist away but your breathing gets a little heavier.\n\n", false);
+				else outputText(player.multiCockDescriptLight());
+				outputText(" a gentle squeeze.  You twist away but your breathing gets a little heavier.\n\n");
 			}
-			else if(selector == 1) {
-				outputText("A girl latches onto your " + player.legs() + " and begins caressing your body lovingly, humming happily.  You quickly shake her loose but the attention makes you blush a little more.\n\n", false);
+			else if (selector == 1) {
+				outputText("A girl latches onto your " + player.legs() + " and begins caressing your body lovingly, humming happily.  You quickly shake her loose but the attention makes you blush a little more.\n\n");
 			}
-			else if(selector == 2) {
-				outputText("One of your daughters launches onto your back and presses her hard, pierced nipples against your neck.  She whispers in your ear, \"<i>Twist my nipples dad!</i>\"\n\n", false);
-				outputText("You reach back and throw her off, but her perverted taunts still leave you feeling a little hot under the collar.\n\n", false);
+			else if (selector == 2) {
+				outputText("One of your daughters launches onto your back and presses her hard, pierced nipples against your neck.  She whispers in your ear, \"<i>Twist my nipples dad!</i>\"\n\n");
+				outputText("You reach back and throw her off, but her perverted taunts still leave you feeling a little hot under the collar.\n\n");
 			}
-			else outputText("A daughter lays down in front of you and starts jilling herself on the spot.  It's impossible to not glance down and see her or hear her pleasured moans.  You step away to remove the distraction but it definitely causes some discomfort in your " + player.armorName + ".\n\n", false);
-			game.dynStats("lus", 1 + player.lib/15+rand(player.cor/30));
+			else outputText("A daughter lays down in front of you and starts jilling herself on the spot.  It's impossible to not glance down and see her or hear her pleasured moans.  You step away to remove the distraction but it definitely causes some discomfort in your " + player.armorName + ".\n\n");
+			var lustDmg:int = 1 + player.lib/15+rand(player.cor/30);
+			player.takeLustDamage(lustDmg, true);
 		}
 
 		private function tamaniShowsUp():void {
@@ -35,8 +36,8 @@ package classes.Scenes.Areas.Forest
 			}
 			else if (rand(6) == 0) {
 				TamainsDaughtersScene.tamaniPresent = true;
-				outputText("A high-pitched yet familiar voice calls out, \"<i><b>So this is where you skanks ran off to---wait a second.  Are you trying to poach Tamani's man!?</b></i>\"\n\n", false);
-				outputText("You can see Tamani lurking around the rear of the goblin pack, visibly berating her daughters.  On one hand it sounds like she might help you, but knowing goblins, she'll probably forget about her anger and help them subdue you for more cum...\n\n", false);
+				outputText("A high-pitched yet familiar voice calls out, \"<i><b>So this is where you skanks ran off to---wait a second.  Are you trying to poach Tamani's man!?</b></i>\"\n\n");
+				outputText("You can see Tamani lurking around the rear of the goblin pack, visibly berating her daughters.  On one hand it sounds like she might help you, but knowing goblins, she'll probably forget about her anger and help them subdue you for more cum...\n\n");
 				//(+5 mob strength)
 				str += 5;
 				//(+5 mob toughness)
@@ -51,39 +52,45 @@ package classes.Scenes.Areas.Forest
 
 		override protected function performCombatAction():void
 		{
-			var select:Number=1;
+			var select:int = 1;
 			//mid-round madness!
 			midRoundMadness();
 			tamaniShowsUp();
 
-			if(special1 > 0 || special1 is Function) select++;
-			if(special2 > 0 || special2 is Function) select++;
-			if(special3 > 0 || special3 is Function) select++;
-			var rando:int = rand(select);
-			//Tamani's Daughters get multiattacks!
-			if(rando == 0) {
-				createStatusAffect(StatusAffects.Attacks, int(flags[kFLAGS.TAMANI_NUMBER_OF_DAUGHTERS] / 20), 0, 0, 0);
-				if (statusAffectv1(StatusAffects.Attacks) > 20) addStatusValue(StatusAffects.Attacks, 1, -(statusAffectv1(StatusAffects.Attacks) - 20));
-				eAttack();
+			if (special1 != null) select++;
+			if (special2 != null) select++;
+			if (special3 != null) select++;
+			switch (rand(select)) {
+				case 0:
+					createStatusEffect(StatusEffects.Attacks, int(flags[kFLAGS.TAMANI_NUMBER_OF_DAUGHTERS] / 20), 0, 0, 0); //Tamani's Daughters get multiattacks!
+					if (statusEffectv1(StatusEffects.Attacks) > 20) addStatusValue(StatusEffects.Attacks, 1, -(statusEffectv1(StatusEffects.Attacks) - 20));
+					eAttack();
+					break;
+				case 1:
+					special1();
+					break;
+				case 2:
+					special2();
+					break;
+				default:
+					special3();
+					break;
 			}
-			if(rando == 1) game.eventParser(special1);
-			if(rando == 2) game.eventParser(special2);
-			if(rando == 3) game.eventParser(special3);
 			combatRoundOver();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			game.forest.tamaniDaughtersScene.combatWinAgainstDaughters();
+			game.forest.tamaniScene.tamaniDaughtersScene.combatWinAgainstDaughters();
 		}
 
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
-			if(pcCameWorms){
+			if (pcCameWorms){
 				outputText("\n\nYour foes seem visibly disgusted and leave, telling you to, \"<i>quit being so fucking gross...</i>\"");
-				game.cleanupAfterCombat();
+				game.combat.cleanupAfterCombat();
 			} else {
-				game.forest.tamaniDaughtersScene.loseToDaughters();
+				game.forest.tamaniScene.tamaniDaughtersScene.loseToDaughters();
 			}
 		}
 
@@ -99,11 +106,11 @@ package classes.Scenes.Areas.Forest
 			this.pronoun2 = "them";
 			this.pronoun3 = "their";
 			this.createVagina(false, VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_TIGHT);
-			this.createStatusAffect(StatusAffects.BonusVCapacity, 40, 0, 0, 0);
+			this.createStatusEffect(StatusEffects.BonusVCapacity, 40, 0, 0, 0);
 			createBreastRow(Appearance.breastCupInverse("D"));
 			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
 			this.ass.analWetness = ANAL_WETNESS_DRY;
-			this.createStatusAffect(StatusAffects.BonusACapacity,25,0,0,0);
+			this.createStatusEffect(StatusEffects.BonusACapacity,25,0,0,0);
 			this.tallness = 40;
 			this.hipRating = HIP_RATING_AMPLE+1;
 			this.buttRating = BUTT_RATING_NOTICEABLE+1;

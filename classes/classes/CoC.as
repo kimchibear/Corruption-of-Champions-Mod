@@ -1,34 +1,83 @@
-﻿package classes
+/* 
+ CoC Main File - This is what loads when the game begins. If you want to start understanding the structure of CoC,
+ this is the place to start.
+ First, we import all the classes from many different files across the codebase. It would be wise not to alter the
+ order of these imports until more is known about what needs to load and when.
+*/
+
+package classes
 {
 	// BREAKING ALL THE RULES.
-	import classes.GlobalFlags.kFLAGS;
-	import classes.GlobalFlags.kGAMECLASS;
-	import classes.GlobalFlags.kACHIEVEMENTS;
-	import classes.Scenes.Dungeons.DungeonEngine;
-	import classes.Scenes.Dungeons.D3.D3;
+import classes.CoC_Settings;
+import classes.GlobalFlags.kFLAGS;
+	import classes.display.SpriteDb;
+	import classes.internals.*;
 
-	import classes.CoC_Settings;
 
-	import classes.AssClass;
-	import classes.BreastRowClass;
-	import classes.Items.*;
-	import classes.PerkLib;
 
-	import classes.Player;
-	import classes.Cock;
-	import classes.Creature;
-	import classes.ItemSlotClass;
-	import classes.PerkClass;
-	import classes.StatusAffectClass;
-	import classes.VaginaClass;
-	import classes.ImageManager;
-	import classes.internals.Utils;
+import flash.display.BitmapData;
+import flash.display.DisplayObjectContainer;
+import flash.utils.setTimeout;
+
+import mx.flash.UIMovieClip;
+
+// This file contains most of the persistent gamestate flags.
+	import classes.GlobalFlags.kGAMECLASS; // This file creates the gameclass that the game will run within.
+	import classes.GlobalFlags.kACHIEVEMENTS; // This file creates the flags for the achievements system.
+	import classes.Scenes.Combat.Combat;
+	import classes.Scenes.Dungeons.DungeonCore; // This file creates all the dungeons, their rooms, and their completion states except for D3. This also includes cabin code. See file for more details.
+	import classes.Scenes.Dungeons.D3.D3; // Likely due to D3's complexity, that dungeon is split out separately.
+	import classes.Scenes.Seasonal.AprilFools;
+	import classes.Scenes.Seasonal.Fera;
+	import classes.Scenes.Seasonal.Thanksgiving;
+	import classes.Scenes.Seasonal.Valentines;
+	import classes.Scenes.Seasonal.XmasBase;
+
+	import classes.CoC_Settings; // This file creates basic variables for CoC itself (debug flags, buffers, button manipulation)
+
+/* 
+One very important thing to know about descriptions in this game is that many words are based on hidden integer values. 
+These integers are compared to tables or queried directly to get the words used for particular parts of descriptions. For instance,
+AssClass below has variables for wetness, looseness, fullness, and virginity. You'll often find little tables like this
+scattered through the code:
+butt looseness
+		0 - virgin
+		1 - normal
+		2 - loose
+		3 - very loose
+		4 - gaping
+		5 - monstrous
+Tracking down a full list of description variables, how their integer values translate to descriptions, and how to call them
+would be a very useful task for anyone who wants to extend content using variables.
+Further complicating this is that the code will also sometimes have a randomized list of words for certain things just to keep 
+the text from being too boring.
+*/
+
+	import classes.AssClass; // Creates the class that holds ass-related variables as described above. 
+	import classes.BreastRowClass; // Creates the class that holds breast-related variables.
+	import classes.BodyParts.Neck;
+	import classes.BodyParts.Skin;
+	import classes.BodyParts.UnderBody;
+	import classes.Items.*; // This pulls in all the files in the Items folder. Basically any inventory item in the game
+	import classes.PerkLib; // This instantiates the IDs, names, and descriptions of perks. Does NOT have any code related to the actual perk! Use the ID field to search the code base for that. 
+
+	import classes.Player; // Creates a player with all that entails. See file for more info. Also see Creature.as.
+	import classes.Cock; // Creates the class that holds cock-related variables. Also has several functions for growing and shrinking cocks.
+	import classes.Creature; // Creates basic information for all characters in CoC. Contains many descriptors.
+	import classes.ItemSlotClass; // Creates item slots
+	import classes.PerkClass; // The function in this file pulls perk information from PerkLib for later querying
+	import classes.StatusEffectClass; // Similar to PerkClass, but for status effects in combat.
+	import classes.VaginaClass; // Creates vaginas
+	import classes.ImageManager; // Image voodoo for sprites
+	import classes.internals.Utils; // This file contains much voodoo for randomizing item arrays and other useful functions.
 
 
 	// This line not necessary, but added because I'm pedantic like that.
 	import classes.InputManager;
 
-	import classes.Parser.Parser;
+	import classes.Parser.Parser; // Much text voodoo for how to make all the description/pronoun/etc replacement work.
+
+// All the files below with Scenes loads the main content for the game.
 
 	import classes.Scenes.*;
 	import classes.Scenes.Areas.*;
@@ -46,18 +95,21 @@
 	import classes.Scenes.NPCs.*;
 	import classes.Scenes.Places.*;
 	import classes.Scenes.Places.TelAdre.*;
+	import classes.Scenes.Seasonal.*;
 	import classes.Scenes.Quests.*;
-	import coc.view.MainView;
-
-	import coc.model.GameModel;
-	import coc.model.TimeModel;
+	import coc.view.MainView; // Creates the framework for the game screen.
+	import coc.model.GameModel; // Uncertain.
+	import coc.model.TimeModel; // Various time-related functions for setting the game clock and querying its state.
 
 	// Class based content? In my CoC?! It's more likely than you think!
 	import classes.content.*;
+	
+	// All the imports below are for Flash.
 	import fl.controls.ComboBox;
 	import fl.data.DataProvider;
 	import flash.display.Loader;
 	import flash.display.MovieClip;
+	import flash.display.Stage;
 	import flash.events.*
 	import flash.net.FileReference;
 	import flash.net.navigateToURL;
@@ -71,42 +123,39 @@
 	import flash.utils.ByteArray;
 	import flash.system.Capabilities;
 	import flash.display.Sprite;
+	import mx.logging.targets.TraceTarget;
+	import mx.logging.Log;
+	import mx.logging.LogEventLevel;
 
 	/****
 		classes.CoC: The Document class of Corruption of the Champions.
 	****/
+	
+	// This class instantiates the game. If you create a new place/location/scene you'll likely have to add it into here.
+	// Add in descriptions for the include statements. Many of the description text code is inside of these.
+	// Suggest moving or removing old comments referencing things that aren't needed anymore.
 		
-	[SWF( width="1000", height="800", pageTitle="Corruption of Champions" )]
+	[SWF( width="1000", height="800", backgroundColor="0x000000", pageTitle="Corruption of Champions" )]
 
 	public class CoC extends MovieClip
 	{
+		{
+			/*
+			 * This is a static initializer block, used as an ugly hack to setup
+			 * logging before any of the class variables are initialized.
+			 * This is done because they could log messages during construction.
+			 */
+
+			 CoC.setUpLogging();
+		}
 
 		// Include the functions. ALL THE FUNCTIONS
-		include "../../includes/customCharCreation.as";
-		
-		include "../../includes/descriptors.as";
-		include "../../includes/appearance.as";
-
-		include "../../includes/InitialiseUI.as";
 		include "../../includes/input.as";
-		include "../../includes/OnLoadVariables.as";
-		include "../../includes/startUp.as";
 		include "../../includes/debug.as";
-		
-		include "../../includes/combat.as";
-//No longer needed. This file has been chopped up and spread throughout the codebase:		include "../../includes/doEvent.as";
 		include "../../includes/eventParser.as";
-		
-
-		include "../../includes/eventTest.as";
-		
-		
-		include "../../includes/transform.as";
-		
 		include "../../includes/engineCore.as";
 
 		// Lots of constants
-		//include "../../includes/flagDefs.as";
 		include "../../includes/appearanceDefs.as";
 
 		//Any classes that need to be made aware when the game is saved or loaded can add themselves to this array using saveAwareAdd.
@@ -129,13 +178,19 @@
 		
 		public static function timeAwareClassAdd(newEntry:TimeAwareInterface):void { _timeAwareClassList.push(newEntry); }
 		
+		private static var doCamp:Function; //Set by campInitialize, should only be called by playerMenu
+		private static function campInitialize(passDoCamp:Function):void { doCamp = passDoCamp; }
+		
 		// /
 		private var _perkLib:PerkLib = new PerkLib();// to init the static
-		private var _statusAffects:StatusAffects = new StatusAffects();// to init the static
+		private var _statusEffects:StatusEffects = new StatusEffects();// to init the static
 		public var charCreation:CharCreation = new CharCreation();
+		public var playerAppearance:PlayerAppearance = new PlayerAppearance();
+		public var playerInfo:PlayerInfo = new PlayerInfo();
 		public var saves:Saves = new Saves(gameStateDirectGet, gameStateDirectSet);
+		public var perkTree:PerkTree = new PerkTree();
 		// Items/
-		public var mutations:Mutations = new Mutations();
+		public var mutations:Mutations = Mutations.init();
 		public var consumables:ConsumableLib = new ConsumableLib();
 		public var useables:UseableLib;
 		public var weapons:WeaponLib = new WeaponLib();
@@ -145,14 +200,23 @@
 		public var shields:ShieldLib = new ShieldLib();
 		public var miscItems:MiscItemLib = new MiscItemLib();
 		// Scenes/
-		public var camp:Camp = new Camp();
-		public var exploration:Exploration = new Exploration();
-		public var inventory:Inventory = new Inventory(saves);
+		public var achievementList:Achievements = new Achievements();
+		public var camp:Camp = new Camp(campInitialize);
+		public var dreams:Dreams = new Dreams();
+		public var dungeons:DungeonCore = new DungeonCore();
 		public var followerInteractions:FollowerInteractions = new FollowerInteractions();
+		public var inventory:Inventory = new Inventory(saves);
+		public var masturbation:Masturbation = new Masturbation();
+		public var pregnancyProgress:PregnancyProgression = new PregnancyProgression();
+		public var bimboProgress:BimboProgression = new BimboProgression();
+
 		// Scenes/Areas/
+		public var commonEncounters:CommonEncounters = new CommonEncounters(); // Common dependencies go first
+
 		public var bog:Bog = new Bog();
 		public var desert:Desert = new Desert();
 		public var forest:Forest = new Forest();
+		public var deepWoods:DeepWoods = new DeepWoods(forest);
 		public var glacialRift:GlacialRift = new GlacialRift();
 		public var highMountains:HighMountains = new HighMountains();
 		public var lake:Lake = new Lake();
@@ -160,6 +224,10 @@
 		public var plains:Plains = new Plains();
 		public var swamp:Swamp = new Swamp();
 		public var volcanicCrag:VolcanicCrag = new VolcanicCrag();
+
+		public var exploration:Exploration = new Exploration(); //Goes last in order to get it working.
+		// Scenes/Combat/
+		public var combat:Combat = new Combat();
 		// Scenes/Dungeons
 		public var brigidScene:BrigidScene = new BrigidScene();
 		public var d3:D3 = new D3();
@@ -169,10 +237,13 @@
 		public var giacomoShop:Giacomo = new Giacomo();
 		// Scenes/Monsters/
 		public var goblinScene:GoblinScene = new GoblinScene();
-		public var impScene:ImpScene = new ImpScene();
 		public var goblinAssassinScene:GoblinAssassinScene = new GoblinAssassinScene();
 		public var goblinWarriorScene:GoblinWarriorScene = new GoblinWarriorScene();
 		public var goblinShamanScene:GoblinShamanScene = new GoblinShamanScene();
+		public var goblinElderScene:PriscillaScene = new PriscillaScene();
+		public var impScene:ImpScene = new ImpScene();
+		public var mimicScene:MimicScene = new MimicScene();
+		public var succubusScene:SuccubusScene = new SuccubusScene();
 		// Scenes/NPC/
 		public var amilyScene:AmilyScene = new AmilyScene();
 		public var anemoneScene:AnemoneScene = new AnemoneScene();
@@ -189,6 +260,7 @@
 		public var isabellaFollowerScene:IsabellaFollowerScene = new IsabellaFollowerScene();
 		public var izmaScene:IzmaScene = new IzmaScene();
 		public var jojoScene:JojoScene = new JojoScene();
+		public var joyScene:JoyScene = new JoyScene();
 		public var kihaFollower:KihaFollower = new KihaFollower();
 		public var kihaScene:KihaScene = new KihaScene();
 		public var latexGirl:LatexGirl = new LatexGirl();
@@ -214,43 +286,32 @@
 		public var farm:Farm = new Farm();
 		public var owca:Owca = new Owca();
 		public var telAdre:TelAdre = new TelAdre();
-		public var dungeons:DungeonEngine = new DungeonEngine();
 		public var ingnam:Ingnam = new Ingnam();
 		public var prison:Prison = new Prison();
+		public var townRuins:TownRuins = new TownRuins();
+		// Scenes/Seasonal/
+		public var aprilFools:AprilFools = new AprilFools();
+		public var fera:Fera = new Fera();
+		public var thanksgiving:Thanksgiving = new Thanksgiving();
+		public var valentines:Valentines = new Valentines();
+		public var xmas:XmasBase = new XmasBase();
 		// Scenes/Quests/
 		public var urtaQuest:UrtaQuest = new UrtaQuest();
-		
+
+		public var mainMenu:MainMenu = new MainMenu();
+		public var gameSettings:GameSettings = new GameSettings();
 		public var debugMenu:DebugMenu = new DebugMenu();
+		public var crafting:Crafting = new Crafting();
 		
 		// Force updates in Pepper Flash ahuehue
 		private var _updateHack:Sprite = new Sprite();
 		
-		public var mainViewHack:MainViewHack = new MainViewHack();
-		// Other scenes
+		public var mainViewManager:MainViewManager = new MainViewManager();
+		//Scenes in includes folder GONE! Huzzah!
 
-		include "../../includes/april_fools.as";
-
-		include "../../includes/dreams.as";
-		//include "../../includes/dungeon2Supplimental.as";
-		//include "../../includes/dungeonCore.as";
-		//include "../../includes/dungeonEvents.as";
-		//include "../../includes/dungeonHelSupplimental.as";
-		//include "../../includes/dungeonSandwitch.as";
-		include "../../includes/fera.as";
-		include "../../includes/masturbation.as";
-		include "../../includes/pregnancy.as";
-		include "../../includes/runa.as";
-		include "../../includes/symGear.as";
-		include "../../includes/tamaniDildo.as";
-		include "../../includes/thanksgiving.as";
-		include "../../includes/valentines.as";
-		include "../../includes/worms.as";
-		include "../../includes/xmas_bitch.as";
-		include "../../includes/xmas_gats_not_an_angel.as";
-		include "../../includes/xmas_jack_frost.as";
-		include "../../includes/xmas_misc.as";
-	
-		
+		public var bindings:Bindings = new Bindings();
+		public var output:Output = Output.init();
+		public var measurements:Measurements = Measurements.init();
 		/****
 			This is used purely for bodges while we get things cleaned up.
 			Hopefully, anything you stick to this object can be removed eventually.
@@ -258,7 +319,6 @@
 			certain functions, even though they were in the same scope as the
 			function calling them.
 		****/
-		public var semiglobalReferencer :* = {};
 
 		public var mainView :MainView;
 
@@ -272,67 +332,92 @@
 		public var debug:Boolean;
 		public var ver:String;
 		public var version:String;
+		public var versionID:uint = 0;
+		public var permObjVersionID:uint = 0;
 		public var mobile:Boolean;
 		public var images:ImageManager;
 		public var player:Player;
 		public var player2:Player;
-		public var tempPerk:PerkClass;
 		public var monster:Monster;
-//No longer used:		public var itemSwapping:Boolean;
 		public var flags:DefaultDict;
 		public var achievements:DefaultDict;
-		private var gameState:int;
-		public var menuLoc:Number;
-//No longer used:		public var itemSubMenu:Boolean;
-//No longer used:		public var supressGoNext:Boolean = false;
+		private var _gameState:int;
+		public function get gameState():int { return _gameState; }
 		public var time :TimeModel;
-		public var currentText:String;
 
-		public var explored:Boolean;
-		public var foundForest:Boolean;
-		public var foundDesert:Boolean;
-		public var foundMountain:Boolean;
-		public var foundLake:Boolean;
-		public var whitney:Number;
-		public var monk:Number;
-		public var sand:Number;
-		public var giacomo:int;
-//Replaced by flag		public var beeProgress:Number;
-//Now in Inventory.as		public var itemStorage:Array;
-//Now in Inventory.as		public var gearStorage:Array;
 		public var temp:int;
 		public var args:Array;
 		public var funcs:Array;
 		public var oldStats:*; // I *think* this is a generic object
 		public var inputManager:InputManager;
 
-		public var monkey:ChaosMonkey;
-		public var testingBlockExiting:Boolean;
-
 		public var kFLAGS_REF:*;
 		public var kACHIEVEMENTS_REF:*;
 
-		public function get inCombat():Boolean { return gameState == 1; }
+		public function get inCombat():Boolean { return _gameState == 1; }
+		public function set inCombat(value:Boolean):void { _gameState = (value ? 1 : 0); }
 		
-		public function set inCombat(value:Boolean):void { gameState = (value ? 1 : 0); }
-		
-		private function gameStateDirectGet():int { return gameState; }
-		
-		private function gameStateDirectSet(value:int):void { gameState = value; }
-		
-		public function rand(max:int):int
-		{
-			return Utils.rand(max);
+		public function gameStateDirectGet():int { return _gameState; }
+		public function gameStateDirectSet(value:int):void { _gameState = value; }
+
+		public function rand(max:int):int { return Utils.rand(max); }
+
+		//System time
+		public var date:Date = new Date();
+
+		//Mod save version.
+		public var modSaveVersion:Number = 15;
+		public var levelCap:Number = 120;
+
+		//dungeoneering variables (If it ain't broke, don't fix it)
+		public var inDungeon:Boolean = false;
+		public var dungeonLoc:int = 0;
+
+		// To save shitting up a lot of code...
+		public var inRoomedDungeon:Boolean = false;
+		public var inRoomedDungeonResume:Function = null;
+
+		public var timeQ:Number = 0;
+		public var campQ:Boolean = false;
+
+		private static var traceTarget:TraceTarget;
+
+		private static function setUpLogging():void {
+			traceTarget = new TraceTarget();
+
+			traceTarget.level = LogEventLevel.WARN;
+
+			CONFIG::debug
+			{
+				traceTarget.level = LogEventLevel.DEBUG;
+			}
+
+			//Add date, time, category, and log level to the output
+			traceTarget.includeDate = true;
+			traceTarget.includeTime = true;
+			traceTarget.includeCategory = true;
+			traceTarget.includeLevel = true;
+
+			// let the logging begin!
+			Log.addTarget(traceTarget);
 		}
 
-		// holidayz
-		public function isEaster():Boolean
+		/**
+		 * Create the main game instance.
+		 * If a stage is injected it will be use instead of the one from the superclass.
+		 *
+		 * @param injectedStage if not null, it will be used instead of this.stage
+		 */
+		public function CoC(injectedStage:Stage = null)
 		{
-			return plains.bunnyGirl.isItEaster();
-		}
+			var stageToUse:Stage;
 
-		public function CoC()
-		{
+			if (injectedStage != null) {
+				stageToUse = injectedStage;
+			}else{
+				stageToUse = this.stage;
+			}
+
 			// Cheatmode.
 			kGAMECLASS = this;
 			
@@ -343,34 +428,35 @@
 			// cheat for the parser to be able to find kFLAGS
 			// If you're not the parser, DON'T USE THIS
 
-			// This is a flag used to prevent the game from exiting when running under the automated tester
-			// (the chaos monkey)
-			testingBlockExiting = false;
-			
-			// Used for stopping chaos monkey on syntax errors. Separate flag so we can make stopping optional
-			CoC_Settings.haltOnErrors = false;
-			
 			this.parser = new Parser(this, CoC_Settings);
 
 			this.model = new GameModel();
-			this.mainView = new MainView( this.model );
+			try {
+				this.mainView = new MainView(/*this.model*/);
+				if (CoC_Settings.charviewEnabled) this.mainView.charView.reload();
+			} catch (e:Error) {
+				trace(e, e.getStackTrace());
+				return;
+			}
 			this.mainView.name = "mainView";
-			this.stage.addChild( this.mainView );
-
+			this.mainView.addEventListener("addedToStage",Utils.curry(_postInit,stageToUse));
+			stageToUse.addChild( this.mainView );
+		}
+		private function _postInit(stageToUse:DisplayObjectContainer,e:Event):void{
 			// Hooking things to MainView.
 			this.mainView.onNewGameClick = charCreation.newGameGo;
-			this.mainView.onAppearanceClick = appearance;
+			this.mainView.onAppearanceClick = playerAppearance.appearance;
 			this.mainView.onDataClick = saves.saveLoad;
-			this.mainView.onLevelClick = levelUpGo;
-			this.mainView.onPerksClick = displayPerks;
-			this.mainView.onStatsClick = displayStats;
+			this.mainView.onLevelClick = playerInfo.levelUpGo;
+			this.mainView.onPerksClick = playerInfo.displayPerks;
+			this.mainView.onStatsClick = playerInfo.displayStats;
 
 			// Set up all the messy global stuff:
 			
 			// ******************************************************************************************
 
-			var mainView :MainView = this.mainView;
-			var model :GameModel = this.model;
+			var mainView:MainView = this.mainView;
+			var model:GameModel = this.model;
 			
 
 			/**
@@ -381,25 +467,17 @@
 			 * System Variables
 			 * Debug, Version, etc
 			 */
-			//{ region SystemVariables
-
-			//DEBUG, used all over the place
-			debug = false;
-			//model.debug = debug; // TODO: Set on model?
-
-			//Version NUMBER
-			ver = "0.9.2_mod_snapshot_20150328";
-			version = ver + " (<b>Mod Snapshot</b>)";
+			debug = false; //DEBUG, used all over the place
+			ver = "1.0.2_mod_1.4.9"; //Version NUMBER
+			version = ver + " (<b>Bug Fixfest</b>)"; //Version TEXT
 
 			//Indicates if building for mobile?
 			mobile = false;
 			model.mobile = mobile;
 
-			this.images = new ImageManager(stage);
-			this.inputManager = new InputManager(stage, false);
+			this.images = new ImageManager(stageToUse.stage, mainView);
+			this.inputManager = new InputManager(stageToUse.stage, mainView, false);
 			include "../../includes/ControlBindings.as";
-
-			this.monkey = new ChaosMonkey(this);
 
 			//} endregion
 
@@ -416,7 +494,7 @@
 			playerEvent = new PlayerEvents();
 
 			//Used in perk selection, mainly eventParser, input and engineCore
-			tempPerk = null;
+			//tempPerk = null;
 
 			//Create monster, used all over the place
 			monster = new Monster();
@@ -429,15 +507,11 @@
 			//{ region StateVariables
 
 			//User all over the place whenever items come up
-//No longer used:			itemSwapping = false;
 
 			//The extreme flag state array. This needs to go. Holds information about everything, whether it be certain attacks for NPCs 
 			//or state information to do with the game. 
 			flags = new DefaultDict();
-			model.flags = flags;
-			
 			achievements = new DefaultDict();
-			model.achievements = achievements;
 
 			///Used everywhere to establish what the current game state is
 			// Key system variables
@@ -445,44 +519,7 @@
 			//1 = in combat
 			//2 = in combat in grapple
 			//3 = at start or game over screen
-//GameState 4 eliminated			//4 = at giacomo
-//GameState 5 eliminated			//5 = getting succubi potion
-//GameState 6 eliminated			//6 = at alchemist choices.
-//GameState 7 eliminated			//7 = item duuuuump
-//GameState 8 eliminated			//8 = worked at farm
-			gameState = 0;
-
-			//Another state variable used for menu display used everywhere
-			//menuLoc
-			//0 - normal
-			//1 - items menu - no heat statuses when leaving it in combat
-			//2 - needs to add an hour after grabbing item
-			//3 - In tease menu - no heat statuses when leaving it.
-//MenuLoc 8 eliminated			//8 - Find Farm Pepper - 2 hours wait
-//MenuLoc 9 eliminated			//9 - Armor shop
-//MenuLoc 10 eliminated			//10- Tailor shop
-//MenuLoc 11 eliminated			//11- Midsleep loot
-//MenuLoc 12 eliminated			//12 - lumi potions
-//MenuLoc 13 eliminated			//13 - lumi enhancements
-//MenuLoc 14 eliminated			//14 - late night receive item
-//MenuLoc 15 eliminated			//15 - Weapon shop in TelAdra
-//MenuLoc 16 eliminated			//16 - Incubus Shop
-//MenuLoc 17 eliminated			//17 - 4 hours wait
-//MenuLoc 18 eliminated			//18 - 8 hours wait
-//MenuLoc 19 eliminated			//19 - Bakery!
-//MenuLoc 20 eliminated			//20 - weapon rack stuffing
-//MenuLoc 21 eliminated			//21 - weapon rack taking
-//MenuLoc 24 eliminated			//24 - Niamh booze
-//MenuLoc 25 eliminated			//25 - Owca Shop
-//MenuLoc 26 eliminated			//26 - Benoit Shop
-//MenuLoc 27 eliminated			//27 - Chicken Harpy Shop
-//MenuLoc 28 eliminated			//28 - Items menu
-			menuLoc = 0;
-
-			//State variable used to indicate whether inside an item submenu
-			//The item sub menu
-//			itemSubMenu = false;
-			//} endregion 
+			_gameState = 0;
 
 			/**
 			 * Display Variables
@@ -495,51 +532,18 @@
 			model.time = time;
 
 			//The string holds all the "story" text, mainly used in engineCore
-			currentText = "";
-			//}endregion 
-
-			/**
-			 * Item variables
-			 * Holds all the information about items in your inventory and stashes away
-			 */
-			//{region ItemVariables
-
-			/**
-			 * Plot Variables
-			 * Booleans and numbers about whether you've found certain places
-			 */
-			//{ region PlotVariables
-
-			//Plot variables
-			explored = false;
-			foundForest = false;
-			foundDesert = false;
-			foundMountain = false;
-			foundLake = false;
-			whitney = 0;
-			monk = 0;
-			sand = 0;
-			giacomo = 0;
-//Replaced by flag			beeProgress = 0;
-
-//			itemStorage = [];
-//			gearStorage = [];
 			//}endregion
-
 
 			// These are toggled between by the [home] key.
 			mainView.textBGWhite.visible = false;
 			mainView.textBGTan.visible = false;
 
 			// *************************************************************************************
+			//Workaround.
+			exploration.configureRooms();
+			d3.configureRooms();
 
-			// import flash.events.MouseEvent;
-
-			//const DOUBLE_ATTACK_STYLE:int = 867;
-			//const SPELLS_CAST:int = 868;
-
-			//Fenoxo loves his temps
-			temp = 0;
+			temp = 0; //Fenoxo loves his temps
 
 			//Used to set what each action buttons displays and does.
 			args = [];
@@ -557,16 +561,15 @@
 			oldStats.oldCor  = 0;
 			oldStats.oldHP   = 0;
 			oldStats.oldLust = 0;
-
-			model.maxHP = maxHP;
+			oldStats.oldFatigue = 0;
+			oldStats.oldHunger = 0;
+			
+			//model.maxHP = maxHP;
 
 			// ******************************************************************************************
 
 			mainView.aCb.dataProvider = new DataProvider([{label:"TEMP",perk:new PerkClass(PerkLib.Acclimation)}]);
-			mainView.aCb.addEventListener(Event.CHANGE, changeHandler); 
-			 
-			//mainView._getButtonToolTipText = getButtonToolTipText;
-
+			mainView.aCb.addEventListener(Event.CHANGE, playerInfo.changeHandler);
 
 			//Register the classes we need to be able to serialize and reconstitute so
 			// they'll get reconstituted into the correct class when deserialized
@@ -580,9 +583,8 @@
 			registerClassAlias("KeyItemClass", KeyItemClass);
 			registerClassAlias("Monster", Monster);
 			registerClassAlias("Player", Player);
-			registerClassAlias("StatusAffectClass", StatusAffectClass);
+			registerClassAlias("StatusEffectClass", StatusEffectClass);
 			registerClassAlias("VaginaClass", VaginaClass);
-			//registerClassAlias("Enum", Enum);
 
 			//Hide sprites
 			mainView.hideSprite();
@@ -594,17 +596,19 @@
 
 		public function run():void
 		{
-			mainMenu();
+			mainMenu.mainMenu();
 			this.stop();
 
-			_updateHack.name = "wtf";
-			_updateHack.graphics.beginFill(0xFF0000, 1);
-			_updateHack.graphics.drawRect(0, 0, 2, 2);
-			_updateHack.graphics.endFill();
+			if (_updateHack) {
+				_updateHack.name = "wtf";
+				_updateHack.graphics.beginFill(0xFF0000, 1);
+				_updateHack.graphics.drawRect(0, 0, 2, 2);
+				_updateHack.graphics.endFill();
 
-			stage.addChild(_updateHack);
-			_updateHack.x = 999;
-			_updateHack.y = 799;
+				stage.addChild(_updateHack);
+				_updateHack.x = 999;
+				_updateHack.y = 799;
+			}
 		}
 
 		public function forceUpdate():void
@@ -621,6 +625,20 @@
 			{
 				_updateHack.x = 0;
 				_updateHack.removeEventListener(Event.ENTER_FRAME, moveHackUpdate);
+			}
+		}
+
+		public function spriteSelect(choice:Object = 0):void {
+			// Inlined call from lib/src/coc/view/MainView.as
+			// TODO: When flags goes away, if it goes away, replace this with the appropriate settings thing.
+			if (choice <= 0 || choice == null || flags[kFLAGS.SHOW_SPRITES_FLAG] == 1) {
+				mainViewManager.hideSprite();
+			} else {
+				if (choice is Class) {
+					mainViewManager.showSpriteBitmap(SpriteDb.bitmapData(choice as Class));
+				} else {
+					mainViewManager.hideSprite();
+				}
 			}
 		}
 	}

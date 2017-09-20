@@ -4,7 +4,7 @@ package classes.Scenes.Dungeons.D3
 	import classes.Cock;
 	import classes.Monster;
 	import classes.VaginaClass;
-	import classes.StatusAffects;
+	import classes.StatusEffects;
 	
 	/**
 	 * ...
@@ -16,7 +16,7 @@ package classes.Scenes.Dungeons.D3
 		
 		public function mirrorAttack(damage:Number):void
 		{
-			this.createStatusAffect(StatusAffects.MirroredAttack, 0, 0, 0, 0);
+			this.createStatusEffect(StatusEffects.MirroredAttack, 0, 0, 0, 0);
 			
 			outputText("As you swing your [weapon] at the doppleganger, " + player.mf("he", "she") + " smiles mockingly, and mirrors your move exactly, lunging forward with " + player.mf("his", "her") + " duplicate " + weaponName + ".");
 			
@@ -25,7 +25,7 @@ package classes.Scenes.Dungeons.D3
 			// tl;dr this avoids a bunch of weapon effects and perks, but given the specific means of attack, I think it actually makes sense overall. (Basically having to pull back from what you would normally do mid-attack to successfully land any kind of hit).
 			if (damage > 0 && rand(8) < 6)
 			{
-				outputText("  At the very last moment, you twist downwards and strike into your opponent’s trunk, drawing a gasp of pain from " + player.mf("him", "her") +" as " + player.mf("he", "she") +" clumsily lashes " + player.mf("his", "her") + " own " + weaponName +" over you. It’s your turn to mirror " + player.mf("him", "her") +", smiling mockingly at " + player.mf("his", "her") +" rabid snarls as " + player.mf("he", "she") +" resets " + player.mf("him", "her") +"self, " + player.mf("his", "her") +" voice bubbling and flickering for a moment as " + player.mf("he", "she") +" tries to maintain control. (" + damage + ")");
+				outputText("  At the very last moment, you twist downwards and strike into your opponent’s trunk, drawing a gasp of pain from " + player.mf("him", "her") +" as " + player.mf("he", "she") +" clumsily lashes " + player.mf("his", "her") + " own " + weaponName +" over you. It’s your turn to mirror " + player.mf("him", "her") +", smiling mockingly at " + player.mf("his", "her") +" rabid snarls as " + player.mf("he", "she") +" resets " + player.mf("him", "her") +"self, " + player.mf("his", "her") +" voice bubbling and flickering for a moment as " + player.mf("he", "she") +" tries to maintain control. <b>(<font color=\"#800000\">" + damage + "</font>)</b>");
 				this.HP -= damage;
 			}
 			else
@@ -57,9 +57,9 @@ package classes.Scenes.Dungeons.D3
 			{
 				outputText("You keep moving and displaying your body as best you can, but an overwhelming amount of self-awareness creeps in as your doppelganger mockingly copies you. Is that really what you look like when you do this? It looks so cheap, so clumsy, so desperate. As a blush climbs onto your face you feel a vague sense of vertigo as control of the situation shifts- you copy the doppelganger as "+ player.mf("he", "she") +" cruelly continues to slide "+ player.mf("his", "her") +" hands over "+ player.mf("his", "her") +" body exaggeratedly.");
 
-				outputText("\n\n“<i>What’s the matter, [name]?</i>” " + player.mf("he", "she") +" breathes, staring lustfully into your eyes as " + player.mf("he", "she") +" sinks both hands into " + player.mf("his", "her") +" crotch and bends forward, forcing you close to " + player.mf("his", "her") +" face. “<i>Never tried it in front of a mirror? You were missing out on the nasty little tramp you are.</i>”");
+				outputText("\n\n“<i>What’s the matter, [name]?</i>” " + player.mf("he", "she") +" breathes, staring lustfully into your eyes ;as " + player.mf("he", "she") +" sinks both hands into " + player.mf("his", "her") +" crotch and bends forward, forcing you close to " + player.mf("his", "her") +" face. “<i>Never tried it in front of a mirror? You were missing out on the nasty little tramp you are.</i>”");
 				
-				game.dynStats("lus", damage + (rand(7) - 3));
+				player.takeLustDamage(damage + (rand(7) - 3), true);
 			}
 			addTalkShit();
 		}
@@ -70,25 +70,23 @@ package classes.Scenes.Dungeons.D3
 			
 			if (HP < 1)
 			{
-				doNext(game.endHpVictory);
+				doNext(game.combat.endHpVictory);
 				return;
 			}
-			
-			if (lust > 99)
-			{
-				doNext(game.endLustVictory);
+			if (lust >= maxLust()) {
+				doNext(game.combat.endLustVictory);
 				return;
 			}
 			
 			if (player.HP < 1)
 			{
-				doNext(game.endHpLoss);
+				doNext(game.combat.endHpLoss);
 				return;
 			}
 			
 			if (player.lust >= player.maxLust())
 			{
-				doNext(game.endLustLoss);
+				doNext(game.combat.endLustLoss);
 				return;
 			}
 			
@@ -134,6 +132,7 @@ package classes.Scenes.Dungeons.D3
 					break;
 					
 				default:
+					outputText("\n\n“<i>How did you even survive?</i>” the doppelganger looks in confusion. “<i>Regardless, I'm still taking your body.</i>”");
 					break;
 			}
 			
@@ -155,7 +154,7 @@ package classes.Scenes.Dungeons.D3
 		{
 			outputText("The mirror demon barely even flinches as your fierce, puissant fire washes over [him].");
 
-			outputText("\n\n“<i>Picked up a few things since you’ve been here, then?</i>” [he] yawns. Flickers of flame cling to [his] fingers, its radiance sputtering and burning away, replaced by a livid black colour. “<i>Serf magic. Easy to pick up, easy to use, difficult to impress with. Let me show you how it’s really done!</i>” [He] thrusts [his] hands out and hurls a pitiless black fireball straight at you, a negative replica of the one you just shot at [him]. ");
+			outputText("\n\n“<i>Picked up a few things since you’ve been here, then?</i>” [he] yawns. Flickers of flame cling to [his] fingers, its radiance sputtering and burning away, replaced by a livid black color. “<i>Serf magic. Easy to pick up, easy to use, difficult to impress with. Let me show you how it’s really done!</i>” [He] thrusts [his] hands out and hurls a pitiless black fireball straight at you, a negative replica of the one you just shot at [him].");
 			
 			if (spell == "fireball")
 			{
@@ -164,6 +163,10 @@ package classes.Scenes.Dungeons.D3
 			else if (spell == "whitefire")
 			{
 				player.takeDamage(10 + (player.inte / 3 + rand(player.inte / 2)), true);
+			}
+			else if (spell == "blackfire")
+			{
+				player.takeDamage(30 + (player.inte / 3 + rand(player.inte / 2)), true); //REST IN FUCK
 			}
 			
 			addTalkShit();
@@ -177,8 +180,8 @@ package classes.Scenes.Dungeons.D3
 		
 		override public function doAI():void
 		{
-			if (findStatusAffect(StatusAffects.Stunned) >= 0) {
-				removeStatusAffect(StatusAffects.Stunned);
+			if (hasStatusEffect(StatusEffects.Stunned)) {
+				removeStatusEffect(StatusEffects.Stunned);
 				outputText("Your duplicate is too stunned, buying you another round!");
 				combatRoundOver();
 				return;
@@ -190,7 +193,7 @@ package classes.Scenes.Dungeons.D3
 		public function Doppleganger() 
 		{
 			this.a = "the ";
-			this.short = "doppleganger";
+			this.short = "doppelganger";
 			this.long = ""; // Needs to be set to supress validation errors, but is handled by an accessor override.
 			this.imageName = "doppleganger";
 			this.plural = false;
@@ -218,6 +221,7 @@ package classes.Scenes.Dungeons.D3
 			skinDesc = player.skinDesc;
 			initStrTouSpeInte(player.str, player.tou, player.spe, player.inte);
 			initLibSensCor(player.lib, player.sens, player.cor);
+			if (cor < 50) cor = 50;
 			faceType = player.faceType;
 			skinType = player.skinType;
 			
@@ -250,7 +254,14 @@ package classes.Scenes.Dungeons.D3
 				(this.vaginas[0] as VaginaClass).vaginalWetness = player.vaginas[0].vaginalWetness;
 				(this.vaginas[0] as VaginaClass).virgin = player.vaginas[0].virgin;
 			}
-			
+			//Genderless get forced to have a cunny
+			if (player.vaginas.length == 0 && player.cocks.length == 0)
+			{
+				this.createVagina();
+				(this.vaginas[0] as VaginaClass).vaginalLooseness = 2;
+				(this.vaginas[0] as VaginaClass).vaginalWetness = 6;
+				(this.vaginas[0] as VaginaClass).virgin = false;
+			}
 			this.breastRows = [];
 			
 			for (i = 0; i < player.breastRows.length; i++)
@@ -284,7 +295,7 @@ package classes.Scenes.Dungeons.D3
 			
 			str += player.mf("His", "Her") + " face is " + player.faceDesc() + ".";
 			
-			str += ". "  + player.mf("His", "Her") + " " + player.hairDescript() + " is parted by";
+			str += " "  + player.mf("His", "Her") + " " + player.hairDescript() + " is parted by";
 			
 			switch(player.earType)
 			{
@@ -317,10 +328,13 @@ package classes.Scenes.Dungeons.D3
 					str += " a pair of large, adept fox ears";
 					break;
 				case EARS_RACCOON:
-					str += " a pair of vaugely egg-shaped, furry racoon ears";
+					str += " a pair of vaguely egg-shaped, furry racoon ears";
 					break;
 				case EARS_MOUSE:
 					str += " a pair of large, dish-shaped mouse ears";
+					break;
+				case EARS_PIG:
+					str += " a pair of pig ears";
 					break;
 				default:
 					str += " a pair of non-descript ears";
@@ -328,7 +342,7 @@ package classes.Scenes.Dungeons.D3
 			}
 			
 			str += ". " + player.mf("He", "She") + " keeps exploring the area around " + player.mf("his", "her") +" mouth with " + player.mf("his", "her") +" tongue with a horribly acquisitive, sensual interest.";
-			str += " " + player.mf("He", "She") + " moves around on " + player.mf("his", "her") +" " + player.legs() + " with a twitchy jerkiness, " + player.mf("his", "her") + " " + game.hipDescript() + " swinging and tightening.";
+			str += " " + player.mf("He", "She") + " moves around on " + player.mf("his", "her") +" " + player.legs() + " with a twitchy jerkiness, " + player.mf("his", "her") + " " + player.hipDescript() + " swinging and tightening.";
 			if (player.tailType != 0) str += " " + player.mf("His", "Her") + " tail flicks this way and that.";
 			str += " " + player.mf("He", "She") + " wields the exact same " + player.weaponName + " you do, and is dressed in the mirror image of your " + player.armorName +  ". ";
 			if (player.biggestTitSize() >= 2) str += "It’s difficult not to notice the way the mirror image of your " + player.breastDescript(player.biggestTitRow()) + " ebbs and heaves within it.";

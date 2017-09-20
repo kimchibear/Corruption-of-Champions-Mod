@@ -1,4 +1,4 @@
-﻿public function executeButtonClick(button:int = 0):void {
+public function executeButtonClick(button:int = 0):void {
 	mainView.clickButton( button );
 }
 
@@ -6,15 +6,8 @@
 // import fl.controls.ComboBox; 
 // import fl.data.DataProvider; 
 // import flash.net.navigateToURL; 
- 
-public function changeHandler(event:Event):void {
- 	//Store perk name for later addition
- 	tempPerk = ComboBox(event.target).selectedItem.perk;
-	mainView.aCb.move(210, 80);
-	outputText("You have selected the following perk:\n\n", true);
-	outputText("<b>" + tempPerk.perkName + ":</b> " + tempPerk.perkLongDesc + "\n\nIf you would like to select this perk, click <b>Okay</b>.  Otherwise, select a new perk, or press <b>Skip</b> to make a decision later.", false);
-	simpleChoices("Okay",114,"Skip",115,"",0,"",0,"",0);
-}
+
+//Change handler is only used for selecting perks. Moved to engineCore with the other perk selection code
 
 
  /*HOLY SHIT THIS HOW TO DO URL LINKS!
@@ -29,17 +22,6 @@ public function displayControls():void
 {
 	mainView.hideAllMenuButtons();
 	inputManager.DisplayBindingPane();
-	
-	/*choices("Reset Ctrls", resetControls,
-			"Clear Ctrls", clearControls,
-			"Null", 0,
-			"Null", 0,
-			"Null", 0,
-			"Null", 0,
-			"Null", 0,
-			"Null", 0,
-			"Null", 0,
-			"Null", 0);*/
 	menu();
 	addButton(0, "Reset Ctrls", resetControls);
 	addButton(1, "Clear Ctrls", clearControls);
@@ -50,14 +32,14 @@ public function hideControls():void
 {
 	inputManager.HideBindingPane();
 	
-	settingsScreenMain();
+	gameSettings.settingsScreenMain();
 }
 
 public function resetControls():void
 {
 	inputManager.HideBindingPane();
-	
-	outputText("Are you sure you want to reset all of the currently bound controls to their defaults?", true);
+	clearOutput();
+	outputText("Are you sure you want to reset all of the currently bound controls to their defaults?");
 	
 	doYesNo(resetControlsYes, displayControls);
 }
@@ -65,8 +47,8 @@ public function resetControls():void
 public function resetControlsYes():void
 {
 	inputManager.ResetToDefaults();
-	
-	outputText("Controls have been reset to defaults!\n\n", true);
+	clearOutput();
+	outputText("Controls have been reset to defaults!\n\n");
 	
 	doNext(displayControls);
 }
@@ -75,7 +57,8 @@ public function clearControls():void
 {
 	inputManager.HideBindingPane();
 	
-	outputText("Are you sure you want to clear all of the currently bound controls?", true);
+	clearOutput();
+	outputText("Are you sure you want to clear all of the currently bound controls?");
 	
 	doYesNo(clearControlsYes, displayControls);
 }
@@ -83,8 +66,8 @@ public function clearControls():void
 public function clearControlsYes():void
 {
 	inputManager.ClearAllBinds();
-	
-	outputText("Controls have been cleared!", true);
+	clearOutput();
+	outputText("Controls have been cleared!");
 	
 	doNext(displayControls);
 }

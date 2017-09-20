@@ -1,7 +1,8 @@
 package classes.Scenes.Areas.Bog 
 {
 	import classes.*;
-	import classes.internals.*;
+import classes.StatusEffects.Combat.LizanBlowpipeDebuff;
+import classes.internals.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
 	
@@ -12,49 +13,30 @@ package classes.Scenes.Areas.Bog
 		//3 - spe
 		//4 - sens
 		public function blowGun():void {
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("The lizan flings himself back.  In the air he puts a blowgun to his lips.  You move just in time to avoid the tiny dart.");
 			}
 			else {
 				outputText("The lizan flings himself back.  In the air he puts his blowgun to his lips and fires a single dart into your neck.  As you pull it out your limbs begin to feel like wet noodles, it appears you’ve been poisoned.");
-				game.dynStats("str", -5, "spe", -5);
-				if (player.findStatusAffect(StatusAffects.LizanBlowpipe) < 0) player.createStatusAffect(StatusAffects.LizanBlowpipe, 5, 0, 5, 0);
-				else {
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 1, 5);
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 3, 5);
-				}
-				if (player.cor > 50) {
-					game.dynStats("str", -5, "spe", -5);
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 1, 5);
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 3, 5);					
-				}
+				(player.createOrFindStatusEffect(StatusEffects.LizanBlowpipe) as LizanBlowpipeDebuff).debuffStrSpe();
 			}
 			combatRoundOver();
 		}
 		
 		public function immaHurtYouBadly():void {
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("The lizan Rushes at you.  As you raise your [weapon] to defend yourself he dives to the side, using a blowgun to fire a single dart at you.  You somehow manage to dodge it.");
 			}
 			else {
 				outputText("The lizan rushes at you.  As you raise your [weapon] to defend yourself he dives to the side, using his blowgun to fire a single stinging dart into your neck.  You pull out the dart and your skin begins to feel hypersensitive, you’re going to have trouble defending yourself");
 				game.dynStats("tou", -5, "sens", 5);
-				if (player.findStatusAffect(StatusAffects.LizanBlowpipe) < 0) player.createStatusAffect(StatusAffects.LizanBlowpipe, 0, 5, 0, 5);
-				else {
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 2, 5);
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 4, 5);
-				}
-				if (player.cor > 50) {
-					game.dynStats("tou", -5, "sens", 5);
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 2, 5);
-					player.addStatusValue(StatusAffects.LizanBlowpipe, 4, 5);					
-				}
+				(player.createOrFindStatusEffect(StatusEffects.LizanBlowpipe) as LizanBlowpipeDebuff).debuffTouSens();
 			}
 			combatRoundOver();
 		}
 		
 		public function wingstickThrow():void {
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("The lizan zips to the side and you hear the whistle of something being thrown. You sidestep just in time to see a wingstick fly past.");
 			}
 			else {
@@ -66,12 +48,12 @@ package classes.Scenes.Areas.Bog
 		}
 				
 		public function tongueAttack():void {
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("All you see is a flash of pink and without even thinking you twist out of its way and watch the lizan’s long tongue snap back into his mouth.");
 			}
 			else {
 				outputText("All you see is a flash of pink as the lizan’s long tongue hits your eyes. Some kind of chemical reaction causes your eyes to burn, you’ve been blinded!");
-				if (player.findStatusAffect(StatusAffects.Blind) < 0) player.createStatusAffect(StatusAffects.Blind, 1 + rand(2), 0, 0, 0)
+				if (!player.hasStatusEffect(StatusEffects.Blind)) player.createStatusEffect(StatusEffects.Blind, 1 + rand(2), 0, 0, 0)
 			}
 			combatRoundOver();
 		}
@@ -97,7 +79,7 @@ package classes.Scenes.Areas.Bog
 		{
 			var skinToneAdj:String = randomChoice(SKIN_VARIATIONS);
 			this.skinTone = skinToneAdj;
-			this.skinType = SKIN_TYPE_SCALES;
+			this.skinType = SKIN_TYPE_LIZARD_SCALES;
 			this.a = "the ";
 			this.short = "lizan rogue";
 			this.imageName = "lizanrogue";

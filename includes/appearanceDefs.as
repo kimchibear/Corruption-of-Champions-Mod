@@ -13,9 +13,13 @@ public static const GENDER_HERM:int                                             
 // skinType
 public static const SKIN_TYPE_PLAIN:int                                             =    0;
 public static const SKIN_TYPE_FUR:int                                               =    1;
-public static const SKIN_TYPE_SCALES:int                                            =    2;
+public static const SKIN_TYPE_LIZARD_SCALES:int                                     =    2;
 public static const SKIN_TYPE_GOO:int                                               =    3;
-public static const SKIN_TYPE_UNDEFINED:int                                         =    4;
+public static const SKIN_TYPE_UNDEFINED:int                                         =    4; // DEPRECATED, silently discarded upon loading a saved game
+public static const SKIN_TYPE_DRAGON_SCALES:int                                     =    5;
+public static const SKIN_TYPE_FISH_SCALES:int                                       =    6; // NYI, for future use
+public static const SKIN_TYPE_WOOL:int                                              =    7;
+public static const SKIN_TYPE_FEATHERED:int                                         =    8;
 
 // hairType
 public static const HAIR_NORMAL:int                                                =     0;
@@ -23,6 +27,10 @@ public static const HAIR_FEATHER:int                                            
 public static const HAIR_GHOST:int                                                 =     2;
 public static const HAIR_GOO:int                                                   =     3;
 public static const HAIR_ANEMONE:int                                               =     4;
+public static const HAIR_QUILL:int                                                 =     5;
+public static const HAIR_BASILISK_SPINES:int                                       =     6;
+public static const HAIR_BASILISK_PLUME:int                                        =     7;
+public static const HAIR_WOOL:int                                                  =     8;
 
 // beardType
 public static const BEARD_NORMAL:int                                               =     0;
@@ -49,18 +57,34 @@ public static const FACE_RACCOON:int                                            
 public static const FACE_BUCKTEETH:int                                              =   15;
 public static const FACE_MOUSE:int                                                  =   16;
 public static const FACE_FERRET_MASK:int                                            =   17;
-public static const FACE_FERRET:int                                            		=   18;
+public static const FACE_FERRET:int                                                 =   18;
+public static const FACE_PIG:int                                                    =   19;
+public static const FACE_BOAR:int                                                   =   20;
+public static const FACE_RHINO:int                                                  =   21;
+public static const FACE_ECHIDNA:int                                                =   22;
+public static const FACE_DEER:int                                                   =   23;
+public static const FACE_WOLF:int                                                   =   24;
+public static const FACE_COCKATRICE:int                                             =   25;
+public static const FACE_BEAK:int                                                   =   26;
 
 // tongueType
-public static const TONUGE_HUMAN:int                                                =   0;
-public static const TONUGE_SNAKE:int                                                =   1;
-public static const TONUGE_DEMONIC:int                                              =   2;
-public static const TONUGE_DRACONIC:int                                             =   3;
+public static const TONGUE_HUMAN:int                                                =   0;
+public static const TONGUE_SNAKE:int                                                =   1;
+public static const TONGUE_DEMONIC:int                                              =   2;
+public static const TONGUE_DRACONIC:int                                             =   3;
+public static const TONGUE_ECHIDNA:int                                              =   4;
+public static const TONGUE_LIZARD:int                                               =   5;
 
 // eyeType
 public static const EYES_HUMAN:int                                                  =   0;
-public static const EYES_FOUR_SPIDER_EYES:int                                       =   1;
+public static const EYES_FOUR_SPIDER_EYES:int                                       =   1; //DEPRECATED, USE EYES_SPIDER AND EYECOUNT = 4
 public static const EYES_BLACK_EYES_SAND_TRAP:int                                   =   2;
+public static const EYES_LIZARD:int                                                 =   3;
+public static const EYES_DRAGON:int                                                 =   4; // Slightly different description/TF and *maybe* in the future(!) grant different perks/combat abilities
+public static const EYES_BASILISK:int                                               =   5;
+public static const EYES_WOLF:int                                                   =   6;
+public static const EYES_SPIDER:int                                                 =   7;
+public static const EYES_COCKATRICE:int                                             =   8;
 
 // earType
 public static const EARS_HUMAN:int                                                  =   0;
@@ -77,6 +101,14 @@ public static const EARS_DRAGON:int                                             
 public static const EARS_RACCOON:int                                                =  11;
 public static const EARS_MOUSE:int                                                  =  12;
 public static const EARS_FERRET:int                                                 =  13;
+public static const EARS_PIG:int                                                    =  14;
+public static const EARS_RHINO:int                                                  =  15;
+public static const EARS_ECHIDNA:int                                                =  16;
+public static const EARS_DEER:int                                                   =  17;
+public static const EARS_WOLF:int                                                   =  18;
+public static const EARS_SHEEP:int                                                  =  19;
+public static const EARS_IMP:int                                                    =  20;
+public static const EARS_COCKATRICE:int                                             =  21;
 
 // hornType
 public static const HORNS_NONE:int                                                  =   0;
@@ -85,15 +117,43 @@ public static const HORNS_COW_MINOTAUR:int                                      
 public static const HORNS_DRACONIC_X2:int                                           =   3;
 public static const HORNS_DRACONIC_X4_12_INCH_LONG:int                              =   4;
 public static const HORNS_ANTLERS:int                                               =   5;
+public static const HORNS_GOAT:int                                                  =   6;
+public static const HORNS_UNICORN:int                                               =   7;
+public static const HORNS_RHINO:int                                                 =   8;
+public static const HORNS_SHEEP:int                                                 =   9;
+public static const HORNS_RAM:int                                                   =  10;
+public static const HORNS_IMP:int                                                   =  11;
 
 // antennae
 public static const ANTENNAE_NONE:int                                               =   0;
 public static const ANTENNAE_BEE:int                                                =   2;
+public static const ANTENNAE_COCKATRICE:int                                         =   3;
+
+// gillType
+public static const GILLS_NONE:int                                                  =   0;
+public static const GILLS_ANEMONE:int                                               =   1;
+public static const GILLS_FISH:int                                                  =   2;
 
 // armType
 public static const ARM_TYPE_HUMAN:int                                              =   0;
 public static const ARM_TYPE_HARPY:int                                              =   1;
 public static const ARM_TYPE_SPIDER:int                                             =   2;
+public static const ARM_TYPE_PREDATOR:int                                           =   4;
+public static const ARM_TYPE_SALAMANDER:int                                         =   5;
+public static const ARM_TYPE_WOLF:int                                               =   6;
+public static const ARM_TYPE_COCKATRICE:int                                         =   7;
+
+// clawType
+public static const CLAW_TYPE_NORMAL:int                                            =   0;
+public static const CLAW_TYPE_LIZARD:int                                            =   1;
+public static const CLAW_TYPE_DRAGON:int                                            =   2;
+public static const CLAW_TYPE_SALAMANDER:int                                        =   3;
+public static const CLAW_TYPE_CAT:int                                               =   4; // NYI! Placeholder for now!! (See http://tiny.cc/coc-revamp-claws)
+public static const CLAW_TYPE_DOG:int                                               =   5; // NYI! Placeholder for now!! (See http://tiny.cc/coc-revamp-claws)
+public static const CLAW_TYPE_RAPTOR:int                                            =   6; // NYI! Placeholder for now!! (See http://tiny.cc/coc-revamp-claws) Giev teh Rapturs :-)
+public static const CLAW_TYPE_MANTIS:int                                            =   7; // NYI! Placeholder for Xianxia mod (See http://tiny.cc/coc-xianxia-mod)
+public static const CLAW_TYPE_IMP:int                                               =   8;
+public static const CLAW_TYPE_COCKATRICE:int                                        =   9;
 
 // tailType
 public static const TAIL_TYPE_NONE:int                                              =   0;
@@ -115,8 +175,150 @@ public static const TAIL_TYPE_RACCOON:int                                       
 public static const TAIL_TYPE_MOUSE:int                                             =  16;
 public static const TAIL_TYPE_FERRET:int                                            =  17;
 public static const TAIL_TYPE_BEHEMOTH:int                                          =  18;
+public static const TAIL_TYPE_PIG:int                                               =  19;
+public static const TAIL_TYPE_SCORPION:int                                          =  20;
+public static const TAIL_TYPE_GOAT:int                                              =  21;
+public static const TAIL_TYPE_RHINO:int                                             =  22;
+public static const TAIL_TYPE_ECHIDNA:int                                           =  23;
+public static const TAIL_TYPE_DEER:int                                              =  24;
+public static const TAIL_TYPE_SALAMANDER:int                                        =  25;
+public static const TAIL_TYPE_WOLF:int                                              =  26;
+public static const TAIL_TYPE_SHEEP:int                                             =  27;
+public static const TAIL_TYPE_IMP:int                                               =  28;
+public static const TAIL_TYPE_COCKATRICE:int                                        =  29;
 
-//breast size
+// wingType
+public static const WING_TYPE_NONE:int                                              =   0;
+public static const WING_TYPE_BEE_LIKE_SMALL:int                                    =   1;
+public static const WING_TYPE_BEE_LIKE_LARGE:int                                    =   2;
+public static const WING_TYPE_HARPY:int                                             =   4;
+public static const WING_TYPE_IMP:int                                               =   5;
+public static const WING_TYPE_BAT_LIKE_TINY:int                                     =   6;
+public static const WING_TYPE_BAT_LIKE_LARGE:int                                    =   7;
+public static const WING_TYPE_SHARK_FIN:int                                         =   8; // Deprecated, moved to the rearBody slot.
+public static const WING_TYPE_FEATHERED_LARGE:int                                   =   9;
+public static const WING_TYPE_DRACONIC_SMALL:int                                    =  10;
+public static const WING_TYPE_DRACONIC_LARGE:int                                    =  11;
+public static const WING_TYPE_GIANT_DRAGONFLY:int                                   =  12;
+public static const WING_TYPE_IMP_LARGE:int                                         =  13;
+
+// lowerBody
+public static const LOWER_BODY_TYPE_HUMAN:int                                       =   0;
+public static const LOWER_BODY_TYPE_HOOFED:int                                      =   1;
+public static const LOWER_BODY_TYPE_DOG:int                                         =   2;
+public static const LOWER_BODY_TYPE_NAGA:int                                        =   3;
+//public static const LOWER_BODY_TYPE_CENTAUR:int                                   =   4; //DEPRECATED - USE HOOFED + LEGCOUNT 4
+public static const LOWER_BODY_TYPE_DEMONIC_HIGH_HEELS:int                          =   5;
+public static const LOWER_BODY_TYPE_DEMONIC_CLAWS:int                               =   6;
+public static const LOWER_BODY_TYPE_BEE:int                                         =   7;
+public static const LOWER_BODY_TYPE_GOO:int                                         =   8;
+public static const LOWER_BODY_TYPE_CAT:int                                         =   9;
+public static const LOWER_BODY_TYPE_LIZARD:int                                      =  10;
+public static const LOWER_BODY_TYPE_PONY:int                                        =  11;
+public static const LOWER_BODY_TYPE_BUNNY:int                                       =  12;
+public static const LOWER_BODY_TYPE_HARPY:int                                       =  13;
+public static const LOWER_BODY_TYPE_KANGAROO:int                                    =  14;
+public static const LOWER_BODY_TYPE_CHITINOUS_SPIDER_LEGS:int                       =  15;
+public static const LOWER_BODY_TYPE_DRIDER_LOWER_BODY:int                           =  16;
+public static const LOWER_BODY_TYPE_FOX:int                                         =  17;
+public static const LOWER_BODY_TYPE_DRAGON:int                                      =  18;
+public static const LOWER_BODY_TYPE_RACCOON:int                                     =  19;
+public static const LOWER_BODY_TYPE_FERRET:int                                      =  20;
+public static const LOWER_BODY_TYPE_CLOVEN_HOOFED:int                               =  21;
+//public static const LOWER_BODY_TYPE_RHINO:int                                       =  22;
+public static const LOWER_BODY_TYPE_ECHIDNA:int                                     =  23;
+//public static const LOWER_BODY_TYPE_DEERTAUR:int                                  =  24;//DEPRECATED - USE CLOVEN HOOFED + LEGCOUNT 4
+public static const LOWER_BODY_TYPE_SALAMANDER:int                                  =  25;
+public static const LOWER_BODY_TYPE_WOLF:int                                        =  26;
+public static const LOWER_BODY_TYPE_IMP:int                                         =  27;
+public static const LOWER_BODY_TYPE_COCKATRICE:int                                  =  28;
+
+// underBody
+public static const UNDER_BODY_TYPE_NONE:int                                        =   0;
+public static const UNDER_BODY_TYPE_REPTILE:int                                     =   1;
+public static const UNDER_BODY_TYPE_DRAGON:int                                      =   2; // Deprecated. Changed to 1 (UNDER_BODY_TYPE_REPTILE) upon loading a savegame
+public static const UNDER_BODY_TYPE_FURRY:int                                       =   3;
+public static const UNDER_BODY_TYPE_NAGA:int                                        =   4;
+public static const UNDER_BODY_TYPE_WOOL:int                                        =   5; // Deprecated. Changed to 3 (UNDER_BODY_TYPE_FURRY) upon loading a savegame
+public static const UNDER_BODY_TYPE_COCKATRICE:int                                  =   6;
+
+// rearBody
+public static const REAR_BODY_NONE:int                                              =   0;
+public static const REAR_BODY_DRACONIC_MANE:int                                     =   1;
+public static const REAR_BODY_DRACONIC_SPIKES:int                                   =   2;
+public static const REAR_BODY_SHARK_FIN:int                                         =   3;
+
+// neckType
+public static const NECK_TYPE_NORMAL:int                                            =   0; // normal human neck. neckLen = 2 inches
+public static const NECK_TYPE_DRACONIC:int                                          =   1; // (western) dragon neck. neckLen = 2-30 inches
+public static const NECK_TYPE_COCKATRICE:int                                        =   2;
+
+// piercingtypesNOPEDISABLED
+public static const PIERCING_TYPE_NONE:int                                          =   0;
+public static const PIERCING_TYPE_STUD:int                                          =   1;
+public static const PIERCING_TYPE_RING:int                                          =   2;
+public static const PIERCING_TYPE_LADDER:int                                        =   3;
+public static const PIERCING_TYPE_HOOP:int                                          =   4;
+public static const PIERCING_TYPE_CHAIN:int                                         =   5;
+
+// vaginatypesNOPEDISABLED
+public static const VAGINA_TYPE_HUMAN:int                                           =   0;
+public static const VAGINA_TYPE_EQUINE:int                                          =   1;
+public static const VAGINA_TYPE_BLACK_SAND_TRAP:int                                 =   5;
+
+// vaginalWetness
+public static const VAGINA_WETNESS_DRY:int                                          =   0;
+public static const VAGINA_WETNESS_NORMAL:int                                       =   1;
+public static const VAGINA_WETNESS_WET:int                                          =   2;
+public static const VAGINA_WETNESS_SLICK:int                                        =   3;
+public static const VAGINA_WETNESS_DROOLING:int                                     =   4;
+public static const VAGINA_WETNESS_SLAVERING:int                                    =   5;
+
+// vaginalLooseness
+public static const VAGINA_LOOSENESS_TIGHT:int                                      =   0;
+public static const VAGINA_LOOSENESS_NORMAL:int                                     =   1;
+public static const VAGINA_LOOSENESS_LOOSE:int                                      =   2;
+public static const VAGINA_LOOSENESS_GAPING:int                                     =   3;
+public static const VAGINA_LOOSENESS_GAPING_WIDE:int                                =   4;
+public static const VAGINA_LOOSENESS_LEVEL_CLOWN_CAR:int                            =   5;
+
+// analwetnesslevelsNOPEDISABLED
+public static const ANAL_WETNESS_DRY:int                                            =   0;
+public static const ANAL_WETNESS_NORMAL:int                                         =   1;
+public static const ANAL_WETNESS_MOIST:int                                          =   2;
+public static const ANAL_WETNESS_SLIMY:int                                          =   3;
+public static const ANAL_WETNESS_DROOLING:int                                       =   4;
+public static const ANAL_WETNESS_SLIME_DROOLING:int                                 =   5;
+
+// analloosenesslevelsNOPEDISABLED
+public static const ANAL_LOOSENESS_VIRGIN:int                                       =   0;
+public static const ANAL_LOOSENESS_TIGHT:int                                        =   1;
+public static const ANAL_LOOSENESS_NORMAL:int                                       =   2;
+public static const ANAL_LOOSENESS_LOOSE:int                                        =   3;
+public static const ANAL_LOOSENESS_STRETCHED:int                                    =   4;
+public static const ANAL_LOOSENESS_GAPING:int                                       =   5;
+
+// hipRating
+public static const HIP_RATING_BOYISH:int                                           =   0;
+public static const HIP_RATING_SLENDER:int                                          =   2;
+public static const HIP_RATING_AVERAGE:int                                          =   4;
+public static const HIP_RATING_AMPLE:int                                            =   6;
+public static const HIP_RATING_CURVY:int                                            =  10;
+public static const HIP_RATING_FERTILE:int                                          =  15;
+public static const HIP_RATING_INHUMANLY_WIDE:int                                   =  20;
+
+// buttRating
+public static const BUTT_RATING_BUTTLESS:int                                        =   0;
+public static const BUTT_RATING_TIGHT:int                                           =   2;
+public static const BUTT_RATING_AVERAGE:int                                         =   4;
+public static const BUTT_RATING_NOTICEABLE:int                                      =   6;
+public static const BUTT_RATING_LARGE:int                                           =   8;
+public static const BUTT_RATING_JIGGLY:int                                          =  10;
+public static const BUTT_RATING_EXPANSIVE:int                                       =  13;
+public static const BUTT_RATING_HUGE:int                                            =  16;
+public static const BUTT_RATING_INCONCEIVABLY_BIG:int                               =  20;
+
+//breast size (moved here because it's the largest list)
 public static const BREAST_CUP_FLAT:int												=   0;
 public static const BREAST_CUP_A:int												=   1;
 public static const BREAST_CUP_B:int												=   2;
@@ -216,109 +418,106 @@ public static const BREAST_CUP_Z_LARGE:int											=  95;
 public static const BREAST_CUP_ZZ:int												=  96;
 public static const BREAST_CUP_ZZ_LARGE:int											=  97;
 public static const BREAST_CUP_ZZZ:int												=  98;
-public static const BREAST_CUP_ZZZ_LARGE:int										=  99;
-
-// wingType
-public static const WING_TYPE_NONE:int                                              =   0;
-public static const WING_TYPE_BEE_LIKE_SMALL:int                                    =   1;
-public static const WING_TYPE_BEE_LIKE_LARGE:int                                    =   2;
-public static const WING_TYPE_HARPY:int                                             =   4;
-public static const WING_TYPE_IMP:int                                               =   5;
-public static const WING_TYPE_BAT_LIKE_TINY:int                                     =   6;
-public static const WING_TYPE_BAT_LIKE_LARGE:int                                    =   7;
-public static const WING_TYPE_SHARK_FIN:int                                         =   8;
-public static const WING_TYPE_FEATHERED_LARGE:int                                   =   9;
-public static const WING_TYPE_DRACONIC_SMALL:int                                    =  10;
-public static const WING_TYPE_DRACONIC_LARGE:int                                    =  11;
-public static const WING_TYPE_GIANT_DRAGONFLY:int                                   =  12;
-
-// lowerBody
-public static const LOWER_BODY_TYPE_HUMAN:int                                       =   0;
-public static const LOWER_BODY_TYPE_HOOFED:int                                      =   1;
-public static const LOWER_BODY_TYPE_DOG:int                                         =   2;
-public static const LOWER_BODY_TYPE_NAGA:int                                        =   3;
-public static const LOWER_BODY_TYPE_CENTAUR:int                                     =   4;
-public static const LOWER_BODY_TYPE_DEMONIC_HIGH_HEELS:int                          =   5;
-public static const LOWER_BODY_TYPE_DEMONIC_CLAWS:int                               =   6;
-public static const LOWER_BODY_TYPE_BEE:int                                         =   7;
-public static const LOWER_BODY_TYPE_GOO:int                                         =   8;
-public static const LOWER_BODY_TYPE_CAT:int                                         =   9;
-public static const LOWER_BODY_TYPE_LIZARD:int                                      =  10;
-public static const LOWER_BODY_TYPE_PONY:int                                        =  11;
-public static const LOWER_BODY_TYPE_BUNNY:int                                       =  12;
-public static const LOWER_BODY_TYPE_HARPY:int                                       =  13;
-public static const LOWER_BODY_TYPE_KANGAROO:int                                    =  14;
-public static const LOWER_BODY_TYPE_CHITINOUS_SPIDER_LEGS:int                       =  15;
-public static const LOWER_BODY_TYPE_DRIDER_LOWER_BODY:int                           =  16;
-public static const LOWER_BODY_TYPE_FOX:int                                         =  17;
-public static const LOWER_BODY_TYPE_DRAGON:int                                      =  18;
-public static const LOWER_BODY_TYPE_RACCOON:int                                     =  19;
-public static const LOWER_BODY_FERRET:int                                           =  20;
-
-// piercingtypesNOPEDISABLED
-public static const PIERCING_TYPE_NONE:int                                          =   0;
-public static const PIERCING_TYPE_STUD:int                                          =   1;
-public static const PIERCING_TYPE_RING:int                                          =   2;
-public static const PIERCING_TYPE_LADDER:int                                        =   3;
-public static const PIERCING_TYPE_HOOP:int                                          =   4;
-public static const PIERCING_TYPE_CHAIN:int                                         =   5;
-
-// vaginatypesNOPEDISABLED
-public static const VAGINA_TYPE_HUMAN:int                                           =   0;
-public static const VAGINA_TYPE_EQUINE:int                                          =   1;
-public static const VAGINA_TYPE_BLACK_SAND_TRAP:int                                 =   5;
-
-// vaginalWetness
-public static const VAGINA_WETNESS_DRY:int                                          =   0;
-public static const VAGINA_WETNESS_NORMAL:int                                       =   1;
-public static const VAGINA_WETNESS_WET:int                                          =   2;
-public static const VAGINA_WETNESS_SLICK:int                                        =   3;
-public static const VAGINA_WETNESS_DROOLING:int                                     =   4;
-public static const VAGINA_WETNESS_SLAVERING:int                                    =   5;
-
-// vaginalLooseness
-public static const VAGINA_LOOSENESS_TIGHT:int                                      =   0;
-public static const VAGINA_LOOSENESS_NORMAL:int                                     =   1;
-public static const VAGINA_LOOSENESS_LOOSE:int                                      =   2;
-public static const VAGINA_LOOSENESS_GAPING:int                                     =   3;
-public static const VAGINA_LOOSENESS_GAPING_WIDE:int                                =   4;
-public static const VAGINA_LOOSENESS_LEVEL_CLOWN_CAR:int                            =   5;
-
-// analwetnesslevelsNOPEDISABLED
-public static const ANAL_WETNESS_DRY:int                                            =   0;
-public static const ANAL_WETNESS_NORMAL:int                                         =   1;
-public static const ANAL_WETNESS_MOIST:int                                          =   2;
-public static const ANAL_WETNESS_SLIMY:int                                          =   3;
-public static const ANAL_WETNESS_DROOLING:int                                       =   4;
-public static const ANAL_WETNESS_SLIME_DROOLING:int                                 =   5;
-
-// analloosenesslevelsNOPEDISABLED
-public static const ANAL_LOOSENESS_VIRGIN:int                                       =   0;
-public static const ANAL_LOOSENESS_TIGHT:int                                        =   1;
-public static const ANAL_LOOSENESS_NORMAL:int                                       =   2;
-public static const ANAL_LOOSENESS_LOOSE:int                                        =   3;
-public static const ANAL_LOOSENESS_STRETCHED:int                                    =   4;
-public static const ANAL_LOOSENESS_GAPING:int                                       =   5;
-
-// hipRating
-public static const HIP_RATING_BOYISH:int                                           =   0;
-public static const HIP_RATING_SLENDER:int                                          =   2;
-public static const HIP_RATING_AVERAGE:int                                          =   4;
-public static const HIP_RATING_AMPLE:int                                            =   6;
-public static const HIP_RATING_CURVY:int                                            =  10;
-public static const HIP_RATING_FERTILE:int                                          =  15;
-public static const HIP_RATING_INHUMANLY_WIDE:int                                   =  20;
-
-// buttRating
-public static const BUTT_RATING_BUTTLESS:int                                        =   0;
-public static const BUTT_RATING_TIGHT:int                                           =   2;
-public static const BUTT_RATING_AVERAGE:int                                         =   4;
-public static const BUTT_RATING_NOTICEABLE:int                                      =   6;
-public static const BUTT_RATING_LARGE:int                                           =   8;
-public static const BUTT_RATING_JIGGLY:int                                          =  10;
-public static const BUTT_RATING_EXPANSIVE:int                                       =  13;
-public static const BUTT_RATING_HUGE:int                                            =  16;
-public static const BUTT_RATING_INCONCEIVABLY_BIG:int                               =  20;
+public static const BREAST_CUP_ZZZ_LARGE:int										=  99; 
+public static const BREAST_CUP_HYPER_A:int											= 100; // <-- HYPER
+public static const BREAST_CUP_HYPER_B:int											= 101;
+public static const BREAST_CUP_HYPER_C:int											= 102;
+public static const BREAST_CUP_HYPER_D:int											= 103;
+public static const BREAST_CUP_HYPER_DD:int											= 104;
+public static const BREAST_CUP_HYPER_DD_BIG:int										= 105;
+public static const BREAST_CUP_HYPER_E:int											= 106;
+public static const BREAST_CUP_HYPER_E_BIG:int										= 107;
+public static const BREAST_CUP_HYPER_EE:int											= 108;
+public static const BREAST_CUP_HYPER_EE_BIG:int										= 109;
+public static const BREAST_CUP_HYPER_F:int											= 110;
+public static const BREAST_CUP_HYPER_F_BIG:int										= 111;
+public static const BREAST_CUP_HYPER_FF:int											= 112;
+public static const BREAST_CUP_HYPER_FF_BIG:int										= 113;
+public static const BREAST_CUP_HYPER_G:int											= 114;
+public static const BREAST_CUP_HYPER_G_BIG:int										= 115;
+public static const BREAST_CUP_HYPER_GG:int											= 116;
+public static const BREAST_CUP_HYPER_GG_BIG:int										= 117;
+public static const BREAST_CUP_HYPER_H:int											= 118;
+public static const BREAST_CUP_HYPER_H_BIG:int										= 119;
+public static const BREAST_CUP_HYPER_HH:int											= 120;
+public static const BREAST_CUP_HYPER_HH_BIG:int										= 121;
+public static const BREAST_CUP_HYPER_HHH:int										= 122;
+public static const BREAST_CUP_HYPER_I:int											= 123;
+public static const BREAST_CUP_HYPER_I_BIG:int										= 124;
+public static const BREAST_CUP_HYPER_II:int											= 125;
+public static const BREAST_CUP_HYPER_II_BIG:int										= 126;
+public static const BREAST_CUP_HYPER_J:int											= 127;
+public static const BREAST_CUP_HYPER_J_BIG:int										= 128;
+public static const BREAST_CUP_HYPER_JJ:int											= 129;
+public static const BREAST_CUP_HYPER_JJ_BIG:int										= 130;
+public static const BREAST_CUP_HYPER_K:int											= 131;
+public static const BREAST_CUP_HYPER_K_BIG:int										= 132;
+public static const BREAST_CUP_HYPER_KK:int											= 133;
+public static const BREAST_CUP_HYPER_KK_BIG:int										= 134;
+public static const BREAST_CUP_HYPER_L:int											= 135;
+public static const BREAST_CUP_HYPER_L_BIG:int										= 136;
+public static const BREAST_CUP_HYPER_LL:int											= 137;
+public static const BREAST_CUP_HYPER_LL_BIG:int										= 138;
+public static const BREAST_CUP_HYPER_M:int											= 139;
+public static const BREAST_CUP_HYPER_M_BIG:int										= 140;
+public static const BREAST_CUP_HYPER_MM:int											= 141;
+public static const BREAST_CUP_HYPER_MM_BIG:int										= 142;
+public static const BREAST_CUP_HYPER_MMM:int										= 143;
+public static const BREAST_CUP_HYPER_MMM_LARGE:int									= 144;
+public static const BREAST_CUP_HYPER_N:int											= 145;
+public static const BREAST_CUP_HYPER_N_LARGE:int									= 146;
+public static const BREAST_CUP_HYPER_NN:int											= 147;
+public static const BREAST_CUP_HYPER_NN_LARGE:int									= 148;
+public static const BREAST_CUP_HYPER_O:int											= 149;
+public static const BREAST_CUP_HYPER_O_LARGE:int									= 150;
+public static const BREAST_CUP_HYPER_OO:int											= 151;
+public static const BREAST_CUP_HYPER_OO_LARGE:int									= 152;
+public static const BREAST_CUP_HYPER_P:int											= 153;
+public static const BREAST_CUP_HYPER_P_LARGE:int									= 154;
+public static const BREAST_CUP_HYPER_PP:int											= 155;
+public static const BREAST_CUP_HYPER_PP_LARGE:int									= 156;
+public static const BREAST_CUP_HYPER_Q:int											= 157;
+public static const BREAST_CUP_HYPER_Q_LARGE:int									= 158;
+public static const BREAST_CUP_HYPER_QQ:int											= 159;
+public static const BREAST_CUP_HYPER_QQ_LARGE:int									= 160;
+public static const BREAST_CUP_HYPER_R:int											= 161;
+public static const BREAST_CUP_HYPER_R_LARGE:int									= 162;
+public static const BREAST_CUP_HYPER_RR:int											= 163;
+public static const BREAST_CUP_HYPER_RR_LARGE:int									= 164;
+public static const BREAST_CUP_HYPER_S:int											= 165;
+public static const BREAST_CUP_HYPER_S_LARGE:int									= 166;
+public static const BREAST_CUP_HYPER_SS:int											= 167;
+public static const BREAST_CUP_HYPER_SS_LARGE:int									= 168;
+public static const BREAST_CUP_HYPER_T:int											= 169;
+public static const BREAST_CUP_HYPER_T_LARGE:int									= 170;
+public static const BREAST_CUP_HYPER_TT:int											= 171;
+public static const BREAST_CUP_HYPER_TT_LARGE:int									= 172;
+public static const BREAST_CUP_HYPER_U:int											= 173;
+public static const BREAST_CUP_HYPER_U_LARGE:int									= 174;
+public static const BREAST_CUP_HYPER_UU:int											= 175;
+public static const BREAST_CUP_HYPER_UU_LARGE:int									= 176;
+public static const BREAST_CUP_HYPER_V:int											= 177;
+public static const BREAST_CUP_HYPER_V_LARGE:int									= 178;
+public static const BREAST_CUP_HYPER_VV:int											= 179;
+public static const BREAST_CUP_HYPER_VV_LARGE:int									= 180;
+public static const BREAST_CUP_HYPER_W:int											= 181;
+public static const BREAST_CUP_HYPER_W_LARGE:int									= 182;
+public static const BREAST_CUP_HYPER_WW:int											= 183;
+public static const BREAST_CUP_HYPER_WW_LARGE:int									= 184;
+public static const BREAST_CUP_HYPER_X:int											= 185;
+public static const BREAST_CUP_HYPER_X_LARGE:int									= 186;
+public static const BREAST_CUP_HYPER_XX:int											= 187;
+public static const BREAST_CUP_HYPER_XX_LARGE:int									= 188;
+public static const BREAST_CUP_HYPER_Y:int											= 189;
+public static const BREAST_CUP_HYPER_Y_LARGE:int									= 190;
+public static const BREAST_CUP_HYPER_YY:int											= 191;
+public static const BREAST_CUP_HYPER_YY_LARGE:int									= 192;
+public static const BREAST_CUP_HYPER_Z:int											= 193;
+public static const BREAST_CUP_HYPER_Z_LARGE:int									= 194;
+public static const BREAST_CUP_HYPER_ZZ:int											= 195;
+public static const BREAST_CUP_HYPER_ZZ_LARGE:int									= 196;
+public static const BREAST_CUP_HYPER_ZZZ:int										= 197;
+public static const BREAST_CUP_HYPER_ZZZ_LARGE:int									= 198;
+public static const BREAST_CUP_JACQUES00:int										= 199; // <-- Jacques00-cup
 
 // End Description constants
-

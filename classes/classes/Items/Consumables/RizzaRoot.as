@@ -3,6 +3,7 @@
  */
 package classes.Items.Consumables
 {
+	import classes.GlobalFlags.kFLAGS;
     import classes.PerkLib;
     import classes.Player;
     import classes.internals.Utils;
@@ -12,21 +13,23 @@ package classes.Items.Consumables
 
         private function rizzaRootEffect(player:Player):void
         {
-            clearOutput();
-			var changes:Number = 0;
-			var changeLimit:Number = 1;
+			var tfSource:String = "rizzaRootEffect";
 			var counter:Number = 0;
+			clearOutput();
+			changes = 0;
+			changeLimit = 1;
 			if (Utils.rand(2) == 0) changeLimit++;
 			if (Utils.rand(3) == 0) changeLimit++;
 			if (Utils.rand(4) == 0) changeLimit++;
 			if (player.findPerk(PerkLib.HistoryAlchemist) >= 0) changeLimit++;
+			if (player.findPerk(PerkLib.TransformationResistance) >= 0) changeLimit--;
 			outputText("You chew on the thin red roots.  They have a rubbery texture and the taste is something like lemons and oranges mixed together.  The roots dry out your mouth as you chew them but at the same time they cause a cooling and numbing sensation that’s rather pleasant.");
-			if ((changes < changeLimit) && (player.skinType != 0) && (Utils.rand(6) == 0)){
-				if (player.skinType == 1)
+			if ((changes < changeLimit) && (!player.hasPlainSkin()) && (Utils.rand(6) == 0)){
+				if (player.hasFur())
 					outputText("\n\nYour fur itches incessantly, so you start scratching it.  It starts coming off in big clumps before the whole mess begins sloughing off your body.  In seconds, your skin is hairless, or nearly so. <b>You've lost your fur!</b>");
-				else if (player.skinType == 2)
+				else if (player.hasScales())
 					outputText("\n\nYour scales itch incessantly, so you scratch at them.  They start falling off wholesale, leaving you standing in a pile of scales after only a few moments. <b>You've lost your scales!</b>");
-				else if (player.skinType > 2)
+				else if (player.hasGooSkin())
 					outputText("\n\nYour " + player.skinDesc + " itches incessantly, and as you scratch it shifts and changes, becoming normal human-like skin. <b>Your skin is once again normal!</b>");
 				player.skinDesc = "skin";
 				player.skinType = 0;
@@ -37,6 +40,7 @@ package classes.Items.Consumables
 				changes++;
 				outputText("\n\nA weird tingling runs through your scalp as your " + player.hairDescript() + " shifts slightly.  You reach up and your hand bumps against <b>your new pointed elfin ears</b>.  You bet they look cute!");
 			}
+			if (Utils.rand(5) == 0) mutations.updateOvipositionPerk(tfSource); // I doubt, that this will ever be affected, but well ... just in case
 			if ((changes < changeLimit) && (player.tallness < 108)){
 				player.tallness += changeLimit - changes + Utils.rand(2); //Add remaining changes as additional height
 				if (player.tallness > 108) player.tallness = 108;
@@ -45,13 +49,12 @@ package classes.Items.Consumables
 			else if (player.tallness >= 108){
 				outputText("\n\nYou don’t feel anything happening along your spine.  Perhaps this is as tall as the rizza root can make you.");
 			}
-        }
-                
-        public function RizzaRoot()
-        {
-            super("RizzaRt", "Rizza Root", "a tube of rizza root strands", rizzaRootEffect, 10, "A small ceramic tube full of fine red root strands.  They smell something like citrus fruit. \n\nType: Transformative item");
-        }
+			game.flags[kFLAGS.TIMES_TRANSFORMED] += changes;
+		}
 
-    }
-
+		public function RizzaRoot()
+		{
+			super("RizzaRt", "Rizza Root", "a tube of rizza root strands", rizzaRootEffect, 10, "A small ceramic tube full of fine red root strands.  They smell something like citrus fruit.");
+		}
+	}
 }

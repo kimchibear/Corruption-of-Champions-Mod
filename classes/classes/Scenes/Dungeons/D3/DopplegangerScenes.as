@@ -3,7 +3,7 @@
 	import classes.BaseContent;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.PerkLib;
-	import classes.StatusAffects;
+	import classes.StatusEffects;
 	
 	/**
 	 * ...
@@ -63,12 +63,17 @@
 			else outputText("  You smile widely at your clone as you begin to shake off your [armor].");
 			outputText("  [He] moans lowly in miserable disbelief, but [he]’s not capable of resisting you as, butt naked, you sit yourself down and methodically repeat the action, sliding your hands over and into [his] replicated clothing, finding [his] warm flesh, clutching and testing it curiously. Obviously you’ve laid your fingers upon this many times before, but touching it now second hand causes an emotion you cannot name to rise in your breast. Is this getting you hot? Yes. In the strangest, most perverse way imaginable, it is.");
 			
+			if (player.vaginas.length == 0 && player.cocks.length == 0) 
+			{
+				outputText("\n\nStrangely, the more you think about fucking this strange creature, the hotter your groin becomes. In moments, you find your fingers pushing against a dampening slit with feather-light caresses. <b>Somehow this place's magic has given you a vagina to match your duplicate!</b> You pull away with a shuddering breath and marvel at the glittering wetness oozing down your fingertips. This is going to be fun.");
+				player.createVagina();
+			}
 			if (player.cocks.length >= 1 && !player.hasVagina())
 			{
 				outputText("\n\nYou turn the mirror demon’s wild stare and ragged breath away from you, laying a comforting but firm hand upon [his] shoulder as, grinning, you lower your eyes to [his] [butt]. Nice.");
 				if (player.isNaga()) outputText("  You sigh at the smooth, pleasurable feeling of your scales rubbing over each other as you sensuously wind yourself around [his] tail until you are tightly bound together. Twin lithe snake boys wound around each other- all you really need is a paying audience. Or a stick and a hospital. You laugh with a similar tinge of madness that your partner did a short while ago and [he] groans raggedly in response.");
 				else if (player.isDrider()) outputText("  The tangle of spindly legs in front of you initially puts you off, but then your arachnid instincts take over and you find yourself eagerly clambering onto [his] bulging back before you know it, your hardening dick pressing against the human softness which rises above the gleaming chitin as your monstrous body presses heavily down onto its mirror counterpart, making [him] groan raggedly.");
-				else if (player.skinType != SKIN_TYPE_FUR) outputText("  You clamber on top of [him], the rough mingling of your fur sparking deep urges within you, your animal half dreaming of frenzied, bestial mating in the wild. Your hardening dick presses against [his] [tail] and [he] groans raggedly in response.");
+				else if (!player.hasFur() && player.tailType != TAIL_TYPE_NONE) outputText("  You clamber on top of [him], the rough mingling of your fur sparking deep urges within you, your animal half dreaming of frenzied, bestial mating in the wild. Your hardening dick presses against [his] [tail] and [he] groans raggedly in response.");
 				else outputText("  You clamber on top of [him], enjoying the give and take of [his] "+ (player.isGoo() ? "gooey" : "smooth") +" flesh as you lock your [hips] around their mirror counterparts, making [him] groan raggedly in response.");
 
 				outputText("\n\n“<i>I cannot believe you are doing this. There- there are demons who wouldn’t do this. What kind of sick bastard even are you?</i>“");
@@ -79,7 +84,7 @@
 
 				outputText("\n\nYou go slowly, enjoying the warmth and syncopated clenching of the mirror demon’s tunnel at leisure. Although [he] is initially frozen with sheer disbelief the need to relax in order to take your insistent [cock] softens [him] up, moving [him] in time with your thrusting. [He] moans from a combination of misery and intensity of the sensation you’re pushing upon [him].");
 				if (player.findPerk(PerkLib.Buttslut) >= 0 || player.findPerk(PerkLib.MaraesGiftButtslut) >= 0) outputText("  You glory in your own decision to transform into an eager butt slut; the doppelganger’s back passage is tight, warm butter, accepting and clenching around your bulging prick like the perfect little boypussy you know it to be.");
-				outputText("  Now you’re locked into your defeated clone you feel no real wish to cause [him] pain. Indeed, as you lose yourself to the rhythm to the slow, tight, gradual sex a desire to force [him] to feel pleasure grows. Where is the fun in seeing your mirror image suffer, after all?");
+				outputText("  Now that you’re locked into your defeated clone you feel no real wish to cause [him] pain. Indeed, as you lose yourself to the rhythm to the slow, tight, gradual sex a desire to force [him] to feel pleasure grows. Where is the fun in seeing your mirror image suffer, after all?");
 				
 				outputText("\n\nYou hook an arm around [his] shoulder and let your fingers graze one of [his] nipples teasingly. [He] gasps, [his] sphincter tightening up around your [cock] delightfully.");
 
@@ -106,10 +111,10 @@
 				outputText("\n\nYour gaze drops from the mirror demon’s wild stare, down to [his] [chest]. Nice. You lay a comforting but firm hand upon [his] shoulder as you sink down on top of your clone, your own [chest] pushing into " + player.mf("his", "hers") + ", your hardening [cock] pressing and rubbing impatiently against its supple, turgid clone. You find yourself intensely aware of every sensation- exactly how your perverse, hermaphroditic body feels to your own touch.");
 				if (player.isNaga()) outputText("  You sigh at the smooth, pleasurable feeling of your scales rubbing over each other as you sensuously wind yourself around [his] tail until you are tightly bound together. Twin lithe snake futa wound around each other- all you really need is a paying audience. Or a stick and a hospital. You laugh with a similar tinge of madness that your partner did a short while ago and [he] groans raggedly in response.");
 				if (player.isDrider()) outputText("  For a moment you consider mounting [him] from behind, allowing your monstrous instincts to take over and fuck [his] ovipositor in a deathly arachnid craze, but the tangle of spindly legs in front of you puts you off. Better to do it face-to-face. You want to drink in your mirror image’s every reaction. Your prick pressing against the human softness which rises above [his] gleaming chitin as your body presses heavily down onto its mirror counterpart, making [him] groan raggedly.");
-				if (player.skinType == SKIN_TYPE_FUR) outputText("  You clamber on top of [him], the rough mingling of your fur sparking deep urges within you, your animal half dreaming of frenzied, bestial mating in the wild. Your dick presses into [his] digitigrade thigh and [he] groans raggedly in response.");
+				if (player.hasFur()) outputText("  You clamber on top of [him], the rough mingling of your fur sparking deep urges within you, your animal half dreaming of frenzied, bestial mating in the wild. Your dick presses into [his] digitigrade thigh and [he] groans raggedly in response.");
 				else outputText(" You clamber on top of [him], enjoying the give and take of [his] "+ (player.isGoo() ? "gooey" : "smooth") + " flesh as you lock your [hips] around their mirror counterparts, making [him] groan raggedly in response.");
 
-				outputText("\n\n“<i>I cannot believe you are doing this. There- there are demons who wouldn’t do this. What kind of sick bitch even are you?</i>“");
+				outputText("\n\n“<i>I cannot believe you are doing this. There- there are demons who wouldn’t do this. What kind of sick bitch are you?</i>\"");
 
 				outputText("\n\n“<i>Oh, shut up,</i>” you reply breezily. “<i>You’re the one who wouldn’t shut up about how much you wanted this body. I’m giving you exactly what you wished for.</i>” You roll [his] [hips], [his] cock");
 				if (player.cocks.length > 1) outputText("s");
@@ -145,10 +150,10 @@
 				outputText("\n\nYour gaze drops from the mirror demon’s wild stare, down to her [chest]. Nice. You lay a comforting but firm hand upon her shoulder as you sit yourself down in front of your clone, your own [chest] pushing into hers as, almost mockingly, you cuddle her.");
 				if (player.isNaga()) outputText("  You sigh at the smooth, pleasurable feeling of scales rubbing over each other as you sensuously wind yourself around her tail until you are tightly bound together. Twin lithe snake girls wound around each other- all you really need is a paying audience. Or a stick and a hospital. You laugh with a similar tinge of madness that your partner did a short while ago and she groans raggedly in response.");
 				else if (player.isDrider()) outputText("  You are momentarily thrown by your sixteen spindly legs tangling together, a creepy twitching maze devolving across the floor- but this is definitely the way to do it. Face-to-face. You want to drink in your mirror image’s every reaction. Your [vagina] presses against the human softness which rises above her gleaming chitin as your body presses heavily into its mirror counterpart, eliciting a ragged groan.");
-				else if (player.skinType == SKIN_TYPE_FUR) outputText("  You clamber on top of her, the rough mingling of your fur sparking deep urges within you, your animal half dreaming of frenzied, bestial mating in the wild. Your [vagina] presses into her digitigrade thigh and she groans raggedly in response.");
+				else if (player.hasFur()) outputText("  You clamber on top of her, the rough mingling of your fur sparking deep urges within you, your animal half dreaming of frenzied, bestial mating in the wild. Your [vagina] presses into her digitigrade thigh and she groans raggedly in response.");
 				else outputText("  You clamber on top of her, enjoying the give and take of her "+ (player.isGoo() ? "gooey" : "smooth") + " flesh as you lock your [hips] around their mirror counterparts, making her groan raggedly in response.");
 
-				outputText("\n\n“<i>I cannot believe you are doing this. There- there are demons who wouldn’t do this. What kind of sick bitch even are you?</i>”");
+				outputText("\n\n“<i>I cannot believe you are doing this. There- there are demons who wouldn’t do this. What kind of sick bitch are you?</i>”");
 
 				outputText("\n\n“<i>Oh, shut up,</i>” you reply breezily. “<i>You’re the one who wouldn’t shut up about how much you wanted this body. I’m giving you exactly what you wished for.</i>” With your [hips] wrapped around hers she cannot stop you bending her open, exposing the mirror image of your [vagina],");
 				if (player.averageVaginalWetness() < 3) outputText(" gleaming invitingly");
@@ -180,31 +185,36 @@
 			}
 			
 			outputText("\n\n<b>(Key Item Acquired: Laybans!)</b>");
-			
-			player.orgasm();
-			cleanupAfterCombat(d3.resumeFromFight);
+			flags[kFLAGS.D3_MIRRORS_SHATTERED] = 1;
+			player.orgasm('Generic');
+			combat.cleanupAfterCombat(getGame().dungeons.resumeFromFight);
 		}
 		
 		public function killYourself():void
 		{
 			clearOutput();
-			outputText("\n\nYou hold its gaze for a moment more, and then with a single, fluid movement turn and smash your [weapon] into the engraved mirror. A shrill scream mingles with the sound of breaking glass, but by the time the shards begin to tinkle and chime to the floor it’s keened away, and when you turn back the doppelganger is gone. The shrill sound could have been the sound of the mirror itself when you hit it, you suppose. This could all have been a very strange fugue. Certainly, standing here now in this dishevelled storage room, it’s difficult to believe what just happened. Shaking your head, you make sure the protective glasses you came here for are still in your pocket before heading to the door and leaving.");
-			
-			cleanupAfterCombat();
+			outputText("You hold its gaze for a moment more, and then with a single, fluid movement turn and smash your [weapon] into the engraved mirror. A shrill scream mingles with the sound of breaking glass, but by the time the shards begin to tinkle and chime to the floor it’s keened away, and when you turn back the doppelganger is gone. The shrill sound could have been the sound of the mirror itself when you hit it, you suppose. This could all have been a very strange fugue. Certainly, standing here now in this dishevelled storage room, it’s difficult to believe what just happened. Shaking your head, you make sure the protective glasses you came here for are still in your pocket before heading to the door and leaving.");
+			flags[kFLAGS.D3_MIRRORS_SHATTERED] = 1;
+			combat.cleanupAfterCombat();
 			menu();
-			addButton(0, "Next", d3.resumeFromFight);
+			combat.cleanupAfterCombat(getGame().dungeons.resumeFromFight);
 		}
 		
 		public function inSovietCoCSelfFucksYou():void
 		{
 			clearOutput();
 			
-			outputText("Everything feels so vague, so inconstent; your body and mind shimmer like a lake hit by rain, incapable of focusing, incapable of holding onto a shape, a slave to any force that wants to form you. Who are you? It is obvious, isn’t it. Your image floats in front of you, the only clear thing you can perceive. It grins triumphantly, and you grin back: it is all you can do. Its movements define you, dominate you utterly, within and without. When it steps forward and puts its hand out, it isn’t by choice you mimic the action - it is all you can do. Your fingers stretch out to meet their mirror image, but before they meet they touch a cold, invisible barrier. Glass. True understanding of your situation permeates you like spreading oil, but you cannot gasp, scream in horror, pull at your hair. You slowly pull away from the mirror’s surface, your grin widening, because that is what the demon who has taken your form is doing.");
+			outputText("Everything feels so vague, so inconsistent; your body and mind shimmer like a lake hit by rain, incapable of focusing, incapable of holding onto a shape, a slave to any force that wants to form you. Who are you? It is obvious, isn’t it. Your image floats in front of you, the only clear thing you can perceive. It grins triumphantly, and you grin back: it is all you can do. Its movements define you, dominate you utterly, within and without. When it steps forward and puts its hand out, it isn’t by choice you mimic the action - it is all you can do. Your fingers stretch out to meet their mirror image, but before they meet they touch a cold, invisible barrier. Glass. True understanding of your situation permeates you like spreading oil, but you cannot gasp, scream in horror, pull at your hair. You slowly pull away from the mirror’s surface, your grin widening, because that is what the demon who has taken your form is doing.");
 
 			outputText("\n\n“<i>Beautiful,</i>” you and [he] breathe. “<i>I will do great things with this body, [name], things you couldn’t have imagined, poor soulful innocent that you were. I will take my revenge with it, but first...</i>” [He] stares at [his] reflection smoulderingly as [he] raises [his] hands to [his] armor. [He] forces you to take off your clothes with [him], and you feel it just as clearly as if you were controlling the actions; the way your underclothes whisper off you, the way your naked flesh goose bumps in the coolness of the room");
 			if (player.hasCock()) outputText(", the way your turgid [cock] feels when you grasp it at the base.");
 			else if (player.hasVagina()) outputText(", the way your [vagina] feels when you slide your fingers along its lips.");
-
+			else 
+			{
+				outputText(", the way your");
+				player.createVagina();
+				outputText(" [vagina] feels when you slide your fingers against your... Wait, where did that come from? You push your fingers in more forcefully, determined to see through this illusion, but all you manage to do is arouse yourself beyond all reasonable measure. Somehow, <b>you've grown a tight, wet pussy to match your duplicate's!</b>");
+			}
 			if (player.hasCock() && !player.hasVagina())
 			{
 				outputText("\n\nYou masturbate with [him], forced to stand there and repeat [his] every pleasurable stroke, growing less gloating and more urgent with each jerk of the wrist as ten years of chastity step into the room and set their weight upon his groin. You feel that weight, terrible for an incubus to endure, and you cannot possibly last long against it. Your face contorts into one of unspeakable joy and release as you tap that urge, your cock contracting and then unleashing a font of cum, your body caught in orgasm for what seems like an eternity.");
@@ -220,16 +230,13 @@
 				outputText("\n\nYou masturbate with her, forced to stand there and repeat her every pleasurable schlick, growing less gloating and more urgent with each flick of the finger as ten years of chastity step into the room and set their weight upon her groin. You feel that weight, terrible for a succubus to endure, and you cannot possibly last long against it. Your face contorts into one of unspeakable joy and release as you tap that urge, your [vagina] quivering, contracting and then wetting itself, your body caught in orgasm for what seems like an eternity. ");
 			}
 			
-			// Fuck Genderless
-			// 9999
-
 			outputText("\n\n“<i>Ahh...</i>” your mouth says finally, as you step back from the mirror, your eyes half-lidded with contentment. “<i>I really needed that.</i>” [Name] turns away from the surface you now embody to put [his] [armor] back on and you follow suit, gazing dumbly at the reflection of the room behind you. You want to shout and scream at [him] now, begging [him] to give you your body back, for [him] not to do what you know comes next, but you can’t- you can’t stop turning back around, you can’t stop yourself touching the surface of your mirror one last time and, smirking, stride out of the room. You mimic your body exiting out of sight of the mirror’s edge, and then... then you mimic a grey, empty room. Staring back at you hollowly, inert and empty. Listening to a metal door shutting behind you with a terrible finality.");
 
 			outputText("\n\nWith your body and brain full of memory of how to defeat demons, coupled with [his] own knowledge and thirst for revenge, your impostor surprises Lethice and manages to destroy her, taking her place and ruling the mountains and beyond with a mania born of horizons and insanity she never knew. You know all this because [Name] is true to [his] promise not to inflict the same suffering [he] endured upon you, and you don’t have to stand in the mirror room for very long (although being a deserted storage chamber, you quickly learn, makes a mockery of concepts like “very long”). [He] has your glass prison brought to [his] lavish inner chambers and installs you there- nailed to the ceiling above [his] bed, specifically. From your vantage point you mimic [his] orgies, each more deranged than the last. You experience sensation even the doppelganger [him]self never knows, because you are forced to embody everything in the room. Not just every slave girl, boy and favored demon there, every bulging prick and tight, eager hole, not just your old body bucking, slithering and glorying in it all, but every dildo, butt-plug, whip, bead, chain, every satin sheet upon which soft flesh is urgently pressed. You encompass everyone’s thoughts, the slavering succulence of total submission, the coursing power and glory of [Name]’s maddened domineering, every mind-wiping orgasm and sensation bordering between screaming pain and ecstatic pleasure is yours to endure. ");
 
 			outputText("\n\nYou quickly go completely insane, just like your bodysnatcher did, although not in a way [he] ever knew. You will never be able to express that insanity though. Every hour there is a new scene of complete depravity for you to reflect, personify and act out. A demon’s dearest wish - an eternity of constantly changing, mind-boggling sex - is your final fate.");
 
-			doBadEnd();
+			getGame().gameOver();
 		}
 	}
 

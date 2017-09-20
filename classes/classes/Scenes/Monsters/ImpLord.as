@@ -12,8 +12,9 @@
 			outputText("The imp mutters something to himself. Before you have time to react the demonic creature's hand is filled with a bright red fire that he hurls at you.  The flames lick at your body leaving a painful burn on you torso, as well as an arousing heat in your groin. ");
 			//[-HP // +Lust(minor)]
 			var damage:int = 40 + rand(10);
+			var lustDmg:int = 20 + player.cor / 10;
 			player.takeDamage(damage, true);
-			game.dynStats("lus", 20 + player.cor / 10);
+			player.takeLustDamage(lustDmg, true);
 			combatRoundOver();
 		}
 		
@@ -22,7 +23,7 @@
 		{
 			var damage:int = int((str + weaponAttack + 20) - rand(player.tou) - player.armorDef);
 			outputText("The demonic creature slashes a clawed hand towards your stomach,");
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) outputText(" but you handily avoid it.");
+			if (player.getEvasionRoll()) outputText(" but you handily avoid it.");
 			else if (damage <= 0) outputText(" but the attack proves ineffectual.");
 			else {
 				outputText("leaving a large gash. The attack leaves you slightly stunned, but you recover. ");
@@ -36,7 +37,8 @@
 		{
 			outputText("Lowering his loincloth the imp reveals his inhumanly thick shaft.  He smirks and licks his lips as he gives his cock a squeeze, milking a few beads of clear pre from the tip.  You shake your head and try to ignore your growing need.");
 			//[+Lust]
-			game.dynStats("lus", 5 + player.lib / 5 + player.cor / 5);
+			var lustDmg:int = 5 + player.lib / 5 + player.cor / 5;
+			player.takeLustDamage(lustDmg, true);
 			combatRoundOver();
 		}
 
@@ -47,7 +49,8 @@
 			var damage:int = 3 + rand(10);
 			player.takeDamage(damage, true);
 			//[-HP(minor) // +Lust]
-			game.dynStats("lus", 5 + player.sens / 4 + player.cor / 10);
+			var lustDmg:int = 5 + player.sens / 4 + player.cor / 10;
+			player.takeLustDamage(lustDmg, true);
 			combatRoundOver();
 		}
         override protected function performCombatAction():void
@@ -65,7 +68,7 @@
 
 		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
 		{
-			game.impScene.loseToAnImpLord();
+			game.impScene.loseToAnImpLord(false);
 		}
 
 		public function ImpLord()
@@ -79,7 +82,7 @@
 			// Imps now only have demon dicks.
 			// Not sure if I agree with this, I can imagine the little fuckers abusing the
 			// shit out of any potions they can get their hands on.
-			this.createCock(rand(2)+11,2.5,CockTypesEnum.DEMON);
+			this.createCock(rand(2) +11,2.5,CockTypesEnum.DEMON);
 			this.balls = 2;
 			this.ballSize = 1;
 			this.cumMultiplier = 3;
@@ -114,8 +117,8 @@
 					add(consumables.LABOVA_,1).
 					add(consumables.INCUBID,6).
 					add(consumables.SUCMILK,6);
-			this.wingType = WING_TYPE_IMP;
-			this.special1 = 5019;
+			this.wingType = WING_TYPE_IMP_LARGE;
+			this.special1 = lustMagicAttack;
 			checkMonster();
 		}
 		

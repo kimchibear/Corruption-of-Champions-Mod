@@ -1,6 +1,8 @@
-﻿package classes 
+package classes 
 {
 import classes.Scenes.Places.TelAdre.UmasShop;
+import classes.Items.JewelryLib;
+import classes.GlobalFlags.kFLAGS;
 
 /**
 	 * Character class for player and NPCs. Has subclasses Player and NonPlayer.
@@ -8,49 +10,8 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 	 */
 	public class Character extends Creature
 	{
-		private var _femininity:Number = 50;
-
-		// This is the easiest way I could think of to apply "flat" bonuses to certain stats without having to write a whole shitload of crazyshit
-		// I think a better long-term solution may be to hang function references off the end of the statusAffect class and move all of the value
-		// calculation into methods of ContentClasses, so rather than having walls of logic, we just call the method reference with a value, and get back the modified value.
-		// It's still shitty, but it would possibly be an improvement.
-		public function get femininity():Number
-		{
-			var fem:Number = _femininity;
-			var statIndex:int = this.findStatusAffect(StatusAffects.UmasMassage);
-
-			if (statIndex >= 0)
-			{
-				if (this.statusAffect(statIndex).value1 == UmasShop.MASSAGE_MODELLING_BONUS)
-				{
-					fem += this.statusAffect(statIndex).value2;
-				}
-			}
-			
-			if (fem > 100)
-			{
-				fem = 100;
-			}
-			
-			return fem;
-		}
-		
-		public function set femininity(value:Number):void
-		{
-			if (value > 100)
-			{
-				value = 100;
-			}
-			else if (value < 0)
-			{
-				value = 0;
-			}
-			
-			_femininity = value;
-		}
-
 		//BEARDS! Not used anywhere right now but WHO WANTS A BEARD?
-		//Kitteh6660: I want a beard! I'll code in obtainable beard.
+		//Kitteh6660: I want a beard! I'll code in obtainable beard. (DONE!)
 
 		//Used for hip ratings
 		public var thickness:Number = 0;
@@ -73,7 +34,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 
 		
 		//Key items
-		public var keyItems:Array;
+		public var keyItems:/*KeyItemClass*/Array;
 		
 		public function Character()
 		{
@@ -183,7 +144,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				if (goal > oldN)
 					output = "\n\nThere's a tingling in your " + face() + " as it changes imperceptibly towards being more feminine. (+" + strength + ")";
 				else if (goal < oldN)
-					output = "\n\nThere's a tingling in your " + face() + " as it changes imperciptibly towards being more masculine. (+" + strength + ")";
+					output = "\n\nThere's a tingling in your " + face() + " as it changes imperceptibly towards being more masculine. (+" + strength + ")";
 			}
 			return output;
 		}
@@ -330,40 +291,13 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			else
 			{
 				//CoC_Settings.error("");
-				return "ERROR: NO BEARD! <b>YOU ARE NOT A VIKING AND SHOULD TELL FEN IMMEDIATELY.</b>";
+				return "ERROR: NO BEARD! <b>YOU ARE NOT A VIKING AND SHOULD TELL KITTEH IMMEDIATELY.</b>";
 			}
 		}
-		
-		public function skin(noAdj:Boolean = false, noTone:Boolean = false):String
-		{
-			var skinzilla:String = "";
-			//Only show stuff other than skinDesc if justSkin is false
-			if (!noAdj)
-			{
-				//Adjectives first!
-				if (skinAdj != "")
-				{
-					skinzilla += skinAdj;
-					if (noTone)
-						skinzilla += " ";
-					else
-						skinzilla += ", ";
-				}
-			}
-			if (!noTone)
-				skinzilla += skinTone + " ";
-			//Fur handled a little differently since it uses
-			//haircolor
-			if (skinType == 1)
-				skinzilla += "skin";
-			else
-				skinzilla += skinDesc;
-			return skinzilla;
-		}
-		
+
 		public function hasMuzzle():Boolean
 		{
-			if (faceType == 1 || faceType == 2 || faceType == 6 || faceType == 7 || faceType == 9 || faceType == 11 || faceType == 12)
+			if (faceType == FACE_HORSE || faceType == FACE_DOG || faceType == FACE_CAT || faceType == FACE_LIZARD || faceType == FACE_KANGAROO || faceType == FACE_FOX || faceType == FACE_DRAGON || faceType == FACE_RHINO || faceType == FACE_ECHIDNA || faceType == FACE_DEER || faceType == FACE_WOLF)
 				return true;
 			return false;
 		}
@@ -380,19 +314,33 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			//1 - horse
 			//2 - dogface
 			//6 - kittah face
+			//7 - lizard face (durned argonians!)
 			//9 - kangaface
-			if (faceType == 9 || faceType == 6 || faceType == 2 || faceType == 1 || faceType == 11)
+			if (hasMuzzle())
 			{
-				if (int(Math.random() * 2) == 0)
-					return "muzzle";
-				if (int(Math.random() * 3) == 0 && faceType == 1)
+				if (int(Math.random() * 3) == 0 && faceType == FACE_HORSE)
 					stringo = "long ";
-				if (int(Math.random() * 3) == 0 && faceType == 6)
+				if (int(Math.random() * 3) == 0 && faceType == FACE_CAT)
 					stringo = "feline ";
-				return stringo + "face";
+				if (int(Math.random() * 3) == 0 && faceType == FACE_RHINO)
+					stringo = "rhino ";
+				if (int(Math.random() * 3) == 0 && (faceType == FACE_LIZARD || faceType == FACE_DRAGON))
+					stringo = "reptilian ";
+				if (int(Math.random() * 3) == 0 && faceType == FACE_WOLF)
+					stringo = "canine ";
+				switch(rand(3)) {
+					case 0:
+						return stringo + "muzzle";
+					case 1:
+						return stringo + "snout";
+					case 2:
+						return stringo + "face";
+					default:
+						return stringo + "face";
+				}
 			}
 			//3 - cowface
-			if (faceType == 3)
+			if (faceType == FACE_COW_MINOTAUR)
 			{
 				if (Math.floor(Math.random() * 4) == 0)
 					stringo = "bovine ";
@@ -401,19 +349,16 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				return stringo + "face";
 			}
 			//4 - sharkface-teeth
-			if (faceType == 4)
+			if (faceType == FACE_SHARK_TEETH)
 			{
 				if (Math.floor(Math.random() * 4) == 0)
 					stringo = "angular ";
 				return stringo + "face";
 			}
-			//7 - lizard face (durned argonians!)
-			if (faceType == 7 || faceType == 12)
+			if (faceType == FACE_PIG || faceType == FACE_BOAR)
 			{
 				if (Math.floor(Math.random() * 4) == 0)
-					stringo = "reptilian ";
-				if (Math.floor(Math.random() * 4) == 0)
-					return stringo + "muzzle";
+					stringo = (faceType == FACE_PIG ? "pig" : "boar") + "-like ";
 				if (Math.floor(Math.random() * 4) == 0)
 					return stringo + "snout";
 				return stringo + "face";
@@ -433,7 +378,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			//14 - dagron tail
 			if (isNaga())
 				return true;
-			if (tailType == 2 || tailType == 3 || tailType == 4 || tailType == 7 || tailType == 8 || tailType == 9 || tailType == 12 || tailType == 13 || tailType == 14)
+			if (tailType == 2 || tailType == 3 || tailType == 4 || tailType == 7 || tailType == 8 || tailType == 9 || tailType == 12 || tailType == 13 || tailType == 14 || tailType == 15 || tailType == 16 || tailType == 17 || tailType == 18 || tailType == 20)
 				return true;
 			return false;
 		}
@@ -442,32 +387,43 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 
 		public function isButtPregnant():Boolean { return _buttPregnancyType != 0; }
 	
-		//fertility must be >= random(0-beat)
-		//If arg == 1 then override any contraceptives and guarantee fertilization
-		public function knockUp(type:int = 0, incubation:int = 0, beat:int = 100, arg:int = 0):void
+		
+		/**
+		 * Impregnate the character with the given pregnancy type if the total fertility 
+		 * is greater or equal to the roll.
+		 * @param	type the type of pregnancy (@see PregnancyStore.PREGNANCY_xxx)
+		 * @param	incubationDuration the incubation duration
+		 * @param	maxRoll the possible maximum roll for an impregnation check
+		 * @param	forcePregnancy specify a large bonus or malus to fertility (0 = no bonus, positive number = guaranteed pregnancy, negative number = no pregnancy)
+		 */
+		public function knockUp(type:int = 0, incubationDuration:int = 0, maxRoll:int = 100, forcePregnancy:int = 0):void
 		{
+			//TODO push this down into player?
 			//Contraceptives cancel!
-			if (findStatusAffect(StatusAffects.Contraceptives) >= 0 && arg < 1)
+			if (hasStatusEffect(StatusEffects.Contraceptives) && forcePregnancy < 1)
 				return;
-//			if (findStatusAffect(StatusAffects.GooStuffed) >= 0) return; //No longer needed thanks to PREGNANCY_GOO_STUFFED being used as a blocking value
+				
 			var bonus:int = 0;
-			//If arg = 1 (always pregnant), bonus = 9000
-			if (arg >= 1)
+			
+			// apply fertility bonus or malus
+			if (forcePregnancy >= 1)
 				bonus = 9000;
-			if (arg <= -1)
+			if (forcePregnancy <= -1)
 				bonus = -9000;
-			//If unpregnant and fertility wins out:
-			if (pregnancyIncubation == 0 && totalFertility() + bonus > Math.floor(Math.random() * beat) && hasVagina())
+				
+			//If not pregnant and fertility wins out:
+			if (pregnancyIncubation == 0 && totalFertility() + bonus > Math.floor(Math.random() * maxRoll) && hasVagina())
 			{
-				knockUpForce(type, incubation);
-				trace("PC Knocked up with pregnancy type: " + type + " for " + incubation + " incubation.");
+				knockUpForce(type, incubationDuration);
+				trace("PC Knocked up with pregnancy type: " + type + " for " + incubationDuration + " incubation.");
 			}
+			
 			//Chance for eggs fertilization - ovi elixir and imps excluded!
 			if (type != PregnancyStore.PREGNANCY_IMP && type != PregnancyStore.PREGNANCY_OVIELIXIR_EGGS && type != PregnancyStore.PREGNANCY_ANEMONE)
 			{
 				if (findPerk(PerkLib.SpiderOvipositor) >= 0 || findPerk(PerkLib.BeeOvipositor) >= 0)
 				{
-					if (totalFertility() + bonus > Math.floor(Math.random() * beat))
+					if (totalFertility() + bonus > Math.floor(Math.random() * maxRoll))
 					{
 						fertilizeEggs();
 					}
@@ -475,19 +431,29 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			}
 		}
 
-		//The more complex knockUp function used by the player is defined above
-		//The player doesn't need to be told of the last event triggered, so the code here is quite a bit simpler than that in PregnancyStore
-		public function knockUpForce(type:int = 0, incubation:int = 0):void
+
+		
+		 /**
+		  * Forcefully override the characters pregnancy. If no pregnancy type is provided,
+		  * any current pregancy is cleared.
+		  * 
+		  * Note: A more complex pregnancy function used by the character is Character.knockUp
+		  * The character doesn't need to be told of the last event triggered, so the code here is quite a bit simpler than that in PregnancyStore.
+		  * @param	type the type of pregnancy (@see PregnancyStore.PREGNANCY_xxx)
+		  * @param	incubationDuration the incubation duration
+		  */
+		public function knockUpForce(type:int = 0, incubationDuration:int = 0):void
 		{
+			//TODO push this down into player?
 			_pregnancyType = type;
-			_pregnancyIncubation = (type == 0 ? 0 : incubation); //Won't allow incubation time without pregnancy type
+			_pregnancyIncubation = (type == 0 ? 0 : incubationDuration); //Won't allow incubation time without pregnancy type
 		}
 	
 		//fertility must be >= random(0-beat)
 		public function buttKnockUp(type:int = 0, incubation:int = 0, beat:int = 100, arg:int = 0):void
 		{
 			//Contraceptives cancel!
-			if (findStatusAffect(StatusAffects.Contraceptives) >= 0 && arg < 1)
+			if (hasStatusEffect(StatusEffects.Contraceptives) && arg < 1)
 				return;
 			var bonus:int = 0;
 			//If arg = 1 (always pregnant), bonus = 9000
@@ -523,7 +489,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 		//Create a keyItem
 		public function createKeyItem(keyName:String, value1:Number, value2:Number, value3:Number, value4:Number):void
 		{
-			var newKeyItem:* = new KeyItemClass();
+			var newKeyItem:KeyItemClass = new KeyItemClass();
 			//used to denote that the array has already had its new spot pushed on.
 			var arrayed:Boolean = false;
 			//used to store where the array goes
@@ -768,19 +734,19 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 
 		/*OLD AND UNUSED
 		   public function breastCupS(rowNum:Number):String {
-		   if(breastRows[rowNum].breastRating < 1) return "tiny";
-		   else if(breastRows[rowNum].breastRating < 2) return "A";
-		   else if(breastRows[rowNum].breastRating < 3) return "B";
-		   else if(breastRows[rowNum].breastRating < 4) return "C";
-		   else if(breastRows[rowNum].breastRating < 5) return "D";
-		   else if(breastRows[rowNum].breastRating < 6) return "DD";
-		   else if(breastRows[rowNum].breastRating < 7) return "E";
-		   else if(breastRows[rowNum].breastRating < 8) return "F";
-		   else if(breastRows[rowNum].breastRating < 9) return "G";
-		   else if(breastRows[rowNum].breastRating < 10) return "GG";
-		   else if(breastRows[rowNum].breastRating < 11) return "H";
-		   else if(breastRows[rowNum].breastRating < 12) return "HH";
-		   else if(breastRows[rowNum].breastRating < 13) return "HHH";
+		   if (breastRows[rowNum].breastRating < 1) return "tiny";
+		   else if (breastRows[rowNum].breastRating < 2) return "A";
+		   else if (breastRows[rowNum].breastRating < 3) return "B";
+		   else if (breastRows[rowNum].breastRating < 4) return "C";
+		   else if (breastRows[rowNum].breastRating < 5) return "D";
+		   else if (breastRows[rowNum].breastRating < 6) return "DD";
+		   else if (breastRows[rowNum].breastRating < 7) return "E";
+		   else if (breastRows[rowNum].breastRating < 8) return "F";
+		   else if (breastRows[rowNum].breastRating < 9) return "G";
+		   else if (breastRows[rowNum].breastRating < 10) return "GG";
+		   else if (breastRows[rowNum].breastRating < 11) return "H";
+		   else if (breastRows[rowNum].breastRating < 12) return "HH";
+		   else if (breastRows[rowNum].breastRating < 13) return "HHH";
 		   return "massive custom-made";
 		 }*/
 		public function viridianChange():Boolean
@@ -797,49 +763,102 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			return false;
 		}
 		
-		public function hasSheath():Boolean
-		{
-			return dogCocks() > 0 || horseCocks() > 0 || catCocks() > 0 || kangaCocks() > 0 || displacerCocks() > 0;
-
-		}
-		
 		public function hasKnot(arg:int = 0):Boolean
 		{
 			if (arg > cockTotal() - 1 || arg < 0)
 				return false;
-			return (cocks[arg].cockType == CockTypesEnum.DOG || cocks[arg].cockType == CockTypesEnum.FOX || cocks[arg].cockType == CockTypesEnum.DISPLACER);
+			return cocks[arg].hasKnot();
 		}
 
 
-		public function maxHP():Number
+
+		
+		public function maxHunger():Number
 		{
-			var max:Number = 0;
-			max += int(tou * 2 + 50);
-			if (findPerk(PerkLib.Tank) >= 0) max += 50;
-			if (findPerk(PerkLib.Tank2) >= 0) max += Math.round(tou);
-			if (findPerk(PerkLib.ChiReflowDefense) >= 0) max += UmasShop.NEEDLEWORK_DEFENSE_EXTRA_HP;
-			max += level * 15;
-			if (jewelryEffectId == 5) max += jewelryEffectMagnitude;
-			max *= 1 + (countCockSocks("green") * 0.02);
-			max = Math.round(max);
-			if (max > 9999) max = 9999;
-			return max;
+			return 100;
 		}
 		
-		public function maxLust():Number
-		{
-			var max:Number = 100;
-			if (findPerk(PerkLib.BroBody) >= 0 || findPerk(PerkLib.BimboBody) >= 0 || findPerk(PerkLib.FutaForm) >= 0) max += 20;
-			if (findPerk(PerkLib.OmnibusGift) >= 0) max += 15;
-			if (findPerk(PerkLib.AscensionDesires) >= 0) max += perkv1(PerkLib.AscensionDesires) * 5;
-			return max;
+		public function growHair(amount:Number = .1):Boolean {
+			//Grow hair!
+			var tempHair:Number = hairLength;
+			if (hairType == HAIR_BASILISK_SPINES) return false;
+			hairLength += amount;
+			if (hairType == HAIR_BASILISK_PLUME && hairLength > 8) hairLength = 8;
+			if (hairLength > 0 && tempHair == 0) {
+				game.outputText("\n<b>You are no longer bald.  You now have " + hairDescript() + " coating your head.\n</b>");
+				return true;
+			}
+			else if (
+				(hairLength >= 1 && tempHair < 1) ||
+				(hairLength >= 3 && tempHair < 3) ||
+				(hairLength >= 6 && tempHair < 6) ||
+				(hairLength >= 10 && tempHair < 10) ||
+				(hairLength >= 16 && tempHair < 16) ||
+				(hairLength >= 26 && tempHair < 26) ||
+				(hairLength >= 40 && tempHair < 40) ||
+				(hairLength >= 40 && hairLength >= tallness && tempHair < tallness)
+			) {
+				game.outputText("\n<b>Your hair's growth has reached a new threshold, giving you " + hairDescript() + ".\n</b>");
+				return true;
+			}
+			return false;
+		}
+
+		public function growBeard(amount:Number = .1):Boolean {
+			//Grow beard!
+			var tempBeard:Number = beardLength;
+			beardLength += amount;
+			if (beardLength > 0 && tempBeard == 0) {
+				game.outputText("\n<b>You feel a tingling in your cheeks and chin.  You now have " + beardDescript() + " coating your cheeks and chin.\n</b>");
+				return true;
+			}
+			else if (beardLength >= 0.2 && tempBeard < 0.2) {
+				game.outputText("\n<b>Your beard's growth has reached a new threshold, giving you " + beardDescript() + ".\n</b>");
+				return true;
+			}
+			else if (beardLength >= 0.5 && tempBeard < 0.5) {
+				game.outputText("\n<b>Your beard's growth has reached a new threshold, giving you " + beardDescript() + ".\n</b>");
+				return true;
+			}
+			else if (beardLength >= 1.5 && tempBeard < 1.5) {
+				game.outputText("\n<b>Your beard's growth has reached a new threshold, giving you " + beardDescript() + ".\n</b>");
+				return true;
+			}
+			else if (beardLength >= 3 && tempBeard < 3) {
+				game.outputText("\n<b>Your beard's growth has reached a new threshold, giving you " + beardDescript() + ".\n</b>");
+				return true;
+			}
+			else if (beardLength >= 6 && tempBeard < 6) {
+				game.outputText("\n<b>Your beard's growth has reached a new threshold, giving you " + beardDescript() + ".\n</b>");
+				return true;
+			}
+
+			return false;
 		}
 		
-		public function maxFatigue():Number
+		public function hairOrFur():String
 		{
-			var max:Number = 100;
-			if (findPerk(PerkLib.AscensionEndurance) >= 0) max += perkv1(PerkLib.AscensionEndurance) * 5;
-			return max;
+			return Appearance.hairOrFur(this);
+		}
+		
+		public function hairDescript():String
+		{
+			return Appearance.hairDescription(this);
+		}
+
+		public function beardDescript():String
+		{
+			return Appearance.beardDescription(this);
+		}
+		
+		public function hipDescript():String
+		{
+			return Appearance.hipDescription(this);
+		}
+		
+		public function assDescript():String
+		{
+			return buttDescript();
 		}
 		
 		public function buttDescript():String
@@ -847,7 +866,60 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			return Appearance.buttDescription(this);
 		}
 
+		public function tongueDescript():String
+		{
+			return Appearance.tongueDescription(this);
+		}
+		
+		public function hornDescript():String
+		{
+			return Appearance.DEFAULT_HORNS_NAMES[hornType] + " horns";
+		}
 
+		public function tailDescript():String
+		{
+			return Appearance.tailDescript(this);
+		}
+		
+		public function oneTailDescript():String
+		{
+			return Appearance.oneTailDescript(this);
+		}
+
+		public function neckDescript():String
+		{
+			return Appearance.neckDescript(this);
+		}
+
+		public function rearBodyDescript():String
+		{
+			return Appearance.rearBodyDescript(this);
+		}
+		
+		public function wingsDescript():String
+		{
+			return Appearance.wingsDescript(this);
+		}
+
+		public function eyesDescript():String
+		{
+			return Appearance.eyesDescript(this);
+		}
+
+		public function extraEyesDescript():String
+		{
+			return Appearance.extraEyesDescript(this);
+		}
+
+		public function extraEyesDescriptShort():String
+		{
+			return Appearance.extraEyesDescriptShort(this);
+		}
+
+		public function nagaLowerBodyColor2():String
+		{
+			return Appearance.nagaLowerBodyColor2(this);
+		}
 	}
 
 }

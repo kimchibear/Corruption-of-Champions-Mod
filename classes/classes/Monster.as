@@ -7,6 +7,7 @@
 	import classes.Items.JewelryLib;
 	import classes.Items.UseableLib;
 	import classes.Items.WeaponLib;
+	import classes.Items.ShieldLib;
 	import classes.Items.UndergarmentLib;
 	import classes.Scenes.Dungeons.Factory.SecretarialSuccubus;
 	import classes.Scenes.NPCs.Kiha;
@@ -29,39 +30,33 @@
 		{
 			return game.player;
 		}
-		protected final function outputText(text:String,clear:Boolean=false):void{
-			game.outputText(text,clear);
+		protected final function outputText(text:String):void{
+			game.outputText(text);
 		}
 		protected final function combatRoundOver():void{
-			game.combatRoundOver();
+			game.combat.combatRoundOver();
 		}
-		protected final function cleanupAfterCombat():void
+		/*protected final function combat.cleanupAfterCombat():void
 		{
-			game.cleanupAfterCombat();
-		}
+			game.combat.cleanupAfterCombat();
+		}*/
 		protected static function showStatDown(a:String):void{
 			kGAMECLASS.mainView.statsView.showStatDown(a);
 		}
 		protected final function statScreenRefresh():void {
 			game.statScreenRefresh();
 		}
-		protected final function doNext(eventNo:*):void {
+		protected final function doNext(eventNo:Function):void { //Now typesafe
 			game.doNext(eventNo);
 		}
 		protected final function combatMiss():Boolean {
-			return game.combatMiss();
+			return game.combat.combatMiss();
 		}
-		protected final function combatEvade():Boolean {
-			return game.combatEvade();
-		}
-		protected final function combatFlexibility():Boolean {
-			return game.combatFlexibility();
-		}
-		protected final function combatMisdirect():Boolean {
-			return game.combatMisdirect();
+		protected final function combatParry():Boolean {
+			return game.combat.combatParry();
 		}
 		protected final function combatBlock(doFatigue:Boolean = false):Boolean {
-			return game.combatBlock(doFatigue);
+			return game.combat.combatBlock(doFatigue);
 		}
 		protected function get consumables():ConsumableLib{
 			return game.consumables;
@@ -72,6 +67,9 @@
 		protected function get weapons():WeaponLib{
 			return game.weapons;
 		}
+		protected function get shields():ShieldLib{
+			return game.shields;
+		}
 		protected function get armors():ArmorLib{
 			return game.armors;
 		}
@@ -81,9 +79,20 @@
 		protected function get undergarments():UndergarmentLib{
 			return game.undergarments;
 		}
+
+		protected function get images():ImageManager
+		{
+			return kGAMECLASS.images;
+		}
+
+		protected function set images(val:ImageManager):void
+		{
+			kGAMECLASS.images = val;
+		}
 		//For enemies
 		public var bonusHP:Number = 0;
-		private var _long:String = "<b>You have encountered an unitialized  Please report this as a bug</b>.";
+		public var bonusLust:Number = 0;
+		private var _long:String = "<b>You have encountered an uninitialized  Please report this as a bug</b>.";
 		public function get long():String
 		{
 			return _long;
@@ -116,9 +125,9 @@
 		public var temperment:Number = TEMPERMENT_AVOID_GRAPPLES;
 
 		//Used for special attacks.
-		public var special1:* = 0;
-		public var special2:* = 0;
-		public var special3:* = 0;
+		public var special1:Function = null;
+		public var special2:Function = null;
+		public var special3:Function = null;
 
 		//he
 		public var pronoun1:String = "";
@@ -146,25 +155,29 @@
 			_drop = value;
 			initedDrop = true;
 		}
-
-		public function eMaxHP():Number
+		public override function maxHP():Number
 		{
 			//Base HP
 			var temp:Number = 50 + this.bonusHP;
+			if (flags[kFLAGS.GRIMDARK_MODE] > 0) {
+				temp = (15 * level) + this.bonusHP;
+			}
 			temp += (this.tou * 2);
 			//Apply perks
 			if (findPerk(PerkLib.Tank) >= 0) temp += 50;
 			if (findPerk(PerkLib.Tank2) >= 0) temp += this.tou;
 			//Apply NG+, NG++, NG+++, etc.
 			if (short == "doppleganger" || short == "pod" || short == "sand trap" || short == "sand tarp") {
-				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 1) temp += 200;
-				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 2) temp += 400;
-				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 3) temp += 600;
+				temp += 200 * player.newGamePlusMod();
+			}
+			else if (short == "Lethice") {
+				temp += 1200 * player.newGamePlusMod();
+			}
+			else if (short == "Marae") {
+				temp += 2500 * player.newGamePlusMod();
 			}
 			else {
-				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 1) temp += 1000;
-				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 2) temp += 2000;
-				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 3) temp += 3000;
+				temp += 1000 * player.newGamePlusMod();
 			}
 			//Apply difficulty
 			if (flags[kFLAGS.GAME_DIFFICULTY] <= 0) temp *= 1.0;
@@ -175,17 +188,23 @@
 			return temp;
 		}
 
-		public function addHP(hp:Number):void{
+		override public function maxLust():Number {
+			//Base Lust
+			var temp:Number = 100 + this.bonusLust;
+			if (findPerk(PerkLib.ImprovedSelfControl) >= 0) temp += 20;
+			return temp;
+		}
+		public function addHP(hp:Number):void {
 			this.HP += hp;
 			if (this.HP<0) this.HP = 0;
-			else if (this.HP>eMaxHP()) this.HP = eMaxHP();
+			else if (this.HP > maxHP()) this.HP = maxHP();
 		}
 
 		/**
 		 * @return HP/eMaxHP()
 		 */
-		public function HPRatio():Number{
-			return HP/eMaxHP();
+		public function HPRatio():Number {
+			return HP / maxHP();
 		}
 
 		/**
@@ -212,9 +231,9 @@
 			// 2) No bonuses for underlevel!
 			// 3) Super high level folks (over 10 levels) only get 1 xp!
 			var difference:Number = playerLevel - this.level;
-			if(difference <= 2) difference = 0;
+			if (difference <= 2) difference = 0;
 			else difference -= 2;
-			if(difference > 4) difference = 4;
+			if (difference > 4) difference = 4;
 			difference = (5 - difference) * 20.0 / 100.0;
 			if (playerLevel - this.level > 10) return 1;
 			return Math.round(this.additionalXP + (this.baseXP() + this.bonusXP()) * difference * multiplier);
@@ -235,7 +254,6 @@
 		public function Monster()
 		{
 			// trace("Generic Monster Constructor!");
-			this.gender = GENDER_NONE;
 
 			//// INSTRUCTIONS
 			//// Copy-paste remaining code to the new monster constructor
@@ -264,7 +282,7 @@
 			///*OPTIONAL*/ //this.hoursSinceCum = ; // default 0
 			//// 2.2. Female
 			///*REQUIRED*/ this.createVagina(virgin=true|false,VAGINA_WETNESS_,VAGINA_LOOSENESS_); // default true,normal,tight
-			///*OPTIONAL*/ //this.createStatusAffect(StatusAffects.BonusVCapacity, bonus, 0, 0, 0);
+			///*OPTIONAL*/ //this.createStatusEffect(StatusEffects.BonusVCapacity, bonus, 0, 0, 0);
 			//// 2.3. Hermaphrodite
 			//// Just create cocks and vaginas. Last call determines pronouns.
 			//// 2.4. Genderless
@@ -292,7 +310,7 @@
 			//// 4. Ass
 			///*OPTIONAL*/ //this.ass.analLooseness = ANAL_LOOSENESS_; // default TIGHT
 			///*OPTIONAL*/ //this.ass.analWetness = ANAL_WETNESS_; // default DRY
-			///*OPTIONAL*/ //this.createStatusAffect(StatusAffects.BonusACapacity, bonus, 0, 0, 0);
+			///*OPTIONAL*/ //this.createStatusEffect(StatusEffects.BonusACapacity, bonus, 0, 0, 0);
 			//// 5. Body
 			///*REQUIRED*/ this.tallness = ;
 			///*OPTIONAL*/ //this.hipRating = HIP_RATING_; // default boyish
@@ -485,7 +503,6 @@
 				}
 			}
 			var result:Boolean = super.createCock(clength, cthickness, ctype);
-			this.genderCheck();
 			return result;
 		}
 
@@ -504,14 +521,13 @@
 				}
 			}
 			var result:Boolean = super.createVagina(virgin, vaginalWetness, vaginalLooseness);
-			this.genderCheck();
 			return result;
 		}
 
 		protected function initGenderless():void
 		{
 			this.cocks = [];
-			this.vaginas = [];
+			this.vaginas = new Vector.<VaginaClass>();
 			initedGenitals = true;
 			if (plural) {
 				this.pronoun1 = "they";
@@ -522,7 +538,6 @@
 				this.pronoun2 = "it";
 				this.pronoun3 = "its";
 			}
-			this.genderCheck();
 		}
 
 		override public function createBreastRow(size:Number = 0, nipplesPerBreast:Number = 1):Boolean
@@ -574,7 +589,7 @@
 			if (!isFullyInit()) {
 				error += "Missing phases: "+missingInits()+". ";
 			}
-			this.HP = eMaxHP();
+			this.HP = maxHP();
 			this.XP = totalXP();
 			error += super.validate();
 			error += Utils.validateNonNegativeNumberFields(this, "Monster.validate",[
@@ -610,15 +625,16 @@
 		{
 			var attack:Boolean = true;
 			//Blind dodge change
-			if (findStatusAffect(StatusAffects.Blind) >= 0) {
+			if (hasStatusEffect(StatusEffects.Blind)) {
 				attack &&= handleBlind();
 			}
 			attack &&= !playerDodged();
+			
 			return attack;
 		}
 
 		public function eAttack():void {
-			var attacks:int = statusAffectv1(StatusAffects.Attacks);
+			var attacks:int = statusEffectv1(StatusEffects.Attacks);
 			if (attacks == 0) attacks = 1;
 			while (attacks>0){
 				if (attackSucceeded()){
@@ -626,15 +642,15 @@
 					outputAttack(damage);
 					postAttack(damage);
 					game.statScreenRefresh();
-					outputText("\n", false);
+					outputText("\n");
 				}
-				if (statusAffectv1(StatusAffects.Attacks) >= 0) {
-					addStatusValue(StatusAffects.Attacks, 1, -1);
+				if (statusEffectv1(StatusEffects.Attacks) >= 0) {
+					addStatusValue(StatusEffects.Attacks, 1, -1);
 				}
 				attacks--;
 			}
-			removeStatusAffect(StatusAffects.Attacks);
-			if (!game.combatRoundOver()) game.doNext(1);
+			removeStatusEffect(StatusEffects.Attacks);
+			combatRoundOver(); //The doNext here was not required
 		}
 
 		/**
@@ -645,8 +661,8 @@
 		{
 			if (damage > 0) {
 				if (lustVuln > 0 && player.armorName == "barely-decent bondage straps") {
-					if (!plural) outputText("\n" + capitalA + short + " brushes against your exposed skin and jerks back in surprise, coloring slightly from seeing so much of you revealed.", false);
-					else outputText("\n" + capitalA + short + " brush against your exposed skin and jerk back in surprise, coloring slightly from seeing so much of you revealed.", false);
+					if (!plural) outputText("\n" + capitalA + short + " brushes against your exposed skin and jerks back in surprise, coloring slightly from seeing so much of you revealed.");
+					else outputText("\n" + capitalA + short + " brush against your exposed skin and jerk back in surprise, coloring slightly from seeing so much of you revealed.");
 					lust += 5 * lustVuln;
 				}
 			}
@@ -654,41 +670,35 @@
 
 		public function outputAttack(damage:int):void
 		{
-			var didBlock:Boolean = combatBlock(true);
-			if (didBlock) {
-				outputText("You block " + a + short + "'s " + weaponVerb + " with your " + player.shieldName + "! ");
-				damage = 0;
-				return;
-			}
 			if (damage <= 0) {
 				//Due to toughness or amor...
-				if (rand(player.armorDef + player.tou) < player.armorDef) outputText("You absorb and deflect every " + weaponVerb + " with your " + (player.armor != ArmorLib.NOTHING ? player.armor.name : player.armorName) + ".", false);
+				if (rand(player.armorDef + player.tou) < player.armorDef) outputText("You absorb and deflect every " + weaponVerb + " with your " + (player.armor != ArmorLib.NOTHING ? player.armor.name : player.armorName) + ".");
 				else {
-					if (plural) outputText("You deflect and block every " + weaponVerb + " " + a + short + " throw at you. ", false);
-					else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you. ", false);
+					if (plural) outputText("You deflect and block every " + weaponVerb + " " + a + short + " throw at you. ");
+					else outputText("You deflect and block every " + weaponVerb + " " + a + short + " throws at you. ");
 				}
 			}
-			else if (damage < 6) outputText("You are struck a glancing blow by " + a + short + "! ", false);
+			else if (damage < 6) outputText("You are struck a glancing blow by " + a + short + "! ");
 			else if (damage < 11) {
 				outputText(capitalA + short + " wound");
 				if (!plural) outputText("s");
-				outputText(" you! ", false);
+				outputText(" you! ");
 			}
 			else if (damage < 21) {
 				outputText(capitalA + short + " stagger");
 				if (!plural) outputText("s");
-				outputText(" you with the force of " + pronoun3 + " " + weaponVerb + "! ", false);
+				outputText(" you with the force of " + pronoun3 + " " + weaponVerb + "! ");
 			}
 			else if (damage > 20) {
-				outputText(capitalA + short + " <b>mutilate", false);
-				if (!plural) outputText("s", false);
-				outputText("</b> you with " + pronoun3 + " powerful " + weaponVerb + "! ", false);
+				outputText(capitalA + short + " <b>mutilate");
+				if (!plural) outputText("s");
+				outputText("</b> you with " + pronoun3 + " powerful " + weaponVerb + "! ");
 			}
 			if (damage > 0) {
 				if (flags[kFLAGS.ENEMY_CRITICAL] > 0) outputText("<b>Critical hit! </b>");
-				outputText("<b>(<font color=\"#800000\">" + damage + "</font>)</b>", false)
+				outputText("<b>(<font color=\"#800000\">" + damage + "</font>)</b>");
 			}
-			else outputText("<b>(<font color=\"#000080\">" + damage + "</font>)</b>", false)
+			else outputText("<b>(<font color=\"#000080\">" + damage + "</font>)</b>");
 		}
 
 		/**
@@ -697,8 +707,8 @@
 		protected function handleBlind():Boolean
 		{
 			if (rand(3) < 2) {
-				if (weaponVerb == "tongue-slap") outputText(capitalA + short + " completely misses you with a thrust from "+pronoun3+" tongue!\n", false);
-				else outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
+				if (weaponVerb == "tongue-slap") outputText(capitalA + short + " completely misses you with a thrust from "+pronoun3+" tongue!\n");
+				else outputText(capitalA + short + " completely misses you with a blind attack!\n");
 				return false;
 			}
 			return true;
@@ -709,13 +719,13 @@
 		 */
 		protected function outputPlayerDodged(dodge:int):void
 		{
-			if (dodge==1) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n", false);
-			else if (dodge==2) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n", false);
+			if (dodge==1) outputText("You narrowly avoid " + a + short + "'s " + weaponVerb + "!\n");
+			else if (dodge==2) outputText("You dodge " + a + short + "'s " + weaponVerb + " with superior quickness!\n");
 			else {
 				outputText("You deftly avoid " + a + short);
 				if (plural) outputText("'");
 				else outputText("'s");
-				outputText(" slow " + weaponVerb + ".\n", false);
+				outputText(" slow " + weaponVerb + ".\n");
 			}
 		}
 
@@ -727,23 +737,41 @@
 				outputPlayerDodged(dodge);
 				return true;
 			}
+			var evasionResult:String = player.getEvasionReason(false); // use separate function for speed dodge for expanded dodge description
 			//Determine if evaded
-			if (!(this is Kiha) && player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
+			if (evasionResult == EVASION_EVADE) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'");
 				if (!plural) outputText("s");
-				outputText(" attack.\n", false);
+				outputText(" attack.\n");
 				return true;
 			}
 			//("Misdirection"
-			if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
-				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
+			if (evasionResult == EVASION_MISDIRECTION) {
+				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n");
 				return true;
 			}
 			//Determine if cat'ed
-			if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
-				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
-				if (plural) outputText("' attacks.\n", false);
-				else outputText("'s attack.\n", false);
+			if (evasionResult == EVASION_FLEXIBILITY) {
+				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "");
+				if (plural) outputText("' attacks.\n");
+				else outputText("'s attack.\n");
+				return true;
+			}
+			if (evasionResult != null) { // Failsafe fur unhandled
+				outputText("Using your superior combat skills you manage to avoid attack completely.\n");
+				return true;
+			}
+			//Parry with weapon
+			if (combatParry()) {
+				outputText("You manage to block " + a + short + "");
+				if (plural) outputText("' attacks ");
+				else outputText("'s attack ");
+				outputText("with your " + player.weaponName + ".\n");
+				return true;
+			}
+			//Block with shield
+			if (combatBlock(true)) {
+				outputText("You block " + a + short + "'s " + weaponVerb + " with your " + player.shieldName + "! ");
 				return true;
 			}
 			return false;
@@ -751,17 +779,17 @@
 
 		public function doAI():void
 		{
-			if (findStatusAffect(StatusAffects.Stunned) >= 0) {
+			if (hasStatusEffect(StatusEffects.Stunned)) {
 				if (!handleStun()) return;
 			}
-			if (findStatusAffect(StatusAffects.Fear) >= 0) {
+			if (hasStatusEffect(StatusEffects.Fear)) {
 				if (!handleFear()) return;
 			}
 			//Exgartuan gets to do stuff!
-			if (game.player.findStatusAffect(StatusAffects.Exgartuan) >= 0 && game.player.statusAffectv2(StatusAffects.Exgartuan) == 0 && rand(3) == 0) {
-				if (game.exgartuan.exgartuanCombatUpdate()) game.outputText("\n\n", false);
+			if (game.player.hasStatusEffect(StatusEffects.Exgartuan) && game.player.statusEffectv2(StatusEffects.Exgartuan) == 0 && rand(3) == 0) {
+				if (game.exgartuan.exgartuanCombatUpdate()) game.outputText("\n\n");
 			}
-			if (findStatusAffect(StatusAffects.Constricted) >= 0) {
+			if (hasStatusEffect(StatusEffects.Constricted)) {
 				if (!handleConstricted()) return;
 			}
 			//If grappling... TODO implement grappling
@@ -773,13 +801,13 @@
 				//2 - random
 				//3 - love grapples
 				/*
-				 //		if(temperment == 0) eGrappleRetreat();
+				 //		if (temperment == 0) eGrappleRetreat();
 				 if (temperment == 1) {
-				 //			if(lust < 50) eGrappleRetreat();
+				 //			if (lust < 50) eGrappleRetreat();
 				 mainClassPtr.doNext(3);
 				 return;
 				 }
-				 mainClassPtr.outputText("Lust Placeholder!!", false);
+				 mainClassPtr.outputText("Lust Placeholder!!");
 				 mainClassPtr.doNext(3);
 				 return;*/
 //			}
@@ -792,13 +820,13 @@
 		protected function handleConstricted():Boolean
 		{
 			//Enemy struggles -
-			game.outputText("Your prey pushes at your tail, twisting and writhing in an effort to escape from your tail's tight bonds.", false);
-			if (statusAffectv1(StatusAffects.Constricted) <= 0) {
-				game.outputText("  " + capitalA + short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.", false);
-				removeStatusAffect(StatusAffects.Constricted);
+			game.outputText("Your prey pushes at your tail, twisting and writhing in an effort to escape from your tail's tight bonds.");
+			if (statusEffectv1(StatusEffects.Constricted) <= 0) {
+				game.outputText("  " + capitalA + short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.");
+				removeStatusEffect(StatusEffects.Constricted);
 			}
-			addStatusValue(StatusAffects.Constricted, 1, -1);
-			game.combatRoundOver();
+			addStatusValue(StatusEffects.Constricted, 1, -1);
+			combatRoundOver();
 			return false;
 		}
 
@@ -807,22 +835,22 @@
 		 */
 		protected function handleFear():Boolean
 		{
-			if (statusAffectv1(StatusAffects.Fear) == 0) {
+			if (statusEffectv1(StatusEffects.Fear) == 0) {
 				if (plural) {
-					removeStatusAffect(StatusAffects.Fear);
-					game.outputText("Your foes shake free of their fear and ready themselves for battle.", false);
+					removeStatusEffect(StatusEffects.Fear);
+					game.outputText("Your foes shake free of their fear and ready themselves for battle.");
 				}
 				else {
-					removeStatusAffect(StatusAffects.Fear);
-					game.outputText("Your foe shakes free of its fear and readies itself for battle.", false);
+					removeStatusEffect(StatusEffects.Fear);
+					game.outputText("Your foe shakes free of its fear and readies itself for battle.");
 				}
 			}
 			else {
-				addStatusValue(StatusAffects.Fear, 1, -1);
-				if (plural) game.outputText(capitalA + short + " are too busy shivering with fear to fight.", false);
-				else game.outputText(capitalA + short + " is too busy shivering with fear to fight.", false);
+				addStatusValue(StatusEffects.Fear, 1, -1);
+				if (plural) game.outputText(capitalA + short + " are too busy shivering with fear to fight.");
+				else game.outputText(capitalA + short + " is too busy shivering with fear to fight.");
 			}
-			game.combatRoundOver();
+			combatRoundOver();
 			return false;
 		}
 
@@ -831,11 +859,11 @@
 		 */
 		protected function handleStun():Boolean
 		{
-			if (plural) game.outputText("Your foes are too dazed from your last hit to strike back!", false);
-			else game.outputText("Your foe is too dazed from your last hit to strike back!", false);
-			if (statusAffectv1(StatusAffects.Stunned) <= 0) removeStatusAffect(StatusAffects.Stunned);
-			else addStatusValue(StatusAffects.Stunned, 1, -1);
-			game.combatRoundOver();
+			if (plural) game.outputText("Your foes are too dazed from your last hit to strike back!");
+			else game.outputText("Your foe is too dazed from your last hit to strike back!");
+			if (statusEffectv1(StatusEffects.Stunned) <= 0) removeStatusEffect(StatusEffects.Stunned);
+			else addStatusValue(StatusEffects.Stunned, 1, -1);
+			combatRoundOver();
 			return false;
 		}
 
@@ -846,15 +874,13 @@
 		protected function performCombatAction():void
 		{
 			var actions:Array = [eAttack,special1,special2,special3].filter(
-					function(special:*,idx:int,array:Array):Boolean{
-						return special != 0 && special != null;
+					function(special:Function, idx:int, array:Array):Boolean {
+						return special != null;
 					}
 			);
 			var rando:int = int(Math.random() * (actions.length));
-			var action:* = actions[rando];
-			if (action is Number) game.eventParser(action);
-			else if (action is Function) action();
-			else trace("monster tried to do "+typeof(action));
+			var action:Function = actions[rando];
+			action();
 		}
 
 		/**
@@ -864,7 +890,7 @@
 		 */
 		public function defeated(hpVictory:Boolean):void
 		{
-			game.finishCombat();
+			game.combat.finishCombat();
 		}
 
 		/**
@@ -875,16 +901,18 @@
 		{
 			if (hpVictory){
 				player.HP = 1;
-				outputText("Your wounds are too great to bear, and you fall unconscious.", true);
+				clearOutput();
+				outputText("Your wounds are too great to bear, and you fall unconscious.");
 			} else {
-				outputText("Your desire reaches uncontrollable levels, and you end up openly masturbating.\n\nThe lust and pleasure cause you to black out for hours on end.", true);
+				clearOutput();
+				outputText("Your desire reaches uncontrollable levels, and you end up openly masturbating.\n\nThe lust and pleasure cause you to black out for hours on end.");
 				player.lust = 0;
 			}
 			game.inCombat = false;
-			game.clearStatuses(false);
+			game.combat.clearStatuses();
 			var temp:Number = rand(10) + 1;
-			if(temp > player.gems) temp = player.gems;
-			outputText("\n\nYou'll probably wake up in eight hours or so, missing " + temp + " gems.", false);
+			if (temp > player.gems) temp = player.gems;
+			outputText("\n\nYou'll probably wake up in eight hours or so, missing " + temp + " gems.");
 			player.gems -= temp;
 			game.doNext(game.camp.returnToCampUseEightHours);
 		}
@@ -927,15 +955,15 @@
 		public function teased(lustDelta:Number):void
 		{
 			outputDefaultTeaseReaction(lustDelta);
-			if(lustDelta > 0) {
+			if (lustDelta > 0) {
 				//Imp mob uber interrupt!
-			  	if(findStatusAffect(StatusAffects.ImpUber) >= 0) { // TODO move to proper class
-					outputText("\nThe imps in the back stumble over their spell, their loincloths tenting obviously as your display interrupts their casting.  One of them spontaneously orgasms, having managed to have his spell backfire.  He falls over, weakly twitching as a growing puddle of whiteness surrounds his defeated form.", false);
+			  	if (hasStatusEffect(StatusEffects.ImpUber)) { // TODO move to proper class
+					outputText("\nThe imps in the back stumble over their spell, their loincloths tenting obviously as your display interrupts their casting.  One of them spontaneously orgasms, having managed to have his spell backfire.  He falls over, weakly twitching as a growing puddle of whiteness surrounds his defeated form.");
 					//(-5% of max enemy HP)
 					HP -= bonusHP * .05;
 					lust -= 15;
-					removeStatusAffect(StatusAffects.ImpUber);
-					createStatusAffect(StatusAffects.ImpSkip,0,0,0,0);
+					removeStatusEffect(StatusEffects.ImpUber);
+					createStatusEffect(StatusEffects.ImpSkip,0,0,0,0);
 				}
 			}
 			applyTease(lustDelta);
@@ -944,31 +972,31 @@
 		protected function outputDefaultTeaseReaction(lustDelta:Number):void
 		{
 			if (plural) {
-				if (lustDelta == 0) outputText("\n\n" + capitalA + short + " seem unimpressed.", false);
-				if (lustDelta > 0 && lustDelta < 4) outputText("\n" + capitalA + short + " look intrigued by what " + pronoun1 + " see.", false);
-				if (lustDelta >= 4 && lustDelta < 10) outputText("\n" + capitalA + short + " definitely seem to be enjoying the show.", false);
-				if (lustDelta >= 10 && lustDelta < 15) outputText("\n" + capitalA + short + " openly stroke " + pronoun2 + "selves as " + pronoun1 + " watch you.", false);
-				if (lustDelta >= 15 && lustDelta < 20) outputText("\n" + capitalA + short + " flush hotly with desire, " + pronoun3 + " eyes filled with longing.", false);
-				if (lustDelta >= 20) outputText("\n" + capitalA + short + " lick " + pronoun3 + " lips in anticipation, " + pronoun3 + " hands idly stroking " + pronoun3 + " bodies.", false);
+				if (lustDelta == 0) outputText("\n\n" + capitalA + short + " seem unimpressed.");
+				if (lustDelta > 0 && lustDelta < 4) outputText("\n" + capitalA + short + " look intrigued by what " + pronoun1 + " see.");
+				if (lustDelta >= 4 && lustDelta < 10) outputText("\n" + capitalA + short + " definitely seem to be enjoying the show.");
+				if (lustDelta >= 10 && lustDelta < 15) outputText("\n" + capitalA + short + " openly stroke " + pronoun2 + "selves as " + pronoun1 + " watch you.");
+				if (lustDelta >= 15 && lustDelta < 20) outputText("\n" + capitalA + short + " flush hotly with desire, " + pronoun3 + " eyes filled with longing.");
+				if (lustDelta >= 20) outputText("\n" + capitalA + short + " lick " + pronoun3 + " lips in anticipation, " + pronoun3 + " hands idly stroking " + pronoun3 + " bodies.");
 			}
 			else {
-				if (lustDelta == 0) outputText("\n" + capitalA + short + " seems unimpressed.", false);
+				if (lustDelta == 0) outputText("\n" + capitalA + short + " seems unimpressed.");
 				if (lustDelta > 0 && lustDelta < 4) {
-					if (plural) outputText("\n" + capitalA + short + " looks intrigued by what " + pronoun1 + " see.", false);
-					else outputText("\n" + capitalA + short + " looks intrigued by what " + pronoun1 + " sees.", false);
+					if (plural) outputText("\n" + capitalA + short + " looks intrigued by what " + pronoun1 + " see.");
+					else outputText("\n" + capitalA + short + " looks intrigued by what " + pronoun1 + " sees.");
 				}
-				if (lustDelta >= 4 && lustDelta < 10) outputText("\n" + capitalA + short + " definitely seems to be enjoying the show.", false);
+				if (lustDelta >= 4 && lustDelta < 10) outputText("\n" + capitalA + short + " definitely seems to be enjoying the show.");
 				if (lustDelta >= 10 && lustDelta < 15) {
-					if (plural) outputText("\n" + capitalA + short + " openly strokes " + pronoun2 + "selves as " + pronoun1 + " watch you.", false);
-					else outputText("\n" + capitalA + short + " openly strokes " + pronoun2 + "self as " + pronoun1 + " watches you.", false);
+					if (plural) outputText("\n" + capitalA + short + " openly strokes " + pronoun2 + "selves as " + pronoun1 + " watch you.");
+					else outputText("\n" + capitalA + short + " openly strokes " + pronoun2 + "self as " + pronoun1 + " watches you.");
 				}
 				if (lustDelta >= 15 && lustDelta < 20) {
-					if (plural) outputText("\n" + capitalA + short + " flush hotly with desire, " + pronoun3 + " eyes filling with longing.", false);
-					else outputText("\n" + capitalA + short + " flushes hotly with desire, " + pronoun3 + " eyes filled with longing.", false);
+					if (plural) outputText("\n" + capitalA + short + " flush hotly with desire, " + pronoun3 + " eyes filling with longing.");
+					else outputText("\n" + capitalA + short + " flushes hotly with desire, " + pronoun3 + " eyes filled with longing.");
 				}
 				if (lustDelta >= 20) {
-					if (plural) outputText("\n" + capitalA + short + " licks " + pronoun3 + " lips in anticipation, " + pronoun3 + " hands idly stroking " + pronoun3 + " own bodies.", false);
-					else outputText("\n" + capitalA + short + " licks " + pronoun3 + " lips in anticipation, " + pronoun3 + " hands idly stroking " + pronoun3 + " own body.", false);
+					if (plural) outputText("\n" + capitalA + short + " licks " + pronoun3 + " lips in anticipation, " + pronoun3 + " hands idly stroking " + pronoun3 + " own bodies.");
+					else outputText("\n" + capitalA + short + " licks " + pronoun3 + " lips in anticipation, " + pronoun3 + " hands idly stroking " + pronoun3 + " own body.");
 				}
 			}
 		}
@@ -976,7 +1004,7 @@
 		protected function applyTease(lustDelta:Number):void{
 			lust += lustDelta;
 			lustDelta = Math.round(lustDelta * 10)/10;
-			outputText(" <b>(<font color=\"#ff00ff\">" + lustDelta + "</font>)</b>", false);
+			outputText(" <b>(<font color=\"#ff00ff\">" + lustDelta + "</font>)</b>");
 		}
 
 		public function generateDebugDescription():String{
@@ -987,9 +1015,9 @@
 			var Hehas:String = Pronoun1 + " " + have + " ";
 			result = "You are inspecting "+a+short+" (imageName='"+imageName+"', class='"+getQualifiedClassName(this)+"'). You are fighting "+pronoun2+".\n\n";
 			result += Heis+(Appearance.DEFAULT_GENDER_NAMES[gender]||("gender#"+gender))+
-					" with "+Appearance.numberOfThings(cocks.length,"cock") +
-					", "+Appearance.numberOfThings(vaginas.length,"vagina")+
-					" and "+Appearance.numberOfThings(breastRows.length,"breast row")+".\n\n";
+					" with "+numberOfThings(cocks.length,"cock") +
+					", "+numberOfThings(vaginas.length,"vagina")+
+					" and "+numberOfThings(breastRows.length,"breast row")+".\n\n";
 			// APPEARANCE
 			result +=Heis+Appearance.inchesAndFeetsAndInches(tallness)+" tall with "+
 					Appearance.describeByScale(hipRating,Appearance.DEFAULT_HIP_RATING_SCALES,"thinner than","wider than")+" hips and "+
@@ -1029,54 +1057,54 @@
 				var cock:Cock = (cocks[i] as Cock);
 				result += Pronoun3+(i>0?(" #"+(i+1)):"")+" "+cock.cockType.toString().toLowerCase()+" cock is ";
 				result += Appearance.inchesAndFeetsAndInches(cock.cockLength)+" long and "+cock.cockThickness+"\" thick";
-				if (cock.isPierced) result+= ", pierced with "+cock.pLongDesc;
-				if (cock.knotMultiplier!=1) result += ", with knot of size "+cock.knotMultiplier;
+				if (cock.isPierced) result += ", pierced with " + cock.pLongDesc;
+				if (cock.knotMultiplier != 1) result += ", with knot of size " + cock.knotMultiplier;
 				result+=".\n";
 			}
-			if (balls>0 || ballSize>0) result += Hehas+Appearance.numberOfThings(balls,"ball")+" of size "+ballSize+".\n";
-			if (cumMultiplier!=1 || cocks.length>0) result += Pronoun1+" "+have+" cum multiplier "+cumMultiplier+". ";
-			if (hoursSinceCum>0 || cocks.length>0) result += "It were "+hoursSinceCum+" hours since "+pronoun1+" came.\n\n";
-			for (i = 0; i<vaginas.length; i++){
+			if (balls > 0 || ballSize > 0) result += Hehas + numberOfThings(balls, "ball") + " of size " + ballSize+".\n";
+			if (cumMultiplier != 1 || cocks.length > 0) result += Pronoun1 + " " + have+" cum multiplier " + cumMultiplier + ". ";
+			if (hoursSinceCum > 0 || cocks.length > 0) result += "It were " + hoursSinceCum + " hours since " + pronoun1 + " came.\n\n";
+			for (i = 0; i < vaginas.length; i++) {	
 				var vagina:VaginaClass = (vaginas[i] as VaginaClass);
 				result += Pronoun3+ (i>0?(" #"+(i+1)):"")+" "+(Appearance.DEFAULT_VAGINA_TYPE_NAMES[vagina.type]||("vaginaType#"+vagina.type))+(vagina.virgin?" ":" non-")+"virgin vagina is ";
 				result += Appearance.describeByScale(vagina.vaginalLooseness,Appearance.DEFAULT_VAGINA_LOOSENESS_SCALES,"tighter than","looser than");
 				result += ", "+Appearance.describeByScale(vagina.vaginalWetness,Appearance.DEFAULT_VAGINA_WETNESS_SCALES,"drier than","wetter than");
 				if (vagina.labiaPierced) result += ". Labia are pierced with "+vagina.labiaPLong;
 				if (vagina.clitPierced) result += ". Clit is pierced with "+vagina.clitPLong;
-				if (statusAffectv1(StatusAffects.BonusVCapacity)>0){
-					result+="; vaginal capacity is increased by "+statusAffectv1(StatusAffects.BonusVCapacity);
+				if (statusEffectv1(StatusEffects.BonusVCapacity)>0){
+					result+="; vaginal capacity is increased by "+statusEffectv1(StatusEffects.BonusVCapacity);
 				}
 				result+=".\n";
 			}
-			if (breastRows.length>0){
+			if (breastRows.length > 0) {	
 				var nipple:String = nippleLength+"\" ";
 				if (nipplesPierced) nipple+="pierced by "+nipplesPLong;
 				for (i = 0; i < breastRows.length; i++) {
 					var row:BreastRowClass = (breastRows[i] as BreastRowClass);
 					result += Pronoun3+(i>0?(" #"+(i+1)):"") + " breast row has " + row.breasts;
 					result += " " + row.breastRating.toFixed(2) + "-size (" + Appearance.breastCup(row.breastRating) + ") breasts with ";
-					result += Appearance.numberOfThings(row.nipplesPerBreast, nipple+(row.fuckable ? "fuckable nipple" : "unfuckable nipple")) + " on each.\n";
+					result += numberOfThings(row.nipplesPerBreast, nipple+(row.fuckable ? "fuckable nipple" : "unfuckable nipple")) + " on each.\n";
 				}
 			}
 			result += Pronoun3+" ass is "+Appearance.describeByScale(ass.analLooseness,Appearance.DEFAULT_ANAL_LOOSENESS_SCALES,"tighter than","looser than")+", "+Appearance.describeByScale(ass.analWetness,Appearance.DEFAULT_ANAL_WETNESS_SCALES,"drier than","wetter than");
-			if (statusAffectv1(StatusAffects.BonusACapacity)>0){
-				result += "; anal capacity is increased by "+statusAffectv1(StatusAffects.BonusACapacity);
+			if (statusEffectv1(StatusEffects.BonusACapacity)>0){
+				result += "; anal capacity is increased by "+statusEffectv1(StatusEffects.BonusACapacity);
 			}
 			result +=".\n\n";
 
 			// COMBAT AND OTHER STATS
-			result+=Hehas+"str="+str+", tou="+tou+", spe="+spe+", inte="+inte+", lib="+lib+", sens="+sens+", cor="+cor+".\n";
-			result += Pronoun1+" can "+weaponVerb+" you with  "+weaponPerk+" "+weaponName+" (attack "+weaponAttack+", value "+weaponValue+").\n";
-			result += Pronoun1 +" is guarded with "+armorPerk+" "+armorName+" (defense "+armorDef+", value "+armorValue+").\n";
-			result += Hehas+HP+"/"+eMaxHP()+" HP, "+lust+"/100 lust, "+fatigue+"/100 fatigue. "+Pronoun3+" bonus HP="+bonusHP+", and lust vulnerability="+lustVuln+".\n";
-			result += Heis+"level "+level+" and "+have+" "+gems+" gems. You will be awarded "+XP+" XP.\n";
-			if (special1 || special2 || special3){
-				result+=Hehas+[special1,special2,special3]
-								.filter(function(x:*,index:int,array:Array):Boolean{return x>0 || x is Function})
-								.length
-						+" special attacks.\n"
-			} else {
-				result+=Hehas+"no special attacks.\n";
+			result += Hehas + "str=" + str + ", tou=" + tou + ", spe=" + spe+", inte=" + inte+", lib=" + lib + ", sens=" + sens + ", cor=" + cor + ".\n";
+			result += Pronoun1 + " can " + weaponVerb + " you with  " + weaponPerk + " " + weaponName+" (attack " + weaponAttack + ", value " + weaponValue+").\n";
+			result += Pronoun1 + " is guarded with " + armorPerk + " " + armorName+" (defense " + armorDef + ", value " + armorValue+").\n";
+			result += Hehas + HP + "/" + maxHP() + " HP, " + lust + "/" + maxLust() + " lust, " + fatigue + "/100 fatigue. " + Pronoun3 + " bonus HP=" + bonusHP + ", and lust vulnerability=" + lustVuln + ".\n";
+			result += Heis + "level " + level + " and " + have+" " + gems + " gems. You will be awarded " + XP + " XP.\n";
+			
+			var numSpec:int = (special1 != null ? 1 : 0) + (special2 != null ? 1 : 0) + (special3 != null ? 1 : 0);
+			if (numSpec > 0) {
+				result += Hehas + numSpec + " special attack" + (numSpec > 1 ? "s" : "") + ".\n";
+			}
+			else {
+				result += Hehas + "no special attacks.\n";
 			}
 
 			return result;
@@ -1094,157 +1122,174 @@
 
 		public function combatRoundUpdate():void
 		{
-			if(findStatusAffect(StatusAffects.MilkyUrta) >= 0) {
+			var store:Number = 0;
+			if (hasStatusEffect(StatusEffects.MilkyUrta)) {
 				game.urtaQuest.milkyUrtaTic();
 			}
 			//Countdown
-			if(findStatusAffect(StatusAffects.TentacleCoolDown) >= 0) {
-				addStatusValue(StatusAffects.TentacleCoolDown,1,-1);
-				if(statusAffect(findStatusAffect(StatusAffects.TentacleCoolDown)).value1 == 0) {
-					removeStatusAffect(StatusAffects.TentacleCoolDown);
+			var tcd:StatusEffectClass = statusEffectByType(StatusEffects.TentacleCoolDown);
+			if (tcd!=null) {
+				tcd.value1-=1;
+				if (tcd.value1 <= 0) {
+					removeStatusEffect(StatusEffects.TentacleCoolDown);
 				}
 			}
-			if(findStatusAffect(StatusAffects.CoonWhip) >= 0) {
-				if(statusAffectv2(StatusAffects.CoonWhip) <= 0) {
-					armorDef += statusAffectv1(StatusAffects.CoonWhip);
+			if (hasStatusEffect(StatusEffects.CoonWhip)) {
+				if (statusEffectv2(StatusEffects.CoonWhip) <= 0) {
+					armorDef += statusEffectv1(StatusEffects.CoonWhip);
 					outputText("<b>Tail whip wears off!</b>\n\n");
-					removeStatusAffect(StatusAffects.CoonWhip);
+					removeStatusEffect(StatusEffects.CoonWhip);
 				}
 				else {
-					addStatusValue(StatusAffects.CoonWhip,2,-1);
+					addStatusValue(StatusEffects.CoonWhip,2,-1);
 					outputText("<b>Tail whip is currently reducing your foe");
-					if(plural) outputText("s'");
+					if (plural) outputText("s'");
 					else outputText("'s");
-					outputText(" armor by " + statusAffectv1(StatusAffects.CoonWhip) + ".</b>\n\n")
+					outputText(" armor by " + statusEffectv1(StatusEffects.CoonWhip) + ".</b>\n\n")
 				}
 			}
-			if(findStatusAffect(StatusAffects.Blind) >= 0) {
-				addStatusValue(StatusAffects.Blind,1,-1);
-				if(statusAffectv1(StatusAffects.Blind) <= 0) {
-					outputText("<b>" + capitalA + short + " is no longer blind!</b>\n\n", false);
-					removeStatusAffect(StatusAffects.Blind);
+			if (hasStatusEffect(StatusEffects.Blind)) {
+				addStatusValue(StatusEffects.Blind,1,-1);
+				if (statusEffectv1(StatusEffects.Blind) <= 0) {
+					outputText("<b>" + capitalA + short + (plural ? " are" : " is") + " no longer blind!</b>\n\n");
+					removeStatusEffect(StatusEffects.Blind);
 				}
-				else outputText("<b>" + capitalA + short + " is currently blind!</b>\n\n", false);
+				else outputText("<b>" + capitalA + short + (plural ? " are" : " is") + " currently blind!</b>\n\n");
 			}
-			if(findStatusAffect(StatusAffects.Earthshield) >= 0) {
+			if (hasStatusEffect(StatusEffects.Earthshield)) {
 				outputText("<b>" + capitalA + short + " is protected by a shield of rocks!</b>\n\n");
 			}
-			if(findStatusAffect(StatusAffects.Sandstorm) >= 0) {
+			if (hasStatusEffect(StatusEffects.Sandstorm)) {
 				//Blinded:
-				if(player.findStatusAffect(StatusAffects.Blind) >= 0) {
+				if (player.hasStatusEffect(StatusEffects.Blind)) {
 					outputText("<b>You blink the sand from your eyes, but you're sure that more will get you if you don't end it soon!</b>\n\n");
-					player.removeStatusAffect(StatusAffects.Blind);
+					player.removeStatusEffect(StatusEffects.Blind);
 				}
 				else {
-					if(statusAffectv1(StatusAffects.Sandstorm) == 0 || statusAffectv1(StatusAffects.Sandstorm) % 4 == 0) {
-						player.createStatusAffect(StatusAffects.Blind,0,0,0,0);
+					if (statusEffectv1(StatusEffects.Sandstorm) == 0 || statusEffectv1(StatusEffects.Sandstorm) % 4 == 0) {
+						player.createStatusEffect(StatusEffects.Blind,0,0,0,0);
 						outputText("<b>The sand is in your eyes!  You're blinded this turn!</b>\n\n");
 					}
 					else {
-						outputText("<b>The grainy mess cuts at any exposed flesh and gets into every crack and crevice of your armor.");
-						var temp:Number = player.takeDamage(1 + rand(2));
-						outputText(" (" + temp + ")");
+						outputText("<b>The grainy mess cuts at any exposed flesh and gets into every crack and crevice of your armor. ");
+						var temp:Number = player.takeDamage(1 + rand(2), true);
 						outputText("</b>\n\n");
 					}
 				}
-				addStatusValue(StatusAffects.Sandstorm,1,1);
+				addStatusValue(StatusEffects.Sandstorm,1,1);
 			}
-			if(findStatusAffect(StatusAffects.Stunned) >= 0) {
-				outputText("<b>" + capitalA + short + " is still stunned!</b>\n\n", false);
+			if (hasStatusEffect(StatusEffects.Stunned)) {
+				outputText("<b>" + capitalA + short + " is still stunned!</b>\n\n");
 			}
-			if(findStatusAffect(StatusAffects.Shell) >= 0) {
-				if(statusAffectv1(StatusAffects.Shell) >= 0) {
+			if (hasStatusEffect(StatusEffects.Shell)) {
+				if (statusEffectv1(StatusEffects.Shell) >= 0) {
 					outputText("<b>A wall of many hues shimmers around " + a + short + ".</b>\n\n");
-					addStatusValue(StatusAffects.Shell,1,-1);
+					addStatusValue(StatusEffects.Shell,1,-1);
 				}
 				else {
 					outputText("<b>The magical barrier " + a + short + " erected fades away to nothing at last.</b>\n\n");
-					removeStatusAffect(StatusAffects.Shell);
+					removeStatusEffect(StatusEffects.Shell);
 				}
 			}
-			if(findStatusAffect(StatusAffects.IzmaBleed) >= 0) {
+			if (hasStatusEffect(StatusEffects.IzmaBleed)) {
 				//Countdown to heal
-				addStatusValue(StatusAffects.IzmaBleed,1,-1);
+				addStatusValue(StatusEffects.IzmaBleed,1,-1);
 				//Heal wounds
-				if(statusAffectv1(StatusAffects.IzmaBleed) <= 0) {
-					outputText("The wounds you left on " + a + short + " stop bleeding so profusely.\n\n", false);
-					removeStatusAffect(StatusAffects.IzmaBleed);
+				if (statusEffectv1(StatusEffects.IzmaBleed) <= 0) {
+					outputText("The wounds you left on " + a + short + " stop bleeding so profusely.\n\n");
+					removeStatusEffect(StatusEffects.IzmaBleed);
 				}
 				//Deal damage if still wounded.
 				else {
-					var store:Number = eMaxHP() * (3 + rand(4))/100;
-					store = game.doDamage(store);
-					if(plural) outputText(capitalA + short + " bleed profusely from the jagged wounds your weapon left behind. (" + store + ")\n\n", false);
-					else outputText(capitalA + short + " bleeds profusely from the jagged wounds your weapon left behind. (" + store + ")\n\n", false);
+					store = maxHP() * (3 + rand(4)) / 100;
+					store = game.combat.doDamage(store);
+					if (plural) outputText(capitalA + short + " bleed profusely from the jagged wounds your weapon left behind. <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
+					else outputText(capitalA + short + " bleeds profusely from the jagged wounds your weapon left behind. <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
 				}
 			}
-			if(findStatusAffect(StatusAffects.Timer) >= 0) {
-				if(statusAffectv1(StatusAffects.Timer) <= 0)
-					removeStatusAffect(StatusAffects.Timer);
-				addStatusValue(StatusAffects.Timer,1,-1);
+			if (hasStatusEffect(StatusEffects.OnFire)) {
+				//Countdown to heal
+				addStatusValue(StatusEffects.OnFire,1,-1);
+				//Heal fire
+				if (statusEffectv1(StatusEffects.OnFire) <= 0) {
+					outputText("The flames engulfing " + a + short + " finally fades.\n\n");
+					removeStatusEffect(StatusEffects.OnFire);
+				}
+				//Deal damage if still on fire.
+				else {
+					store = maxHP() * (4 + rand(5)) / 100;
+					store = game.combat.doDamage(store);
+					if (plural) outputText(capitalA + short + " continue to burn from the flames engulfing " + pronoun2 + ". <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
+					else outputText(capitalA + short + " continues to burn from the flames engulfing " + pronoun2 + ". <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
+				}
 			}
-			if(findStatusAffect(StatusAffects.LustStick) >= 0) {
+			if (hasStatusEffect(StatusEffects.Timer)) {
+				if (statusEffectv1(StatusEffects.Timer) <= 0)
+					removeStatusEffect(StatusEffects.Timer);
+				addStatusValue(StatusEffects.Timer,1,-1);
+			}
+			if (hasStatusEffect(StatusEffects.LustStick)) {
 				//LoT Effect Messages:
-				switch(statusAffectv1(StatusAffects.LustStick)) {
+				switch(statusEffectv1(StatusEffects.LustStick)) {
 					//First:
 					case 1:
-						if(plural) outputText("One of " + a + short + " pants and crosses " + mf("his","her") + " eyes for a moment.  " + mf("His","Her") + " dick flexes and bulges, twitching as " + mf("he","she") + " loses himself in a lipstick-fueled fantasy.  When " + mf("he","she") + " recovers, you lick your lips and watch " + mf("his","her") + " blush spread.\n\n", false);
-						else outputText(capitalA + short + " pants and crosses " + pronoun3 + " eyes for a moment.  " + mf("His","Her") + " dick flexes and bulges, twitching as " + pronoun1 + " loses " + mf("himself", "herself") + " in a lipstick-fueled fantasy.  When " + pronoun1 + " recovers, you lick your lips and watch " + mf("his","her") + " blush spread.\n\n", false);
+						if (plural) outputText("One of " + a + short + " pants and crosses " + mf("his","her") + " eyes for a moment.  " + mf("His","Her") + " dick flexes and bulges, twitching as " + mf("he","she") + " loses himself in a lipstick-fueled fantasy.  When " + mf("he","she") + " recovers, you lick your lips and watch " + mf("his","her") + " blush spread.\n\n");
+						else outputText(capitalA + short + " pants and crosses " + pronoun3 + " eyes for a moment.  " + mf("His","Her") + " dick flexes and bulges, twitching as " + pronoun1 + " loses " + mf("himself", "herself") + " in a lipstick-fueled fantasy.  When " + pronoun1 + " recovers, you lick your lips and watch " + mf("his","her") + " blush spread.\n\n");
 						break;
 					//Second:
 					case 2:
-						if(plural) outputText(capitalA + short + " moan out loud, " + pronoun3 + " dicks leaking and dribbling while " + pronoun1 + " struggle not to touch " + pronoun2 + ".\n\n", false);
-						else outputText(capitalA + short + " moans out loud, " + pronoun3 + " dick leaking and dribbling while " + pronoun1 + " struggles not to touch it.\n\n", false);
+						if (plural) outputText(capitalA + short + " moan out loud, " + pronoun3 + " dicks leaking and dribbling while " + pronoun1 + " struggle not to touch " + pronoun2 + ".\n\n");
+						else outputText(capitalA + short + " moans out loud, " + pronoun3 + " dick leaking and dribbling while " + pronoun1 + " struggles not to touch it.\n\n");
 						break;
 					//Third:
 					case 3:
-						if(plural) outputText(capitalA + short + " pump " + pronoun3 + " hips futilely, air-humping non-existent partners.  Clearly your lipstick is getting to " + pronoun2 + ".\n\n", false);
-						else outputText(capitalA + short + " pumps " + pronoun3 + " hips futilely, air-humping a non-existent partner.  Clearly your lipstick is getting to " + pronoun2 + ".\n\n", false);
+						if (plural) outputText(capitalA + short + " pump " + pronoun3 + " hips futilely, air-humping non-existent partners.  Clearly your lipstick is getting to " + pronoun2 + ".\n\n");
+						else outputText(capitalA + short + " pumps " + pronoun3 + " hips futilely, air-humping a non-existent partner.  Clearly your lipstick is getting to " + pronoun2 + ".\n\n");
 						break;
 					//Fourth:
 					case 4:
-						if(plural) outputText(capitalA + short + " close " + pronoun3 + " eyes and grunt, " + pronoun3 + " cocks twitching, bouncing, and leaking pre-cum.\n\n", false);
-						else outputText(capitalA + short + " closes " + pronoun2 + " eyes and grunts, " + pronoun3 + " cock twitching, bouncing, and leaking pre-cum.\n\n", false);
+						if (plural) outputText(capitalA + short + " close " + pronoun3 + " eyes and grunt, " + pronoun3 + " cocks twitching, bouncing, and leaking pre-cum.\n\n");
+						else outputText(capitalA + short + " closes " + pronoun2 + " eyes and grunts, " + pronoun3 + " cock twitching, bouncing, and leaking pre-cum.\n\n");
 						break;
 					//Fifth and repeat:
 					default:
-						if(plural) outputText("Drops of pre-cum roll steadily out of their dicks.  It's a marvel " + pronoun1 + " haven't given in to " + pronoun3 + " lusts yet.\n\n", false);
-						else outputText("Drops of pre-cum roll steadily out of " + a + short + "'s dick.  It's a marvel " + pronoun1 + " hasn't given in to " + pronoun3 + " lust yet.\n\n", false);
+						if (plural) outputText("Drops of pre-cum roll steadily out of their dicks.  It's a marvel " + pronoun1 + " haven't given in to " + pronoun3 + " lusts yet.\n\n");
+						else outputText("Drops of pre-cum roll steadily out of " + a + short + "'s dick.  It's a marvel " + pronoun1 + " hasn't given in to " + pronoun3 + " lust yet.\n\n");
 						break;
 				}
-				addStatusValue(StatusAffects.LustStick,1,1);
+				addStatusValue(StatusEffects.LustStick,1,1);
 				//Damage = 5 + bonus score minus
 				//Reduced by lust vuln of course
-				lust += Math.round(lustVuln * (5 + statusAffectv2(StatusAffects.LustStick)));
+				lust += Math.round(lustVuln * (5 + statusEffectv2(StatusEffects.LustStick)));
 			}
-			if(findStatusAffect(StatusAffects.PCTailTangle) >= 0) {
+			if (hasStatusEffect(StatusEffects.PCTailTangle)) {
 				//when Entwined
 				outputText("You are bound tightly in the kitsune's tails.  <b>The only thing you can do is try to struggle free!</b>\n\n");
 				outputText("Stimulated by the coils of fur, you find yourself growing more and more aroused...\n\n");
 				game.dynStats("lus", 5+player.sens/10);
 			}
-			if(findStatusAffect(StatusAffects.QueenBind) >= 0) {
+			if (hasStatusEffect(StatusEffects.QueenBind)) {
 				outputText("You're utterly restrained by the Harpy Queen's magical ropes!\n\n");
-				if(flags[kFLAGS.PC_FETISH] >= 2) game.dynStats("lus", 3);
+				if (flags[kFLAGS.PC_FETISH] >= 2) game.dynStats("lus", 3);
 			}
-			if(this is SecretarialSuccubus || this is MilkySuccubus) {
-				if(player.lust < 45) outputText("There is something in the air around your opponent that makes you feel warm.\n\n", false);
-				if(player.lust >= 45 && player.lust < 70) outputText("You aren't sure why but you have difficulty keeping your eyes off your opponent's lewd form.\n\n", false);
-				if(player.lust >= 70 && player.lust < 90) outputText("You blush when you catch yourself staring at your foe's rack, watching it wobble with every step she takes.\n\n", false);
-				if(player.lust >= 90) outputText("You have trouble keeping your greedy hands away from your groin.  It would be so easy to just lay down and masturbate to the sight of your curvy enemy.  The succubus looks at you with a sexy, knowing expression.\n\n", false);
+			if (this is SecretarialSuccubus || this is MilkySuccubus) {
+				if (player.lust100 < 45) outputText("There is something in the air around your opponent that makes you feel warm.\n\n");
+				if (player.lust100 >= 45 && player.lust100 < 70) outputText("You aren't sure why but you have difficulty keeping your eyes off your opponent's lewd form.\n\n");
+				if (player.lust100 >= 70 && player.lust100 < 90) outputText("You blush when you catch yourself staring at your foe's rack, watching it wobble with every step she takes.\n\n");
+				if (player.lust100 >= 90) outputText("You have trouble keeping your greedy hands away from your groin.  It would be so easy to just lay down and masturbate to the sight of your curvy enemy.  The succubus looks at you with a sexy, knowing expression.\n\n");
 				game.dynStats("lus", 1+rand(8));
 			}
 			//[LUST GAINED PER ROUND] - Omnibus
-			if(findStatusAffect(StatusAffects.LustAura) >= 0) {
-				if(player.lust < 33) outputText("Your groin tingles warmly.  The demon's aura is starting to get to you.\n\n", false);
-		 		if(player.lust >= 33 && player.lust < 66) outputText("You blush as the demon's aura seeps into you, arousing you more and more.\n\n", false);
-		  		if(player.lust >= 66) {
-					outputText("You flush bright red with desire as the lust in the air worms its way inside you.  ", false);
+			if (hasStatusEffect(StatusEffects.LustAura)) {
+				if (player.lust100 < 33) outputText("Your groin tingles warmly.  The demon's aura is starting to get to you.\n\n");
+		 		if (player.lust100 >= 33 && player.lust100 < 66) outputText("You blush as the demon's aura seeps into you, arousing you more and more.\n\n");
+		  		if (player.lust100 >= 66) {
+					outputText("You flush bright red with desire as the lust in the air worms its way inside you.  ");
 					temp = rand(4);
-					if(temp == 0) outputText("You have a hard time not dropping to your knees to service her right now.\n\n", false);
-					if(temp == 2) outputText("The urge to bury your face in her breasts and suckle her pink nipples nearly overwhelms you.\n\n", false);
-					if(temp == 1) outputText("You swoon and lick your lips, tasting the scent of the demon's pussy in the air.\n\n", false);
-					if(temp == 3) outputText("She winks at you and licks her lips, and you can't help but imagine her tongue sliding all over your body.  You regain composure moments before throwing yourself at her.  That was close.\n\n", false);
+					if (temp == 0) outputText("You have a hard time not dropping to your knees to service her right now.\n\n");
+					if (temp == 2) outputText("The urge to bury your face in her breasts and suckle her pink nipples nearly overwhelms you.\n\n");
+					if (temp == 1) outputText("You swoon and lick your lips, tasting the scent of the demon's pussy in the air.\n\n");
+					if (temp == 3) outputText("She winks at you and licks her lips, and you can't help but imagine her tongue sliding all over your body.  You regain composure moments before throwing yourself at her.  That was close.\n\n");
 				}
 				game.dynStats("lus", (3 + int(player.lib/20 + player.cor/30)));
 			}
@@ -1266,7 +1311,22 @@
 		public function handleCombatLossText(inDungeon:Boolean, gemsLost:int):int
 		{ //New Function, override this function in child classes if you want a monster to output special text after the player loses in combat
 			//This function doesn’t take the gems away from the player, it just provides the output text
+			if (game.prison.inPrison) {
+				game.prison.doPrisonEscapeFightLoss();
+				return 8;
+			}
 			if (!inDungeon) {
+				if (game.prison.trainingFeed.prisonCaptorFeedingQuestTrainingExists()) {
+					if (short == "goblin" || short == "goblin assassin" || short == "goblin warrior" || short == "goblin shaman" || short == "imp" || short == "imp lord" || short == "imp warlord" || short == "imp overlord" || //Generic encounter
+						short == "tentacle beast" || (short == "kitsune" && hairColor == "red") || short == "Akbal" || short == "Tamani" || //Forest, deepwoods
+						short == "goo-girl" || short == "green slime" || short == "fetish cultist" || short == "fetish zealot" || //Lake
+						short == "sandtrap" || short == "sand tarp" || short == "naga" || short == "demons" || short == "Cum Witch" || //Desert
+						short == "hellhound" || short == "infested hellhound" || short == "minotaur" || short == "minotaur lord" || short == "minotaur gang" || short == "minotaur tribe" || short == "basilisk" || short == "phoenix" || //Mountain, high mountains
+						short == "satyr" || short == "gnoll" || short == "gnoll spear-thrower" || short == "female spider-morph" || short == "male spider-morph" || short == "corrupted drider" || //Plains, swamp, bog
+						short == "yeti" || short == "behemoth") { //Glacial rift, volcanic crag
+						game.prison.trainingFeed.prisonCaptorFeedingQuestTrainingProgress(1, 1);
+					}
+				}
 				outputText("\n\nYou'll probably come to your senses in eight hours or so");
 				if (player.gems > 1)
 					outputText(", missing " + gemsLost + " gems.");

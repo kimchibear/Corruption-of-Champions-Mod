@@ -31,6 +31,49 @@ package classes.Items
 
 		public function get name():String { return _name; }
 		
+		override public function get description():String {
+			var desc:String = _description;
+			//Type
+			desc += "\n\nType: Ring ";
+			//Special
+			if (_effectId > 0) desc += "\nSpecial: ";
+			switch(_effectId) {
+				case JewelryLib.MODIFIER_MINIMUM_LUST:
+					if (_effectMagnitude >= 0)
+						desc += "Increases minimum lust by " + _effectMagnitude + ".";
+					else
+						desc += "Reduces minimum lust by " + (-_effectMagnitude) + ".";
+					break;
+				case JewelryLib.MODIFIER_FERTILITY:
+					desc += "Increases cum production by " + _effectMagnitude + "% and fertility by " + _effectMagnitude + ".";
+					break;
+				case JewelryLib.MODIFIER_CRITICAL:
+					desc += "Increases critical chance by " + _effectMagnitude + "%.";
+					break;
+				case JewelryLib.MODIFIER_REGENERATION:
+					desc += "Grants regeneration of " + _effectMagnitude + " HP per turn. Effect doubled outside of combat.";
+					break;
+				case JewelryLib.MODIFIER_HP:
+					desc += "Increases maximum HP by " + _effectMagnitude + "."
+					break;
+				case JewelryLib.MODIFIER_ATTACK_POWER:
+					desc += "Increases attack power by " + _effectMagnitude + "%."
+					break;
+				case JewelryLib.MODIFIER_SPELL_POWER:
+					desc += "Increases spellpower by " + _effectMagnitude + "%, applies additively."
+					break;
+				case JewelryLib.PURITY:
+					desc += "Slowly decreases the corruption of the wearer over time. Reduces minimum libido by " + _effectMagnitude + ".";
+					break;
+				case JewelryLib.CORRUPTION:
+					desc += "Slowly corrupts the wearer over time.";
+					break;
+			}
+			//Value
+			desc += "\nBase value: " + String(value);
+			return desc;
+		}
+		
 		override public function useText():void {
 			outputText("You equip " + longName + ".  ");
 		}

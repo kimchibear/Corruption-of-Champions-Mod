@@ -7,7 +7,7 @@ package classes.Scenes.Places.Owca
 
 		override protected function performCombatAction():void
 		{
-			createStatusAffect(StatusAffects.Attacks,4,0,0,0);
+			createStatusEffect(StatusEffects.Attacks,4,0,0,0);
 			eAttack();
 			combatRoundOver();
 		}
@@ -56,7 +56,7 @@ package classes.Scenes.Places.Owca
 			this.lustVuln = 0;
 			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
 			this.level = 10;
-			this.gems = rand(25)+40;
+			this.gems = rand(25) +40;
 			this.hornType = HORNS_DEMON;
 			this.horns = 2;
 			this.tailType = TAIL_TYPE_DEMONIC;

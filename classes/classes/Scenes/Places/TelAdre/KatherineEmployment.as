@@ -26,8 +26,8 @@ package classes.Scenes.Places.TelAdre{
 			clearOutput();
 			outputText("You ask Katherine if she’s ever thought about trying to get a job, so she can settle into a home of her own and get off the streets.\n\n");
 			outputText("“<i>Oh, sure, plenty of times.</i>”  The feline shrugs.  “<i>But it’s never worked out; nobody’s ever been willing to hire me... I guess I just don’t look very employable.</i>”  She sighs and picks at a thread hanging from her usual tatters.\n\n");
-			outputText("You ask if she’d like you to look around for her?  You don’t know why, but folks in this world seem to take a liking to you on sight; maybe you’ll have better luck persuading somebody in town to take her on as an apprentice of some kind?\n\n");
-			outputText("Kath visibly thinks it over, then gives you a loving smile.  “<i>I’d really appreciate that,</i>” she beams.  “<i>It’d be nice to have somewhere other than an empty alley to spend time with you.</i>”  She pokes sadly at the meagre nest she’s made from rubbish, ashamed that this is all she has.\n\n");
+			outputText("You ask if she’d like you to look around for her.  You don’t know why, but folks in this world seem to take a liking to you on sight; maybe you’ll have better luck persuading somebody in town to take her on as an apprentice of some kind?\n\n");
+			outputText("Kath visibly thinks it over, then gives you a loving smile.  “<i>I’d really appreciate that,</i>” she beams.  “<i>It’d be nice to have somewhere other than an empty alley to spend time with you.</i>”  She pokes sadly at the meager nest she’s made from rubbish, ashamed that this is all she has.\n\n");
 			outputText("You tell her that you’ll go and take a look right now, and promise to be back as quickly as you can.");
 			doNext(tryShops);
 		}
@@ -44,7 +44,7 @@ package classes.Scenes.Places.TelAdre{
 			outputText("Looking around once more, you figure you’ll try the local Blacksmith.  Since that shop is the one responsible for supplying the watch, they must need more workers, right?  Kath couldn’t do any of the actual crafting, but there’s always chores that need to be handled in a forge.  As far as you know, Yvonne works alone, so she might welcome an extra set of hands.  With that in mind you enter the Blacksmith.\n\n");
 			outputText("When you spot Yvonne hammering away at a steel breastplate, you approach and ask her if she might be inclined to hire an assistant, or maybe an apprentice.  The dog-woman nods her head slowly.  “<i>Well... that contract with the City Watch does give me quite a bit of work to do.  Another pair of hands would be useful... do you know someone?  More importantly, do they know how to work with metal?</i>”\n\n");
 			outputText("You reply that you do know somebody, but you can’t really say they know anything about being a blacksmith.  Yvonne sighs heavily and shakes her head.  “<i>Sorry, but I don’t really have the time to train fresh meat.  If this friend of yours wants a job, they need to look elsewhere.</i>”\n\n");
-			outputText("Sighing... you thank Yvonne for her time and wish her a good day.  Once outside you consider your other options... hmm... how about the Gym?  That doesn’t look like it’d be too much work for the cat-girl, especially if she gets a desk job.  You head over, a bit hopeful.\n\n");
+			outputText("Sighing, you thank Yvonne for her time and wish her a good day.  Once outside you consider your other options... hmm... how about the Gym?  That doesn’t look like it’d be too much work for the cat-girl, especially if she gets a desk job.  You head over, a bit hopeful.\n\n");
 			outputText("Seeing the buxom centauress receptionist, you approach her and ask if the Gym could use additional staff - maybe someone to take over from her when she’s on break, or even just to clean the place up. She considers your offer for a while before politely shaking her head.  “<i>Sorry, but what we’re really looking for are trainers to help our clients.  Does the person you’re asking for have any experience in fitness?</i>”\n\n");
 			outputText("You admit that she’s probably not really qualified to train anyone in how to exercise or help people get fit.  The centauress sighs.  “<i>Then I’m afraid I cannot help you...</i>”");
 			if (player.tone >= 75) {
@@ -52,9 +52,9 @@ package classes.Scenes.Places.TelAdre{
 				outputText("You tell her that you appreciate the offer, and keep it in mind, but you currently have other engagements that demand the bulk of your time.");
 			}
 			outputText("\n\nYou thank her for her time and tell her you’ll just have to look elsewhere.  The centauress smiles at you and wishes you good luck.\n\n");
-			outputText("You consider your remaining options... what about Yara?  Sure her business might not exactly be booming, but you never know till you ask, right?  With that in mind you decide to enter the Piercing Studio.\n\n");
+			outputText("You consider your remaining options... what about Yara?  Sure her business might not exactly be booming, but you never know until you ask, right?  With that in mind you decide to enter the Piercing Studio.\n\n");
 			outputText("Stepping inside, you greet Yara with a friendly nod.  Drumming her fingernails on the counter, she returns the gesture with a half-smile.  “<i>Welcome, can I help you with anything?</i>”\n\n");
-			outputText("You tell her that you have a friend who is looking for a job, and you were hoping the studio might be able to take her on in some fashion?\n\n");
+			outputText("You tell her that you have a friend who is looking for a job, and you were hoping the studio might be able to take her on in some fashion.\n\n");
 			outputText("Yara thinks it over.  “<i>I don’t really need anyone else at the moment, but I understand it must be rough... does she know anything about piercings?  You need to have a special touch for this kind of work, especially considering some of the sensitive parts my clients might request to be pierced.</i>”\n\n");
 			outputText("You know for a fact Kath’s never been pierced, so you have to admit she probably doesn’t know anything; but surely Yara can teach her on the job?\n\n");
 			outputText("“<i>I might... but I’d need someone to help me train her, so if you’d be willing to volunteer we could see about training this friend of yours.  Hope she has a steady hand, otherwise things can hurt... Oh!  And make sure she has no bad habits, like drinking, or addiction to some kind of drug or substance.  When people suffer from withdrawal, they tend to shake...</i>”\n\n");
@@ -65,7 +65,7 @@ package classes.Scenes.Places.TelAdre{
 			outputText("“<i>Sorry, but I’m afraid I’m not really interested in hiring anyone at this point in time.  Why do you ask, anyway?</i>”  The petite anthropomorphic corgi asks you.  You explain about Katherine and she clucks her tongue sympathetically.  “<i>I’m really sorry, but I can’t help you.  Maybe one of the other shops?</i>” she suggests.\n\n");
 			outputText("You smile and thank her for time, letting her know that you will try; then leave the shop.\n\n");
 			outputText("Your only remaining option is the Weaponsmith... dreading the task ahead, you steel yourself and approach the old dog-morph.\n\n");
-			outputText("“<i>What? Spit it out, I’m in a hurry!</i>” the bad-tempered man snarls at you when he sees you hesitating.  Once he hears what you want, though, he starts to rant and rave and swear, cursing you and Katherine with language fouler than anything you’ve heard since coming here.  You beat a hasty retreat when it looks like he’s seriously contemplating throwing a red-hot sword-blade fresh from the mould at you.\n\n");
+			outputText("“<i>What? Spit it out, I’m in a hurry!</i>” the bad-tempered man snarls at you when he sees you hesitating.  Once he hears what you want, though, he starts to rant and rave and swear, cursing you and Katherine with language fouler than anything you’ve heard since coming here.  You beat a hasty retreat when it looks like he’s seriously contemplating throwing a red-hot sword-blade fresh from the mold at you.\n\n");
 			outputText("...Cranky old coot.\n\n");
 			outputText("It looks like no one is willing to take Kath in... you’ll have to think of something else...");
 			doNext(tryTheWatch);
@@ -116,12 +116,12 @@ package classes.Scenes.Places.TelAdre{
 			outputText("\n\nYou quickly explain that you aren’t asking because you want to sign up yourself; you’re asking on behalf of a friend who is unemployed and, frankly, doesn’t have any other options.\n\n");
 			outputText("“<i>Oh. I see,</i>” Edryn says, rubbing her chin thoughtfully.  “<i>Well, it’s a simple matter of joining, you just need to come to the Watch house and ask, but there is one little problem.  All watch recruits need to pass certain tests - survival, self defense, things to prove they can actually do what we need them to do, you understand?</i>”\n\n");
 			outputText("Of course, you reply, before admitting you’re not certain if Katherine - the person you’re asking for - has those skills.\n\n");
-			outputText("“<i>Well, you’re an adventurer, right?  You’ve probably seen more action than some of our veterans, nevermind the usual wet-behind-the-ears rookie.</i>”  Edryn shrugs, waving her hand flippantly.  “<i>So, show her a few tricks before you send her down our way; I’m sure with your coaching, she’ll get in for sure.</i>”\n\n");
+			outputText("“<i>Well, you’re an adventurer, right?  You’ve probably seen more action than some of our veterans, never mind the usual wet-behind-the-ears rookie.</i>”  Edryn shrugs, waving her hand flippantly.  “<i>So, show her a few tricks before you send her down our way; I’m sure with your coaching, she’ll get in for sure.</i>”\n\n");
 			outputText("You smile and thank the centauress for her help.  “<i>It was nothing,</i>” she replies, looking quite pleased at your thanks all the same.\n\n");
 			flags[kFLAGS.KATHERINE_TRAINING] |= KBIT_TRAINING_TALK_EDRYN; //Using a mask so it doesn’t matter what order you talk to Edryn and Urta in
 			var cockFitIndex:int = player.cockThatFits(300);
-			if ((cockFitIndex >= 0 && player.cockArea(cockFitIndex) >= 24) && (player.lowerBody == LOWER_BODY_TYPE_CENTAUR || player.horseCocks() > 0 || player.cor > 50 || player.statusAffectv1(StatusAffects.Edryn) > 0)) {
-				outputText("“<i>So... I don’t suppose there’s anything else you might have on mind...?</i>”  She gives you a coy look and fiddles with a nipple through her shirt.");
+			if ((cockFitIndex >= 0 && player.cockArea(cockFitIndex) >= 24) && (player.lowerBody == LOWER_BODY_TYPE_HOOFED || player.countCocksOfType(CockTypesEnum.HORSE) > 0 || player.cor > (50 - player.corruptionTolerance()) || player.statusEffectv1(StatusEffects.Edryn) > 0)) {
+				outputText("“<i>So... I don’t suppose there’s anything else you might have on your mind...?</i>”  She gives you a coy look and fiddles with a nipple through her shirt.");
 				doYesNo((edryn.pregnancy.isPregnant ? pregnantEdrynSexSelector : edryn.edrynSexSelecter), telAdre.barTelAdre);
 			}
 			else {
@@ -152,8 +152,10 @@ package classes.Scenes.Places.TelAdre{
 			flags[kFLAGS.KATHERINE_TRAINING] |= KBIT_TRAINING_TALK_URTA; //Using a mask so it doesn’t matter what order you talk to Edryn and Urta in
 			if (urta.urtaLove()) { //Lover Urta
 				outputText("She looks quietly at you for a few long moments, then sighs and shakes her head.  “<i>I should be so jealous of her... but, well, it’s not like either of us really went into this thing expecting monogamy, right?  Besides, you’re too noble and cute for me to stay mad at you.</i>”  She winks at you in a flirtatious manner.  “<i>In fact... how about this?  If you want to bring your little kitten to me, I’ll help you whip her into shape.  That’s all the help I can offer you, I’m afraid... But first...</i>”  She sets down her mug, then takes one of your hand and slides it into her lap, where you can feel the distinctive bulge swelling.  “<i>How about giving me a little appreciation for being so nice, hmm?</i>”  She asks, licking her lips and savoring your reaction.\n\n");
-			outputText("You figure it’s the least you can do to thank her; you can go and tell Katherine about it when you’re done here, and besides, it’s best to keep her in a good mood, right?");
-				simpleChoices("Suck Off", urta.blowUrtaUnderTheTableLuv, "Eat Out", urta.eatUrtaOutNomNomPussy, "", null, "", null, "", null);				
+				outputText("You figure it’s the least you can do to thank her; you can go and tell Katherine about it when you’re done here, and besides, it’s best to keep her in a good mood, right?");
+				menu();
+				addButton(0, "Suck Off", urta.blowUrtaUnderTheTableLuv);
+				addButton(1, "Eat Out", urta.eatUrtaOutNomNomPussy);
 			}
 			else { //Fuckbuddy Urta
 				outputText("She then sullenly starts gulping her mug down, one hand already waving to a bar attendant for a refill.  Looks like she might be a little jealous... You decide not to push your luck, instead thanking her for the advice and leaving her to her drinking.  Now, all you need to do is figure out how to convince Katherine to join the Watch...");
@@ -167,10 +169,10 @@ package classes.Scenes.Places.TelAdre{
 //    (KATHERINE_UNLOCKED == 1 && KATHERINE_TRAINING >= 3 &&
 //    && (KATHERINE_TRAINING & KBIT_TRAINING_TALK_KATH) == 0)
 			outputText("\n\nYou tell Katherine that you want to talk about your efforts at finding her a job.  “<i>Really?</i>”  She asks, tail slowly waving in cautious optimism.  You nod your head and tell her that you tried every store in the main street; unfortunately, not one of them wanted to hire anyone.  Kath’s feline ears droop and her tail lolls listlessly on the ground.  “<i>Oh. I see...</i>” she says, sadly.  You hasten to assure her that you did find someone who would employ her, but it won’t be easy.  When her ears perk up, you finally explain that you want to help her get a job as a watchcat.\n\n");
-			outputText("She stares at you silently, and then... “<i>WHAT!?</i>”  You wince at the ear-piercing volume she reaches, reminding you of that time you heard somebody step on a cat’s tail back in Ingnam.  “<i>I ran away from home because I didn’t WANT to join the watch; why in the world would you suggest I join them now?!</i>”  Kath shrieks at you, tail bristling, ears flattened against her skull, baring her needle-like canines at you in outrage.\n\n");
+			outputText("She stares at you silently, and then... “<i>WHAT!?</i>”  You wince at the ear-piercing volume she reaches, reminding you of that time you heard somebody step on a cat’s tail back in Ingnam.  “<i>I ran away from home because I didn’t WANT to join the Watch; why in the world would you suggest I join them now?!</i>”  Kath shrieks at you, tail bristling, ears flattened against her skull, baring her needle-like canines at you in outrage.\n\n");
 			outputText("You frown at her attitude and tell her that there is no need to get aggressive, after all you’re trying to help her.  Besides that, it’s not like she has much choice.\n\n");
 			outputText("“<i>What do you mean I have no choice?!</i>” Kath protests.  “<i>You’re just not looking hard enough for a job!</i>”\n\n");
-			outputText("You cross your arms and ask her what kind of skills she has that would make her employable?  Can she cook?  Sew?  Work with metal?  Does she have the firm, precise touch to work with piercings?  Come to think of it... is she even capable of joining the watch in her current conditions?  Can she fight?  Does she know anything about survival in the wilderness?  Can she be imposing when she might need to uphold the law?\n\n");
+			outputText("You cross your arms and ask her what kind of skills she has that would make her employable.  Can she cook?  Sew?  Work with metal?  Does she have the firm, precise touch to work with piercings?  Come to think of it... is she even capable of joining the Watch in her current conditions?  Can she fight?  Does she know anything about survival in the wilderness?  Can she be imposing when she might need to uphold the law?\n\n");
 			outputText("Kath glowers at you, but then wilts, ears and tail falling limp.  “<i>No.  I survive mainly by running away, and I’ve never been a leader, always a follower - if that.  More often, a hanger-on,</i>” she admits, glumly.\n\n");
 			outputText("Then does she intend to keep living in the streets?  Scavenging for food for the rest of her days?  Or does she want to try and make a living?  Do something that matters so that she can eventually retire and live in comfort for her remaining days?  What about a family?  Has she ever considered having one?  How does she hope to support her family if she’s living on the streets?  And what kind of example would she be setting for her kittens?\n\n");
 			outputText("“<i>I’ve done alright so far!  As for kids... well, there’s lots of women who have children on the streets.  And I’m not talking one or two, I’m talking dozens - one of the biggest gangs around is a mother and her brood of kids, and she just keeps popping them out.</i>”  Katherine spits back at you, glowering defiantly, stubborn pride refusing to let her concede.\n\n");
@@ -178,11 +180,11 @@ package classes.Scenes.Places.TelAdre{
 			outputText("Kath’s lip trembles and her ears and tail droop so low they look like they want to fall off.  “<i>How... how can you say these things to me?  Don’t you know what the Watch does to us homeless?  They’re nothing but bullies and thugs - always chasing us away from empty houses because of some dumb law!</i>”\n\n");
 			outputText("Of course they do, Kath herself might be a good person, but can she vouch for all homeless people?  Can she be so sure nobody’s tried using vacant homes for more illicit purposes?  How many drug dealers, thieves, and murderers would love somewhere private and hidden to hide from the Watch?  Isn’t it more important that the city be protected from the demons than invite domestic dissent and possible anarchy?  She might bristle under the yoke of the law, but being some demon’s fucktoy is so much worse.\n\n");
 			outputText("“<i>Of course!</i>” she spits, managing to muster enough spirit to bristle her tail with rage.  “<i>But... why are they so unfair to us?  We didn’t ask to be homeless, you know...</i>”\n\n");
-			outputText("Then why doesn’t she do something about it?  She could just join the watch and try to change the system.  You agree that there might be people who didn’t want this kind of life, but there are some who just don’t care.  All they want is a life of thievery and luxury; and they are even willing to hurt good people too... Rubbing your head, you tell her you still remember when they assaulted you with an iron pipe.\n\n");
+			outputText("Then why doesn’t she do something about it?  She could just join the Watch and try to change the system.  You agree that there might be people who didn’t want this kind of life, but there are some who just don’t care.  All they want is a life of thievery and luxury; and they are even willing to hurt good people too... Rubbing your head, you tell her you still remember when they assaulted you with an iron pipe.\n\n");
 			outputText("“<i>But that wasn’t-!  I didn’t-!</i>”  She tries to defend the actions of her colleagues, unable to find any arguments that sound even the least bit convincing.\n\n");
 			outputText("So?  Can she really honestly say that the watch is all that bad, and the homeless vagrants on the streets are actually just victims?  Katherine says nothing, drooping all over, waiting for you to finish your point and make the knockout blow.  You’re offering her a chance to turn her life around for the better; after all the work you’ve had to look for a job for her, is she going to waste her chance at a better life because of some foolish pride?  Because if she just lets go of it, the two of you would be talking with a roof over your heads, maybe even eating some nice home cooked food; and Kath could be wearing a nice dress, instead of rags.\n\n");
-			outputText("“<i>I...Alright.  You win.  I’ll take the job,</i>” Kath says, sniffling in shame and wiping a humiliated tear from her right eye.\n\n");
-			outputText("You pat the sniffling cat-girl on her head, inviting her into a friendly hug.  It’s okay, you tell her, taking a chance can be frightening, but life is about reaching through fear and risk for something more.  Besides, no matter how unlikely it might seem, she might actually end up liking her job at the watch.\n\n");
+			outputText("“<i>I... all right.  You win.  I’ll take the job,</i>” Kath says, sniffling in shame and wiping a humiliated tear from her right eye.\n\n");
+			outputText("You pat the sniffling cat-girl on her head, inviting her into a friendly hug.  It’s okay, you tell her, taking a chance can be frightening, but life is about reaching through fear and risk for something more.  Besides, no matter how unlikely it might seem, she might actually end up liking her job at the Watch.\n\n");
 			outputText("“<i>I guess...</i>” she replies, still not sounding sure of it, but willing to accept the hug and the spirit behind it gratefully, tail starting to gently swish.  “<i>Still, even if they’re willing to take me, how will I qualify?  You need to know things to join the Watch now, even I know that - they’re getting choosier, because they don’t think they can spend as much time training new recruits as they used to.</i>”\n\n");
 			outputText("Well it’s true that when you asked, you were told Kath would need some basic knowledge before passing the test and joining... but you should be able to help her.  There is plenty you’ve learned adventuring, surely you can pass some of that knowledge to her?  ");
 			if (urta.urtaLove()) {
@@ -190,7 +192,7 @@ package classes.Scenes.Places.TelAdre{
 				outputText("“<i>And how do you know they’ll be good enough to meet Watch standards?</i>”  Kath asks, curiously.\n\n");
 				outputText("Oh I don’t know... maybe because she’s the captain?  You smile wryly at Kath.  The cat’s jaw drops and she stares to you.  “<i>Wha... how?</i>” she blurts aimlessly.\n\n");
 				outputText("You give her a winning smile and simply tell her that you have your ways...  Regardless, if she’s uncomfortable with the idea, you can always train her yourself.  Maybe you won’t be as fast or as thorough as her, since you also have other tasks to handle... but you’re pretty sure you can get Kath trained by yourself.\n\n");
-				outputText("“<i>I... well, I guess it’s really up to you; the two of you would know more about this than I do,</i>” she mumbles, a little overwhelmed.  You explain that you have some preparations to take care of, before you can begin.  Until then, you advise her to get some rest, because you don’t intend to let her to slack off once the training starts.\n\n");
+				outputText("“<i>I... well, I guess it’s really up to you; the two of you would know more about this than I do,</i>” she mumbles, a little overwhelmed.  You explain that you have some preparations to take care of, before you can begin.  Until then, you advise her to get some rest, because you don’t intend to let her slack off once the training starts.\n\n");
 				outputText("The cat-herm nods her head in understanding.  “<i>I promise I’ll do what you tell me,</i>” she swears, blushing a bit.\n\n");
 			}
 			else {
@@ -217,13 +219,15 @@ package classes.Scenes.Places.TelAdre{
 			}
 			clearOutput();
 			outputText("As you approach Katherine’s alleyway, you take a mental inventory of your preparations, to see if it’s time to begin her training.  You realize that once Kath’s training has begun, she will no longer have time to engage in your usual activities until her training is complete, so perhaps you should postpone the final preparations and just pay her a recreational visit instead?");
-			var withUrta:Function = trainKathWithUrta;
-			if (!urta.urtaLove() || (flags[kFLAGS.KATHERINE_TRAINING] & KBIT_TRAINING_TALK_URTA) == 0) withUrta = null; //Urta must be a lover and you must have talked about Kath
-			if (!urtaAvailable && withUrta != null) {
+			menu();
+			addButton(0, "Postpone", postpone);
+			addButton(1, "Train", trainKath);
+			addButton(2, "With Urta", trainKathWithUrta);
+			if (!urta.urtaLove() || (flags[kFLAGS.KATHERINE_TRAINING] & KBIT_TRAINING_TALK_URTA) == 0) addDisabledButton(2, "With Urta"); //Urta must be a lover and you must have talked about Kath
+			else if (!urtaAvailable) {
 				outputText("\n\nPerhaps you should wait for a time when you know Urta will be available " + (urta.pregnancy.isPregnant ? "" : "(and sober enough) ") + "to help.");
-				withUrta = null; //She has to be in the bar
+				addDisabledButton(2, "With Urta"); //She has to be in the bar
 			}
-			simpleChoices("Postpone", postpone, "Train", trainKath, "With Urta", withUrta, "", null, "", null);
 			return true;
 		}
 
@@ -243,7 +247,7 @@ package classes.Scenes.Places.TelAdre{
 			outputText("Stepping into the alleyway you put down the sack of spare equipment you gathered at camp and tell Kath that it’s time.  She nervously get up from the old packing crate she was sitting on.  Her tail twitches as she approaches and she asks you what the sack is for.\n\n");
 			outputText("You tell her it’s all supplies for her to train with.  Until she finishes training she’s going to have to carry this bundle with her at all times.  Kath picks it up and just manages to heft the sack onto her shoulder.  Hopefully the weight will help build her strength and her endurance.\n\n");
 			outputText("You lead Kath through the streets of Tel’Adre and despite having lived here her whole life she doesn’t realize where you’re going until you reach the gates.  “<i>We’re going into the desert?  What if some monster eats me?  I heard there are these man eating nagas out here that love cat flesh.</i>”\n\n");
-			if (player.statusAffectv2(StatusAffects.Naga) != 0)
+			if (player.statusEffectv2(StatusEffects.Naga) != 0)
 				outputText("You almost laugh.  Of all the dangers of the desert she picks the naga.  There’s only one way the naga would eat Kath and they would both enjoy it.  ");
 			outputText("You tell Kath that this is the best way for her to learn survival skills.  Besides you’re always going to be with her out in the desert and you’ve crossed it uncounted times and you’re still here.\n\n");
 			outputText("Kath nods, adjusts the sack, steels herself and follows you out into the wastes for some very practical survival training.");
@@ -252,8 +256,9 @@ package classes.Scenes.Places.TelAdre{
 			doNext(katherineTrainingStage1);
 		}
 
-		public function katherineTrainingStage1():void
+		public function katherineTrainingStage1(clearOut:Boolean = true):void
 		{
+			if (clearOut) clearOutput();
 			outputText((flags[kFLAGS.KATHERINE_TRAINING] == 0 ? "  You" : "Kath readies herself quickly and you") + " lead her on a long, winding trek through the desert sands.  You always keep Tel’Adre in sight so that if the two of you are somehow separated Kath will be able to find her way home.\n\n");
 			outputText("You show her some strategies and good tricks for staying alive out here and moving across the sand without tiring yourself as much.  Kath’s good at listening and while she doesn’t improve much you know she’ll do better tomorrow.\n\n");
 			outputText("When you aren’t instructing her Kath complains about the sand, the heat and the weight of the sack.  You can tell when she really gets tired because she starts to concentrate more on walking than talking.  You can’t blame her.  The desert is difficult terrain to walk on, that’s why you chose it.\n\n");
@@ -301,7 +306,9 @@ package classes.Scenes.Places.TelAdre{
 			outputText("She sits up, embarrassed despite the fact there’s no one else within a mile.  “<i>Come on " + player.short + " - You had me walking all over the place.  My cock" + katherine.cockMultiple("", "s") + " kept rubbing against my pants.  I need to do this to even think straight.</i>”\n\n");
 			outputText("You realize there is no way you’re going to get Kath to do anything useful out here.  On the other hand it’s a nice day and your girlfriend is very, very horny.  Might as well make the most of this trip.");
 			flags[kFLAGS.KATHERINE_LOCATION] = Katherine.KLOC_DESERT; //Makes sure the scene happens out in the dunes
-			simpleChoices("Oral", katherine.giveKatOralPenisWingWang, "Handjob", katherine.handjobbiesFurrDemCatFurries, "", null, "", null, "", null);
+			menu();
+			addButton(0, "Oral", katherine.giveKatOralPenisWingWang);
+			addButton(1, "Handjob", katherine.handjobbiesFurrDemCatFurries);
 		}
 
 		public function katherineTrainingStage2():void
@@ -341,28 +348,36 @@ package classes.Scenes.Places.TelAdre{
 		private function katherineTrainingStage2Horny():void
 		{
 			clearOutput();
-			outputText("Katherine returns much sooner than you expected and with energy to spare.  Her pupils are dilated and her head and tail both keep flicking from side to side.  “<i>There is the most amazing smell over that way</i>” she says, pointing inland toward a patch of bushes.\n\n");
-			outputText("You don’t need to go over to the bushes to find out what the smell is, it’s all over her.  It’s a sweet yet creamy scent, unlike anything back home.  It seems whisker fruits, or at least the blossoms of the tree it comes from, have a certain effect on your feline friend.\n\n");
-			outputText("As you smell Katherine she is busy sniffing you.  She rubs her nose against your cheek, her whiskers tickling your face and says, “<i>This place is really nice, I know what we could do.</i>”");
+			outputText("Katherine returns much sooner than you expected and with energy to spare.  Her pupils are dilated and her head and tail both flick continuously from side to side.  “<i>There is the most amazing smell over that way,</i>” she says, pointing inland toward a patch of bushes.\n\n");
+			outputText("You don’t need to go over to the bushes to find out what the smell is; it’s all over her.  It’s a sweet-yet-creamy scent, unlike anything back home.  It seems whisker fruits, or at least the blossoms of the tree it comes from, have a certain effect on your feline friend.\n\n");
+			outputText("As you smell Katherine she is likewise busy sniffing you.  She rubs her nose against your cheek, her whiskers tickling your face, and says, “<i>This place is really nice... I know what we could do.</i>”");
 			flags[kFLAGS.KATHERINE_LOCATION] = Katherine.KLOC_LAKE; //Makes sure the scene happens on the shores of the lake
-			var penKath:Function = null;       //Fuck and give options only available for males and herms
-			var penAnal:Function = null;
-			var penBoth:Function = null;
-			var takeVag:Function = null;       //Mount her option is only available to females and herms with a vaginal capacity >= 100
-			var takeAnal:Function = null;      //Take Anal option is only available when Kath’s knot size is less than 4</i>”
-			var takeVagAndAss:Function = null; //Take both is available for those who meet both the Mount Her and Take Anal requirements
+			menu();
+			addDisabledButton(0, "Fuck Her", "This scene requires you to have fitting cock.");
+			addDisabledButton(1, "Give Anal", "This scene requires you to have fitting cock.");
+			addDisabledButton(2, "Give Both", "This scene requires you to have two fitting cocks.");
+			// bath always available
+			addDisabledButton(5, "Mount Her", "This scene requires you to have vagina. You should be able to pull out her knot - this is not the best place to be in such vulnerable state.");
+			addDisabledButton(6, "Take Anal", "Her knot should not be overly large.");
+			addDisabledButton(7, "Take Both", "This scene requires you to have vagina. Her knot should not be overly large. You should be able to pull out her knot - this is not the best place to be in such vulnerable state.");
+			
+			addButton(4, "Bath", katherine.bathTime);
 			if (player.cockThatFits(70) > -1) {
-				penKath = katherine.penetrateKatsVag;
-				penAnal = katherine.pcPenetratesKatAnally;
-				if (player.cockThatFits2(70) > -1) penBoth = katherine.pcPenetratesKatDoubly;
+				addButton(0, "Fuck Her", katherine.penetrateKatsVag);
+				addButton(1, "Give Anal", katherine.pcPenetratesKatAnally);
+				if (player.cockThatFits2(70) > -1) {
+					addButton(2, "Give Both", katherine.pcPenetratesKatDoubly);
+				}
 			}
 			if (player.hasVagina() && player.vaginalCapacity() >= 100) { //Don't want to get knotted together out here at the lake
-				takeVag = katherine.letKatKnotYourCuntPussyFuck;
-				if (katherine.knotSize < 4 && katherine.cockNumber > 1) takeVagAndAss = katherine.getDoublePennedByKat;
+				addButton(5, "Mount Her", katherine.letKatKnotYourCuntPussyFuck);
+				if (katherine.knotSize < 4 && katherine.cockNumber > 1) {
+					addButton(7, "Take Both", katherine.getDoublePennedByKat);
+				}
 			}
-			if (katherine.knotSize < 4) takeAnal = katherine.getPenetrated;
-			choices("Fuck Her", penKath, "Give Anal", penAnal, "Give Both", penBoth, "Bath", katherine.bathTime, "", null,
-				"Nount Her", takeVag, "Take Anal", takeAnal, "Take Both", takeVagAndAss, "", null, "", null);
+			if (katherine.knotSize < 4) {
+				addButton(6, "Take Anal", katherine.getPenetrated);
+			}
 		}
 
 		public function katherineTrainingStage3():void
@@ -423,28 +438,42 @@ package classes.Scenes.Places.TelAdre{
 		private function alleywaySexOptions():void
 		{
 			flags[kFLAGS.KATHERINE_LOCATION] = Katherine.KLOC_STREETS; //Makes sure the scene happens in a Tel’Adre alleyway
-			var penKath:Function = null;       //Fuck and give options only available for males and herms
-			var penAnal:Function = null;
-			var penBoth:Function = null;
-			var suckNFucks:Function = null;
-			var takeVag:Function = null;       //Mount her option is only available to females and herms with a vaginal capacity >= 100
-			var takeAnal:Function = null;      //Take Anal option is only available when Kath’s knot size is less than 4</i>”
-			var takeVagAndAss:Function = null; //Take both is available for those who meet both the Mount Her and Take Anal requirements
-			var suckNFucked:Function = null;
+			menu();
+			addDisabledButton(0, "Fuck Her", "This scene requires you to have fitting cock.");
+			addDisabledButton(1, "Give Anal", "This scene requires you to have fitting cock.");
+			addDisabledButton(2, "Give Both", "This scene requires you to have two fitting cocks.");
+			addDisabledButton(3, "SuckNFuck", "This scene requires you to have fitting cock. Her knot should not be overly large.");
+			addDisabledButton(4, "Bath", "This scene is only available after her training is over.");
+			addDisabledButton(5, "Mount Her", "This scene requires you to have vagina.");
+			addDisabledButton(6, "Take Anal", "Her knot should not be overly large.");
+			addDisabledButton(7, "Take Both", "This scene requires you to have vagina. Her knot should not be overly large.");
+			addDisabledButton(8, "SuckNFuckd", "This scene requires you to have cock. You should have some experience with her.");
+			
 			if (player.cockThatFits(70) > -1) {
-				penKath = katherine.penetrateKatsVag;
-				penAnal = katherine.pcPenetratesKatAnally;
-				if (player.cockThatFits2(70) > -1) penBoth = katherine.pcPenetratesKatDoubly;
-				if (katherine.knotSize <= 4) suckNFucks = katherine.suckNFuck;
+				addButton(0, "Fuck Her", katherine.penetrateKatsVag);
+				addButton(1, "Give Anal", katherine.pcPenetratesKatAnally);
+				if (player.cockThatFits2(70) > -1) {
+					addButton(2, "Give Both", katherine.pcPenetratesKatDoubly);
+				}
+				if (katherine.knotSize <= 4) {
+					addButton(3, "SuckNFuck", katherine.suckNFuck);
+				}
 			}
-			if (player.hasCock() && flags[kFLAGS.KATHERINE_TIMES_SEXED] > 0) suckNFucked = katherine.suckedNFuckedByKat;
+			if (flags[kFLAGS.KATHERINE_TRAINING] >= 100) {
+				addButton(4, "Bath", katherine.dateKathBath);
+			}
 			if (player.hasVagina()) {
-				takeVag = katherine.letKatKnotYourCuntPussyFuck;
-				if (katherine.knotSize < 4 && katherine.cockNumber > 1) takeVagAndAss = katherine.getDoublePennedByKat;
+				addButton(5, "Mount Her", katherine.letKatKnotYourCuntPussyFuck);
+				if (katherine.knotSize < 4 && katherine.cockNumber > 1) {
+					addButton(7, "Take Both", katherine.getDoublePennedByKat);
+				}
 			}
-			if (katherine.knotSize < 4) takeAnal = katherine.getPenetrated;
-			choices("Fuck Her", penKath, "Give Anal", penAnal, "Give Both", penBoth, "SuckNFuck", suckNFucks, "Bath", (flags[kFLAGS.KATHERINE_TRAINING] >= 100 ? katherine.dateKathBath : null),
-				"Mount Her", takeVag, "Take Anal", takeAnal, "Take Both", takeVagAndAss, "SuckNFuckd", suckNFucked, "", null);
+			if (katherine.knotSize < 4) {
+				addButton(6, "Take Anal", katherine.getPenetrated);
+			}
+			if (player.hasCock() && flags[kFLAGS.KATHERINE_TIMES_SEXED] > 0) {
+				addButton(8, "SuckNFuckd", katherine.suckedNFuckedByKat);
+			}
 		}
 
 		public function katherineTrainingComplete():void
@@ -464,9 +493,9 @@ package classes.Scenes.Places.TelAdre{
 			outputText("You tell Kath that you feel she’s ready for testing.  She beams and nervously tries to smooth out her clothes.  The two of you walk to the Wet Bitch where, as expected, you find captain Urta sitting alone at her table reading reports and sipping something from a mug.\n\n");
 			if (flags[kFLAGS.URTA_COMFORTABLE_WITH_OWN_BODY] > -1) {
 				if (flags[kFLAGS.TIMES_FUCKED_URTA] > 0) { //Urta is either your lover or a fuckbuddy
-					outputText("Urta gives you a big smile as you lead Katherine over to her table.  “<i>How’s it going " + player.short + "?</i>”  When Kath sits down she adds, “<i>And who’s this?</i>” in a friendly tone.\n\n");
-			outputText("You explain to Urta how you’ve been training Kath in the hopes of getting her a job in the watch.  Urta sips from her mug and listens closely as you go over the training.  When you finish Urta says, “<i>" + (urta.urtaLove() ? "You know I could have given you a hand with that love" : "Well love, the watch can always use new recruits if they’re well trained") + ".</i>”  Kath’s jaw hits the floor and she asks, “<i>You’re sleeping with the captain of the guard?</i>”\n\n");
-			outputText("Urta knocks back her mug and says, “<i>Oh yes, we’ve been sleeping together for a while.  I’m guessing from the look on your face you two have been sleeping together for a while too, hmmm?  Where have you been hiding her " + player.short + "?  And why haven’t you introduced us?</i>”");
+					outputText("Urta gives you a big smile as you lead Katherine over to her table.  “<i>How’s it going, " + player.short + "?</i>”  When Kath sits down, she adds, “<i>And who’s this?</i>” in a friendly tone.\n\n");
+			outputText("You explain to Urta how you’ve been training Kath in the hopes of getting her a job in the watch.  Urta sips from her mug and listens closely as you go over the training.  When you finish Urta says, “<i>" + (urta.urtaLove() ? "You know, I could have given you a hand with that, love" : "Well love, the watch can always use new recruits if they’re well trained") + ".</i>”  Kath’s jaw hits the floor and she asks, “<i>You’re sleeping with the captain of the guard?</i>”\n\n");
+			outputText("Urta knocks back her mug and says, “<i>Oh yes, we’ve been sleeping together for a while.  I’m guessing from the look on your face, you two have been sleeping together for a while too, hmmm?  Where have you been hiding her, " + player.short + "?  And why haven’t you introduced us?</i>”");
 					flags[kFLAGS.KATHERINE_URTA_AFFECTION] = 1;
 					if (urta.urtaLove() && (flags[kFLAGS.AMILY_VISITING_URTA] == 4 || flags[kFLAGS.URTA_KNOWS_PC_HAS_MARBLE_FOLLOWER] > 0)) {
 						outputText("\n\nBefore Katherine can respond Urta adds, “<i>Don’t worry, I’m not angry about " + player.short + " sleeping around");
@@ -524,7 +553,7 @@ package classes.Scenes.Places.TelAdre{
 			clearOutput();
 			outputText("You go back to Kath’s alley and pace back and forth, waiting.  Hours later Kath races into the alley and leaps into your arms, nearly knocking you off your feet.  “<i>I did it!  I did it!</i>” she cries while hugging you tight enough to squeeze the breath out of you.  “<i>Oh thank you " + player.short + ", I couldn’t have done it without you.  The tests were hard but I knew what she wanted.</i>”\n\n");
 			outputText("You stroke her hair and Katherine finally calms down enough to show you her new badge.  “<i>I’m starting tomorrow.  Oh - and that’s not even the best part.  I didn’t know about this, but because I’m in the watch they can give me papers that show I have a good job, that I’m a good citizen.  I forget what it’s called, but it means I’ll be able to get a house really soon cause they know I’m good for it and I’ll be earning a wage.</i>”\n\n");
-			outputText("She looks around at the alley and says, “<i>We had some fun times here, but I won’t miss living on the street.</i>”  She gives you a kiss and adds, “<i>I have to run.  I’ve got equipment to pick up and patrol routes to memorize.  Next time you’re in town look for me at the wet bitch, I’ll try to hang around there.</i>”");
+			outputText("She looks around at the alley and says, “<i>We had some fun times here, but I won’t miss living on the street.</i>”  She gives you a kiss and adds, “<i>I have to run.  I’ve got equipment to pick up and patrol routes to memorize.  Next time you’re in town, look for me at the Wet Bitch; I’ll try to hang around there.</i>”");
 			doNext(camp.returnToCampUseFourHours); //Use up 4 hours, go back to camp
 		}
 		
@@ -546,7 +575,10 @@ package classes.Scenes.Places.TelAdre{
 			outputText("She leads you over to her table and soon you’re " + (player.isPregnant() ? "drinking some hot chocolate while Urta sips some kind of hard liquor" : "sipping some harsh form of whiskey with her") + ".  Urta starts by complimenting you on Kath’s training.  It seems few candidates are that well prepared on their first attempt to take the tests.  She seems nervous, even acts bit deferential to you.\n\n");
 			outputText("From how she’s acting you feel there’s more to this talk than that but it takes a while, and several more drinks, for Urta to work up her courage.  Finally she says, “<i>From the way Katherine acted I know you two are together.</i>”  She tilts her glass and looks at the amber liquid.  “<i>From the testing I can tell Kath is a herm.  I mean, we did some combat tests, some grappling.  It’s kind of hard to miss.</i>”\n\n");
 			outputText("After a long pause she adds “<i>So... I think I misjudged you.  That time you saw me, just out back of this place.  A lot of people hate herms and I thought you must be like that.</i>”  She looks down again and adds, “<i>I guess I never gave you the chance to set the record straight.</i>”");
-			simpleChoices("Flirt", urta.flirtWithUrta, "Friends", friendsWithUrta, "Destroy Her", destroyUrta, "", null, "", null);
+			menu();
+			addButton(0, "Flirt", urta.flirtWithUrta);
+			addButton(1, "Friends", friendsWithUrta);
+			addButton(2, "Destroy Her", destroyUrta);
 		}
 
 		private function friendsWithUrta():void
@@ -579,15 +611,15 @@ package classes.Scenes.Places.TelAdre{
 			outputText("The route to Urta’s place is quite familiar to you by now, and she surprises you by opening the door and gallantly offering to let you inside first.  An invitation you’re only too happy to take.   You’re reminded of the practice of men holding doors open for ladies back in Ingnam by the gesture.  Once inside you take a seat on her couch and wait for her to sit next to you, so you can start planning.  The over-endowed fox takes a seat with a groan, rubbing her balls through her dress, then faking a yawn as an excuse to sling an arm around your back.  “<i>So... what do you have in mind?</i>” she asks.\n\n");
 			outputText("You lay a hand on her thigh and start sharing all you know about Kath; how she is currently homeless; how she lacks any combat experience beyond basic survival; how she tends to get pretty pent up sexually and how that frustration boils over... even giving the details of how you met in the first place...\n\n");
 			outputText("Urta nods her head and keeps quiet throughout, quietly digesting what you have to say.  Glancing at you with eyes half-lidded in thought, she quietly asks, “<i>So... do you just have a thing for herms with mismatched dicks?</i>”\n\n");
-			outputText("You tell her to focus on what actually matters.  The vulpine watch officer gives you a pleading look, hoping you’ll answer her first question.  With a sigh of defeat you finally ask her if she has a problem with it?  Maybe you do... maybe you don’t, but the fact is the two of you are together, you stress.  You assure her, that if she’s worried about this, you can put her mind at ease.  She’s more than just some fetish to you- you genuinely enjoy being with her.  But, admit, the fact that she’s a sexy herm is a definite plus...\n\n");
+			outputText("You tell her to focus on what actually matters.  The vulpine watch officer gives you a pleading look, hoping you’ll answer her first question.  With a sigh of defeat you finally ask her if she has a problem with it?  Maybe you do... maybe you don’t, but the fact is the two of you are together, you stress.  You assure her, that if she’s worried about this, you can put her mind at ease.  She’s more than just some fetish to you- you genuinely enjoy being with her.  But, you must admit, the fact that she’s a sexy herm is a definite plus...\n\n");
 			outputText("Urta blushes and looks at her feet, idly fiddling with the hem of her dress.  She’s silent for a long time, but finally asks, “<i>So... how do you want me to help you train this... Kath, was it?</i>”\n\n");
 			outputText("To be honest, you were hoping she would have a plan... she is the guard captain, and if anyone knows the job, it’d be her.  You ask Urta if she doesn’t have any ideas?\n\n");
 			outputText("Urta frowns in thought and scratches the back of her ear.  “<i>Well... the three main requirements of a recruit are basic survival skills, the ability to fight both unarmed and with at least one kind of weapon, and being able to muster the appropriate attitude for a watchman - to be firm and confident no matter the adversary.</i>”\n\n");
 			outputText("You tell her you understand... but considering the current state of affairs in Mareth perhaps it would be good to train Kath in the matter of... restraint... as well.  You fear that some demon or perhaps a corrupt individual might be able to take advantage of her that way...\n\n");
 			outputText("Urta nods her head.  “<i>Yes, while it’s true that conventional training used to be enough when I joined, these days it’s important to train sexual resistance too...</i>”  Urta ponders the fact for a while longer, then an idea hits her.  “<i>Wait here, I think I have something that can help with that.</i>”  Rising, the fox-woman gets up and ducks out to her room.  The sound of rustling drawers and cabinets filters back to you, until finally you hear a faint, “<i>Aha!</i>”\n\n");
-			outputText("Urta walks back into the living room holding a chastity belt; it is made of a combination of leather and metal.  The designs looks like that of a pair of panties, with a padded protrusion in the end made to fit a cock, and a wide oval plating, with a slit cut in the middle to prevent anything from entering the user’s pussy; an iron lock dots the side of the constricting metal panties and opens sideways to allow it’s victim to step inside and then lock tightly on the side;  you can clearly see it was made to prevent any sort of pleasing touch no matter what you’ve got between your legs.  A simple lock adorns the side of the belt and a pair of keys dangle from the contraption.  You just stare at Urta in awkward silence for a short while before finally asking her why she has something like that handy?\n\n");
+			outputText("Urta walks back into the living room holding a chastity belt; it is made of a combination of leather and metal.  The designs looks like that of a pair of panties, with a padded protrusion in the end made to fit a cock, and a wide oval plating, with a slit cut in the middle to prevent anything from entering the user’s pussy; an iron lock dots the side of the constricting metal panties and opens sideways to allow its victim to step inside and then lock tightly on the side;  you can clearly see it was made to prevent any sort of pleasing touch no matter what you’ve got between your legs.  A simple lock adorns the side of the belt and a pair of keys dangle from the contraption.  You just stare at Urta in awkward silence for a short while before finally asking her why she has something like that handy?\n\n");
 			outputText("Urta blushes fiercely.  “<i>I... I wanted to see if maybe it would help with, y’know, my little problem...</i>” she finally manages to blurt out.  She looks off into the distance and scowls.  “<i>But as it turns out I just couldn’t bring myself to keep it on... it was unbearable.</i>”  Really?  Perhaps you could help her by hanging onto the keys for her, that way she wouldn’t have a way of getting it off unless you wanted her to...\n\n");
-			outputText("Urta looks at you with an shocked expression; you probably couldn’t have horrified her more if you’d told her you were taking a lifelong vow of celibacy and would never be able to see her again.  You can’t help but burst out laughing, getting up to run your hand along her back, down to her butt.  You tell Urta that there’s no way you’d be able to keep her tied up for too long... Still if the chastity belt didn’t help her, how is it supposed to help Kath?\n\n");
+			outputText("Urta looks at you with a shocked expression; you probably couldn’t have horrified her more if you’d told her you were taking a lifelong vow of celibacy and would never be able to see her again.  You can’t help but burst out laughing, getting up to run your hand along her back, down to her butt.  You tell Urta that there’s no way you’d be able to keep her tied up for too long... Still if the chastity belt didn’t help her, how is it supposed to help Kath?\n\n");
 			outputText("“<i>From what you tell me, my libido’s a lot worse than your little kitty-cat’s.  She wouldn’t have it anywhere near as bad as I did,</i>” Urta points out.  She then shrugs.  “<i>Besides, it failed to help me master my libido in the long term, but for short-term motivation, it’s quite effective.</i>”\n\n");
 			outputText("That’s true, you admit.  As a final note, you ask if Urta has a place where she could properly train Kath.\n\n");
 			outputText("“<i>Well... we use a number of safehouses around the city for new recruits, and lust-resistance training is part of their regime too.  I could commandeer one when you need, justify it as me brushing up on some training of my own?</i>” Urta offers after some deep thought on the subject.\n\n");
@@ -619,14 +651,14 @@ package classes.Scenes.Places.TelAdre{
 		{	//Happens next time you visit Kath after the visit to Urta
 			outputText("You approach the alleyway behind the pawn shop, looking for Kath... and sure enough, you spot the cat-herm grooming herself.  Gently coughing to get her attention, you wave a hand at her.\n\n");
 			outputText("She looks up and gives you a strained smile.  “<i>Hi, " + player.short + ".  So... uh, something you need?</i>” she asks weakly, clearly still not too enthused about signing up for the Watch.\n\n");
-			outputText("You nod, and simply state that, “<i>It’s time</i>”.  You tell her to pack up whatever she needs and wait while you go check up on her trainer.  “<i>Trainer?</i>” Kath repeats, curious.  But she doesn’t press on the matter, instead indicating you should go while she gets her meagre belongings together to move out of the alley.\n\n");
-			outputText("You find Urta standing at the door of the Wet Bitch, she has chosen to wear her watch uniform for this task it seems... smiling, you wave to her, trying to draw her attention.\n\n");
-			outputText("The watch-vixen looks at you, smiles and walks over to meet up with you.  “<i>So, you and the puffball kitten ready to start, are you?</i>” she asks, her tone light and fairly friendly despite her words.  Still, you think she’s maybe a little jealous, and you can’t really blame her.\n\n");
+			outputText("You nod, and simply state that, “<i>It’s time</i>”.  You tell her to pack up whatever she needs and wait while you go check up on her trainer.  “<i>Trainer?</i>” Kath repeats, curious.  But she doesn’t press on the matter, instead indicating you should go while she gets her meager belongings together to move out of the alley.\n\n");
+			outputText("You find Urta standing at the door of the Wet Bitch; she has chosen to wear her Watch uniform for this task it seems... smiling, you wave to her, trying to draw her attention.\n\n");
+			outputText("The Watch-vixen looks at you, smiles and walks over to meet up with you.  “<i>So, you and the puffball kitten ready to start, are you?</i>” she asks, her tone light and fairly friendly despite her words.  Still, you think she’s maybe a little jealous, and you can’t really blame her.\n\n");
 			outputText("You decide to ease the tension by drawing her into a quick kiss, then telling her that yes... you’re both ready.  You also warn her that Kath doesn’t seem too enthusiastic about joining the watch... maybe Urta could give her some motivation or something?\n\n");
 			outputText("“<i>Motivation?  Like how?  I’m not going to threaten to shove my cock up her ass if she doesn’t perform to my expectations.  I got more pride than that, I’ll have you know,</i>” she warns you.\n\n");
 			outputText("You shake your head.  You didn’t mean anything like that... you were hoping Urta would maybe give a pep talk or something along the lines of that.  Threats are not likely to get the reluctant cat going...\n\n");
 			outputText("Urta stops and flushes with embarrassment.  “<i>Okay, yeah, pep talk, I think I can pull that off.  Can’t guarantee she’ll listen, but hey, isn’t that always a problem with trying to talk people into doing something, even for their own good?</i>” she rambles.\n\n");
-			outputText("You agree with her, but you could use all the help you can get... and so could Kath.  Urta’s lip curls, exposing a very sharp set of chompers in what is quite obviously a jealous scowl.  Realizing what is going on, you decide to ask Urta if she’s really ok with doing this?  You certainly don’t mean to make her uncomfortable...  “<i>No, no, it’s fine...</i>” she turns her head to the side and you almost think you hear her mumble something like, “<i>It’s not like I’m exactly a beacon of monogamy either,</i>” but then she shakes her head.  “<i>It just takes a little getting used to.  That you got a girlfriend on the side is one thing, that you want me to help get her, well, what is basically my job is kind of another thing, you know?</i>” she shrugs her shoulders.\n\n");
+			outputText("You agree with her, but you could use all the help you can get... and so could Kath.  Urta’s lip curls, exposing a very sharp set of chompers in what is quite obviously a jealous scowl.  Realizing what is going on, you decide to ask Urta if she’s really ok with doing this.  You certainly don’t mean to make her uncomfortable...  “<i>No, no, it’s fine...</i>” she turns her head to the side and you almost think you hear her mumble something like, “<i>It’s not like I’m exactly a beacon of monogamy either,</i>” but then she shakes her head.  “<i>It just takes a little getting used to.  That you got a girlfriend on the side is one thing, that you want me to help get her, well, what is basically my job is kind of another thing, you know?</i>” she shrugs her shoulders.\n\n");
 			outputText("You nod in understanding, but tell Urta that Kath has it pretty rough.  You were hoping she would be sympathetic, considering her past.  Urta was strong enough to get a better life on her own, but Kath isn’t... besides that, you tell her you’re not trying to replace her or anything like that.\n\n");
 			outputText("Urta heaves a sigh.  “<i>Okay, okay, no need for the lectures.  Let’s just go see this cat of yours.</i>”  Despite her gruff tone, her expression makes it obvious she appreciates your words.  She indicates you should lead the way.\n\n");
 			outputText("Nodding, you do so.\n\n");
@@ -642,7 +674,7 @@ package classes.Scenes.Places.TelAdre{
 			outputText("“<i>Deal,</i>” the cat replies, shaking the fox’s hand.  “<i>So... uh... what do you two have in mind, anyway?</i>” she asks, looking from Urta to you and back again.\n\n");
 			outputText("First... you just breath a sigh of relief, for a moment you thought a fight would break out... then you reply that while you have a basic idea of what needs to be done Urta is the one running the show here, so the details are left at her discretion.  But you do know that Urta commandeered a safe house, usually used to train other Watch members for the purpose of training Kath.\n\n");
 			outputText("Kath’s eyes widen and she turns to Urta.  “<i>Isn’t that expensive?</i>” she asks, dumbstruck.\n\n");
-			outputText("“<i>I’m the captain of the Watch.  Besides, it’s official purpose is for training Watch members; there’s no price on it.  We got others to use, anyway,</i>” Urta replies.\n\n");
+			outputText("“<i>I’m the captain of the Watch.  Besides, its official purpose is for training Watch members; there’s no price on it.  We got others to use, anyway,</i>” Urta replies.\n\n");
 			outputText("“<i>I see.... well,</i>” Kath draws herself up straight, “<i>I swear I’ll do my best to train - I won’t let either of you down.</i>”\n\n");
 			outputText("“<i>You say that now.  You mightn’t be so chipper when you see what the training entails,</i>” Urta smirks.\n\n");
 			outputText("Katherine looks nervous at that.  “<i>Uh... what does it entail, anyway?</i>” she asks.  Urta just gives her the epitome of a vulpine grin and refuses to say anything.  When Kath turns to look at you looking for an answer, but you just reply with a knowing grin.  You then ask if Urta brought the package?  The one you two agreed upon?\n\n");
@@ -661,7 +693,7 @@ package classes.Scenes.Places.TelAdre{
 					outputText("You would beg to differ, you happen to not only know one... but is also carrying one right at this instant...\n\n");
 					outputText("“<i>Oh? So why doesn’t he come out and say hello, huh?</i>” Urta snarks, clearly feeling very put out.\n\n");
 					outputText("“<i>Don’t mind if I do!</i>” an ethereal voice replies out of your chest.  A familiar face emerges, grinning widely.  “<i>Boo,</i>” Shouldra states, simply.\n\n");
-					outputText("Urta and Kath’s jaws drop in unision, both staring dumbfoundedly at Shouldra.  Looks like they’ve never seen a ghost before.  “<i>I can see at least two bodies I wouldn’t mind getting to know better... but first, let’s see what you’re packing...</i>”  Shouldra’s hand emerges from your chest and she makes a few arcane gestures, aimed at both Kath and Urta.  At once, the two’s outfits tent as their mismatched dicks swell as erect as they can between the ghost’s magic and their restraining garments.  Urta yelps in that way she has and tries to cover herself up; Kath just looks surprised, but doesn’t make any effort, figuring that it must be harmless.\n\n");
+					outputText("Urta and Kath’s jaws drop in unison, both staring dumbfoundedly at Shouldra.  Looks like they’ve never seen a ghost before.  “<i>I can see at least two bodies I wouldn’t mind getting to know better... but first, let’s see what you’re packing...</i>”  Shouldra’s hand emerges from your chest and she makes a few arcane gestures, aimed at both Kath and Urta.  At once, the two’s outfits tent as their mismatched dicks swell as erect as they can between the ghost’s magic and their restraining garments.  Urta yelps in that way she has and tries to cover herself up; Kath just looks surprised, but doesn’t make any effort, figuring that it must be harmless.\n\n");
 					outputText("“<i>Wow, jackpot!  Come here my swollen-dicked morsels, let’s have some fun!</i>”  Shouldra lunges after both Kath and Urta, who promptly scamper, not happy with the idea of becoming a ghost’s plaything.  You just watch the spectacle unfold and both the herms and Shouldra vanish from your sight...\n\n");
 					outputText("A few minutes later, both Urta and Kath return... panting and with their respective tents visibly absent...\n\n");
 					outputText("“<i>Oh, dear sweet Marae’s mercy, we finally lost that freaky ghoulie,</i>” Urta pants, tongue lolling out in a very canine fashion.\n\n");
@@ -688,7 +720,7 @@ package classes.Scenes.Places.TelAdre{
 			outputText("Urta pouts, clearly not too happy at having her thunder stolen, while Kath rolls her eyes.  “<i>Corny much, " + player.short + "?</i>”  Still, there’s a twinkle in her eyes that makes you feel you really have bolstered her spirits.  “<i>So, what does this training consist of, anyway?</i>”\n\n");
 			outputText("Upon hearing that, you grin evilly at Urta and ask her if you should get the package?\n\n");
 			outputText("Urta shakes her head and passes you the key, indicating silently that you should lock the front door instead.  Nodding in agreement, you concur that this is probably a good idea, there’s no telling how Kath will react.\n\n");
-			outputText("The cat-morph watches nervously as you and Urta head your seperate ways.  As the fox rummages amongst the junk on the side, she audibly professes, “<i>Why do I think I’m not going to like this?</i>”\n\n");
+			outputText("The cat-morph watches nervously as you and Urta head your separate ways.  As the fox rummages amongst the junk on the side, she audibly professes, “<i>Why do I think I’m not going to like this?</i>”\n\n");
 			outputText("You tell Kath to relax, this will all be over soon...\n\n");
 			outputText("“<i>Okay, now I’m really worried,</i>” she retorts, eyes flicking nervously between you and Urta.\n\n");
 			outputText("“<i>Before we begin, you should put this on,</i>” Urta says, holding the chastity belt towards Kath.\n\n");
@@ -744,9 +776,9 @@ package classes.Scenes.Places.TelAdre{
 			outputText("“<i>When are you going to start taking this seriously, kitty?  These skills are essential if you ever get sent outside the walls!</i>”\n\n");
 			outputText("“<i>Since when do you send people out into the desert anyway?  Besides, it’s hard to concentrate when you’re stuck in this stupid thing,</i>” the cat replies, tapping a claw-like fingernail meaningfully on the chastity belt she’s wearing.\n\n");
 			outputText("“<i>You can’t seriously be aroused already - I’m the only one here, and it’s not like I’m in heat.  It should only be bothering you if you’re too much of a slut to control yourself!</i>” Urta snaps back.\n\n");
-			outputText("Before things can escalate into a fight, you interject, yelling both of them to stay quiet!  This is not helping either of them!  You step between the two girls, crossing your arms and glaring at both of them.  You tell them to apologise to each other so the three of you can carry on.\n\n");
+			outputText("Before things can escalate into a fight, you interject, yelling both of them to stay quiet!  This is not helping either of them!  You step between the two girls, crossing your arms and glaring at both of them.  You tell them to apologize to each other so the three of you can carry on.\n\n");
 			outputText("Bristling, the two glower half-heartedly at each other and mumble a tired sounding, “<i>sorry,</i>” simultaneously.  You’re not sure if they’re really still hating each other, or they just don’t want to try and get along for whatever reasons.  Still, you suppose this will have to do, for the moment.  Turning to Urta, you ask her about the details of this training.  What exactly is Kath supposed to do?\n\n");
-			outputText("“<i>Well, part of being a watch recruit is being able to look after yourself if you get sent out beyond the city, right?</i>”  The vulpine officer explains.  You nod in agreement, motioning for her to go on.  “<i>So, that means you need to know how to look after yourself out in the wilderness.  We covered firemaking and foraging already - she actually passed those pretty well, quicker than a lot of recruits I’ve seen,</i>” she admits, which makes Kath blink in shock at hearing her skills praised.\n\n");
+			outputText("“<i>Well, part of being a Watch recruit is being able to look after yourself if you get sent out beyond the city, right?</i>”  The vulpine officer explains.  You nod in agreement, motioning for her to go on.  “<i>So, that means you need to know how to look after yourself out in the wilderness.  We covered firemaking and foraging already - she actually passed those pretty well, quicker than a lot of recruits I’ve seen,</i>” she admits, which makes Kath blink in shock at hearing her skills praised.\n\n");
 			outputText("You turn to smile at Kath and then ask.  If Kath did as well as Urta’s saying, what seems to be the problem?\n\n");
 			outputText("“<i>The problem is the shelter-finding part of the training,</i>” Urta sighs.  “<i>Living in the streets has made her soft; there’s always an alleyway or a rubbish heap or an abandoned building to hide in.  I mean, yes, it hasn’t rained in the last twenty years, but that doesn’t mean shelter’s not important.  I’m trying to get her to learn how to set up a tent.</i>”\n\n");
 			outputText("You nod in agreement.  Even if there is no rain, there are other elements that she would need protection from; for instance, if she ever has to camp in the desert, where there is no cover, and a sandstorm kicks in, she’d be in deep trouble without a tent.\n\n");
@@ -780,9 +812,9 @@ package classes.Scenes.Places.TelAdre{
 			outputText("“<i>Uh, you gotta work your way up to stakes like that, all I’m offering is a handjob, kitty,</i>” Urta points out.  “<i>And stop with the prick-vixen stuff!</i>”\n\n");
 			outputText("“<i>You’re just scared because you know I’d win,</i>” Kath replies.\n\n");
 			outputText("“<i>Confident, huh?  Fine, let's up the ante then!  Do it ten times in a row and I will blow you... for a whole day... but if you lose... YOU are going to blow me instead!</i>”\n\n");
-			outputText("You look at Kath, shaking your head lightly, trying to dissuade her from taking Urta up on her offer.  Even for someone as experienced as yourself, putting a tent up so many times without fail might be a challenge.  Miss one little detail and tent comes crashing down!  You hope Kath will listen to you on this one...\n\n");
+			outputText("You look at Kath, shaking your head lightly, trying to dissuade her from taking Urta up on her offer.  Even for someone as experienced as yourself, putting a tent up so many times without fail might be a challenge.  Miss one little detail and the tent comes crashing down!  You hope Kath will listen to you on this one...\n\n");
 			outputText("“<i>Alright, you’re on; I hope you got room for all I’ve got!</i>” Kath cries excitedly, then practically throws herself at the tent equipment.  You sigh and roll your eyes in exasperation; well, either Kath will learn, or she might actually win by sheer dumb luck.  Either way, you decide it’s time you left and gave them a chance to get on with it.\n\n");
-			outputText("You bid farewell to Urta and wish Kath luck, then twists the knob and see yourself out...");
+			outputText("You bid farewell to Urta and wish Kath luck, then twist the knob and see yourself out...");
 			flags[kFLAGS.KATHERINE_TRAINING] += 16;
 			doNext(camp.returnToCampUseOneHour);
 		}
@@ -812,7 +844,7 @@ package classes.Scenes.Places.TelAdre{
 			outputText("“<i>Then what about at breakfast, when you were washing up?  Tail wagging all over the place - I could look right at your pussy every time it wasn’t hanging between your legs,</i>” Kath drawls.\n\n");
 			outputText("Looking at Urta you tell her that does seem like something she would do when drunk...\n\n");
 			outputText("“<i>I don’t drink that much in the morning, and certainly not while I’m working here!</i>” the vulpine herm retorts indignantly.\n\n");
-			outputText("Okay... you apologise.  Still you oughta do something about Kath, she really looks in pain...\n\n");
+			outputText("Okay... you apologize.  Still you oughta do something about Kath, she really looks in pain...\n\n");
 			outputText("Kath promptly clasps her hands in front of you and stares at you and Urta alike with her eyes as wide and pleading as possible... how is it that she can look so much like an adorable little kitten when she wants to?\n\n");
 			outputText("“<i>...Ugh, fine, I guess we can do something for her.  What do you have in mind? ...Besides taking the belt off, of course?</i>” Urta asks.\n\n");
 			outputText("Hmm... this is supposed to help Kath develop some resistance to lust, so actually fucking her is out of question.  Maybe a handjob?  Just to help her get her rocks off so she can focus on the task at hand?  Figuring this could also be a great opportunity to help them get along... you suggest Urta should be the one giving her a handjob.\n\n");
@@ -821,24 +853,28 @@ package classes.Scenes.Places.TelAdre{
 			outputText("“<i>Of course you would, you had nobody else to practice with,</i>” Kath retorts.  Urta flinches at that, looking genuinely wounded.\n\n");
 			outputText("“<i>Hey!</i>” you interject.  “<i>That is not something you say to someone who is using her off-time to help you out!  Maybe you should stay in your belt after all... you’ll cool off sometime later...</i>”\n\n");
 			outputText("“<i>You wouldn’t!</i>” Kath protests in horror.\n\n");
-			outputText("You wouldn’t?  After saying something so inconsiderate, you damn well should!  Or need you remind her that she was in basically the same situation as Urta before you met her?  You wouldn’t blame Urta for leaving her hanging after saying something like that.  If Kath has any hopes of getting out of that belt anytime soon, she’d better apologise!\n\n");
-			outputText("The feline herm has the decency to look genuinely ashamed of herself as she turns to Urta, “<i>I’m sorry, Ms Urta,</i>” she says.\n\n");
+			outputText("You wouldn’t?  After saying something so inconsiderate, you damn well should!  Or need you remind her that she was in basically the same situation as Urta before you met her?  You wouldn’t blame Urta for leaving her hanging after saying something like that.  If Kath has any hopes of getting out of that belt anytime soon, she’d better apologize!\n\n");
+			outputText("The feline herm has the decency to look genuinely ashamed of herself as she turns to Urta, “<i>I’m sorry, Ms. Urta,</i>” she says.\n\n");
 			outputText("“<i>...Just Urta, is fine,</i>” Urta grumbles, then heaves a sigh.\n\n");
 			outputText("You nod your head, that’s much better now...\n\n");
 			outputText("Kath then turns to you.  “<i>Can you let me out of this belt now?  Please?</i>” she begs.  You sigh and tell her that if she wants release, she’d better talk to Urta.  After what she’s done, you don’t really feel like granting her release.\n\n");
 			outputText("“<i>Oh, come on!</i>” Kath protests, but you just ignore her.  “<i>Fiiine!</i>” she concedes, the fur on the back of her neck bristling.  She turns to Urta and takes a deep breath.  “<i>Can you grant me release?  Please?</i>”\n\n");
 			outputText("Urta just scowls and then storms off; clearly, this was pushing her a bit too far.  So much for things working out between the two of them... You hurry to catch up and try to convince her to cool down and give it a try.  You’d like them to get along; you feel that if they tried they could be really good friends... so why not give Kath a break?\n\n");
-			outputText("“<i>...I’d find it easier to give her a break if she’d stop being such a mouthy little -</i>” she trails off, making a sound you’re not sure a human could replicate.  “<i>It’s not that I mind the idea of you and her being together so much, but she keeps trying to push my buttons, and all because I’m part of the watch!  If she’s not going to try and respect me, why should I respect her?</i>”\n\n");
-			outputText("You explain to her that Kath’s had it rough with the watch... she views the watch as a bunch of bullies, and you’re trying to show her she was wrong.  Urta heaves a huge sigh, “<i>yeah, I can understand that, but it’s hard to resist the urge to punch her sometimes when she goes and gets mouthy like that.  I’m a watchwoman, yeah, but I’m a person too - if she won’t see me as anything other than the enemy, then I’m not sure I should bother helping her.</i>”\n\n");
+			outputText("“<i>...I’d find it easier to give her a break if she’d stop being such a mouthy little -</i>” she trails off, making a sound you’re not sure a human could replicate.  “<i>It’s not that I mind the idea of you and her being together so much, but she keeps trying to push my buttons, and all because I’m part of the Watch!  If she’s not going to try and respect me, why should I respect her?</i>”\n\n");
+			outputText("You explain to her that Kath’s had it rough with the Watch... she views the Watch as a bunch of bullies, and you’re trying to show her she was wrong.  Urta heaves a huge sigh, “<i>Yeah, I can understand that, but it’s hard to resist the urge to punch her sometimes when she goes and gets mouthy like that.  I’m a Watchwoman, yeah, but I’m a person too - if she won’t see me as anything other than the enemy, then I’m not sure I should bother helping her.</i>”\n\n");
 			outputText("Well... one of them has to give... otherwise this just won’t work.  Seeing no other option, you take hold of Urta’s head and pull her into a kiss, letting your hands wander over her butt and rapidly erecting horse-cock.  The surprised fox stiffens, but then eagerly melts into your embrace, too hungry for your affection to hold onto her frustration with Kath.\n\n");
 			outputText("Breaking the kiss you ask her to do this for you... in exchange you’ll make it worth her while.  You smile seductively at her.  “<i>You do not play fair, " + player.short + ",</i>” Urta tells you, tapping you playfully on the nose, a wicked grin curling on her lips.  “<i>What do you have in mind, hmm?  Something special?</i>”\n\n");
-			outputText("You suggest that if she gives Kath a hand with her problem... you’d be happy to give her a hand with her own problem.  You gently reach for her shaft, sensuously teasing it with light touches.  Your vulpine partner moans, precum already starting to bubble out of her ever-ready prick.  “<i>Alright, you got a deal, sweet thing.</i>”  She suddenly grabs you and kisses you fiercely, striving to stun you with the intensity of her gesture.  “<i>I’m a lucky girl to have you... I just hope kitty realises how lucky she is that she’s got you too.</i>”  She says after she finally breaks the liplock.\n\n");
+			outputText("You suggest that if she gives Kath a hand with her problem... you’d be happy to give her a hand with her own problem.  You gently reach for her shaft, sensuously teasing it with light touches.  Your vulpine partner moans, precum already starting to bubble out of her ever-ready prick.  “<i>Alright, you got a deal, sweet thing.</i>”  She suddenly grabs you and kisses you fiercely, striving to stun you with the intensity of her gesture.  “<i>I’m a lucky girl to have you... I just hope kitty realizes how lucky she is that she’s got you too.</i>”  She says after she finally breaks the liplock.\n\n");
 			outputText("You smile at her, and motion for her to lead the way.  She nods, her prick bobbing before her.  Kath looks up in puzzlement as the two of you approach, while Urta tries to avoid blushing as she is exposed to her fellow mismatched herm.  “<i>Alright, seeing as how I’m in the mood too, I guess I can help you.</i>”\n\n");
 			outputText("The cat simply shrugs, as if to say ‘what the heck’, and then nods.  Urta produces the key and unlocks the belt, which Kath practically tears off, her " + katherine.cockMultiple("", "twin ") + "doggie-dongs stabbing fiercely into the air, dripping with their need.  She promptly sits herself down on the floor, waiting for Urta to do the same.  With surprising shyness, the herm fox seats herself beside the cat.  “<i>Now, let’s see... you’re " + (katherine.cockLength <= 10 ? "a lot " : "") + " smaller than me, so let’s see how works...</i>” Urta mutters, cracking her fingers.  She then reaches out a hand and closes her fingers gently around Kath’s " + katherine.cockMultiple("", "upper ") + "shaft...\n\n");
 			outputText("You could probably try and live up to your promise by giving Urta a handjob yourself, or just leave the two to pleasure each other.");
-			var helpThem:Function = katherineTrainingWithUrtaStage1HornyHelp;
-			if (player.gender == 0) helpThem = null;
-			simpleChoices("Help Out", helpThem, "Leave", katherineTrainingWithUrtaStage1HornyLeave, "", null, "", null, "", null);
+			menu();
+			if (!player.isGenderless()) {
+				addButton(0, "Help Out", katherineTrainingWithUrtaStage1HornyHelp);
+			} else {
+				addDisabledButton(0, "Help Out", "This scene requires you to have genitals.");
+			}
+			addButton(1, "Leave", katherineTrainingWithUrtaStage1HornyLeave);
 		}
 
 		private function katherineTrainingWithUrtaStage1HornyLeave():void
@@ -862,7 +898,7 @@ package classes.Scenes.Places.TelAdre{
 		{
 			clearOutput();
 			outputText("When you come to you're lying on your back - fairly clean, but still matted in some places with the results of your session with the lovely herms.  You stretch the kinks out of your limbs and sit up.  Immediately, you gaze upon Urta, scolding Kath for something she did wrong... both already dressed.  You don’t really catch what’s being said as Kath retorts... so the two are still bickering... you sigh.  Upon closer inspection though... you see something different... rather than scowling at each other they’re... smiling?  Well, well.  It seems these two can get along after all.\n\n");
-			outputText("With a groan you rise to your feet, looking around to see if you can spot your " + player.armorName + ".  “<i>Hello, sleepy-head; bout time you woke up.</i>” Kath suddenly declares, spotting you getting up.  Urta turns to confirm and smiles.  “<i>Well, I guess we wore you out, huh?</i>” she jokes.  No kidding... you might have to think twice next time you decide to join them...\n\n");
+			outputText("With a groan you rise to your feet, looking around to see if you can spot your " + player.armorName + ".  “<i>Hello, sleepy-head; 'bout time you woke up.</i>” Kath suddenly declares, spotting you getting up.  Urta turns to confirm and smiles.  “<i>Well, I guess we wore you out, huh?</i>” she jokes.  No kidding... you might have to think twice next time you decide to join them...\n\n");
 			outputText("“<i>Well, maybe we’ll need to get together like this a little more often; we’re a trio now, aren’t we?</i>” Urta asks, smiling - and not a playful smile, a genuine one.\n\n");
 			outputText("“<i>That’s right,</i>” Kath agrees, nodding her head, wearing the same smile.  You chuckle, it seems your little bonding session did work out after all... you tell Urta and Kath that you didn't think they’d grow so fond of each other so quickly.\n\n");
 			outputText("“<i>We’re not friends!</i>” Urta promptly protests.  “<i>That’s right!  There’s no way I’m going to be friends with lady truncheon here as long as she keeps strapping me into that belt!</i>” Kath adds.  “<i>Oh yeah?  Well, as long as you keep running that mouth of yours off, I can’t be friends with you either!</i>” Urta snaps back.\n\n");
@@ -935,14 +971,18 @@ package classes.Scenes.Places.TelAdre{
 			outputText("Urta rolls back on top of Kath and pins her firmly to the floor.  “<i>Well puss, that’s what happens when you think with your cock,</i>” Urta says, smiling. “<i>Expect to wake up in some alleyway missing some of your gems and all of your dignity.</i>”\n\n");
 			outputText("Urta tries to get up but Kath’s legs are still locked around her waist.  Kath grins and asks “<i>What happened to filling me up like a big condom if you win?</i>”\n\n");
 			outputText("“<i>That was <b>if</b> we were in the wasteland.  Get off already!</i>” Urta looks over at you and mutters “<i>You told her what to do, so I blame you for this.</i>”  While Urta uses the key to unlock Kath’s chastity belt you protest that this wasn’t what you suggested.  As Kath’s cock springs free, flicking some drops of pre across the floor Urta cuts you off.  “<i>You wanted to help with her training, so you can help me fill this little kitty.</i>”");
-			var spitroast:Function = threesome.spitroastKath;
-			if (player.gender == 0) spitroast = null;
-			simpleChoices("Spitroast", spitroast, "Leave", katherineTrainingWithUrtaStage2HornyLeave, "", null, "", null, "", null);
+			menu();
+			if (!player.isGenderless()) {
+				addButton(0, "Spitroast", threesome.spitroastKath);
+			} else {
+				addDisabledButton(0, "Spitroast", "This scene requires you to have genitals.");
+			}
+			addButton(1, "Leave", katherineTrainingWithUrtaStage2HornyLeave);
 		}
 
 		private function katherineTrainingWithUrtaStage2HornyLeave():void
 		{
-			if (player.gender == 0)
+			if (player.isGenderless())
 				outputText("\n\nYou gesture toward your featureless crotch and remind Urta that there's no way you're going to be able to help fill Kath.  You wish her the best of luck and wave goodbye as Kath, now free of her chastity belt, wraps herself around Urta once more.");
 			else
 				outputText("\n\nYou’ve already been away from camp for a while.  You need to get back there and check on the portal.  Besides, Kath and Urta are getting along with each other better every time they have sex.  Katherine starts to lick at one of Urta’s nipples.");
@@ -1021,7 +1061,7 @@ package classes.Scenes.Places.TelAdre{
 				outputText("“<i>...Haven’t you ever played games before?</i>” Kath finally asks, looking at Urta with a shocked expression on her face.\n\n");
 				outputText("Urta blushes.  “<i>I...er... well... oh, you two are just being ridiculous!</i>” she complains, throwing her arms up in exasperation.\n\n");
 				outputText("You and Kath look at each other and then burst out laughing.  Urta looks on with an annoyed expression, triangular ears twitching at the sound of your laughter.  With a mutter and a scowl she storms over and physically separates the pair of you.  “<i>Alright, kitty, that’s enough goofing off!  And you, " + player.short + "; if you aren’t going to help, then maybe you should just leave and let us get on with practicing,</i>” she growls.\n\n");
-				outputText("Still smiling, you tell Kath that you’ll stop by later to check up on her, encouraging her to keep trying until she’s able to properly get into the mindset.  “<i>I will, name, don’t you worry - I’m so close now, I won’t let you down!</i>” she vows.\n\n");
+				outputText("Still smiling, you tell Kath that you’ll stop by later to check up on her, encouraging her to keep trying until she’s able to properly get into the mindset.  “<i>I will, " + player.short + ", don’t you worry - I’m so close now, I won’t let you down!</i>” she vows.\n\n");
 				outputText("Then you turn to Urta and wink at her, telling her there’s no need to be such a killjoy... you’ll be happy to help her get over her grumpiness later, in bed.  “<i>I bet you will, " + player.short + ",</i>” Kath jokes.  “<i>But, you know, Urta, if if " + player.short + "’s not giving you enough love, I’ve got a pole you could use to loosen up with.</i>”\n\n");
 				outputText("You frown jokingly and tell Kath to find her own fox-herm, you got dibs on this one.  “<i>Dibs?  When did you call that?  And besides, she’s really kind of sexy now that I've got to know her - why shouldn’t I have some fun if she’s willing?</i>” the cat-herm jokes.  You smile confidently and boast of all the experience you have handling this particular piece of horse-dicked fox ass, and tell her of how overfilled Urta’s condoms get when the two of you happen to have some fun.\n\n");
 				outputText("“<i>Oh so the two of you have THAT much fun, huh?  Well now I just have to have a piece of that vixen all for myself...</i>” Kath laughs, licking her lips with an exaggerated leer.  Not if you can help it, you argue stepping in front of Urta and blocking Kath’s hungry eyes.  “<i>Move aside, " + player.short + ".  This is a free city, I’m allowed to look at whatever piece of ass I damn well please,</i>” Kath protests, grabbing your arm and trying to get you to move away playfully.\n\n");
@@ -1044,11 +1084,18 @@ package classes.Scenes.Places.TelAdre{
 			outputText("Urta moves in next to Kath and says “<i>We’re going to have to work on that.  It’s a sure bet that perps will <b>whoa!</b></i>”  Kath has got her hands on Urta’s breasts and is purring much more loudly now.  Urta swats her away and back up.  “<i>No Kath, fight it.  This is exactly what some perps will do.</i>”\n\n");
 			outputText("Kath starts to rub her own breasts as her torso and tail sway from side to side in a hypnotic dance.  Only her overly flexible spine allows her to move that way.\n\n");
 			outputText("Urta shakes her head and says “<i>Well she’s no good to anyone now.  It was your idea to tease her so now you’re going help me calm this kitty.</i>”");
-			var spitroast:Function = threesome.spitroastKath;
-			var three69:Function = threesome.threeSixtyNine;
-			if (player.gender == 0) spitroast = null;
-			if (!player.hasCock()) three69 = null;
-			simpleChoices("Spitroast", spitroast, "369", three69, "Try Leaving", threesome.roastYou, "", null, "", null);
+			menu();
+			if (!player.isGenderless()) {
+				addButton(0, "Spitroast", threesome.spitroastKath);
+			} else {
+				addDisabledButton(0, "Spitroast", "This scene requires you to have genitals.");
+			}
+			if (player.hasCock()) {
+				addButton(1, "369", threesome.threeSixtyNine);
+			} else {
+				addDisabledButton(1, "369", "This scene requires you to have cock.");
+			}
+			addButton(2, "Try Leaving", threesome.roastYou);
 		}
 
 		private function katherineTrainingWithUrtaComplete():void
@@ -1057,23 +1104,23 @@ package classes.Scenes.Places.TelAdre{
 			outputText("As you approach the safehouse, you wonder what else is on the agenda for Katherine’s training.  However, when you get there, Urta is outside, looking expectantly up and down the streets.  She sees you and grins widely, tail wagging openly in her happiness.\n\n");
 			outputText("You smile and wave to the excited vixen, approaching her.  Once you’re close enough you ask what is the reason for all that happiness?  Could it be that she’s just that happy to see you? you joke.\n\n");
 			outputText("“<i>You know I’m always happy to see you, " + player.short + ".</i>”  Urta says with a smile - indeed, you think you can see the faintest signs of that familiar stirring in her oversized prick.  “<i>But this time, I've got good news; introducing the Watch’s newest Corporal, Katherine!</i>”  She proclaims in a proud, excited tone, stepping away from the door and performing a surprisingly elegant bow as it flies open and out marches a very proud-looking black cat-morph.  Clad in a new helmet and chainmail jerkin, sporting a decent-looking broadsword at her hip, Kath smiles at you, pride and nervousness mingling on her face as she awaits your opinion.\n\n");
-			outputText("You look her over and nod your head in approval, commenting that the look suits Kath well.  Why... if you knew she was going to look so good in her gear, you might have skipped all this training and just gotten her some fetish clothing... then the two of you could-");
+			outputText("You look her over and nod your head in approval, commenting that the look suits Kath well.  Why... if you knew she was going to look so good in her gear, you might have skipped all this training and just gotten her some fetish clothing... then the two of you could...\n\n");
 			outputText("Kath promptly lunges for you, latching her arms around your waist - whether she couldn’t stand to hear any more or is just that excited, who can say?  “<i>Thank you, " + player.short + "!  Thank you, thank you, thank you, thank you!</i>” she cheers, laughing wildly with glee and squeezing for all she’s worth.  Then, out of the corner of her eye, she spots the grinning fox-herm watching the display, promptly lets go of you and hurls herself at Urta, knocking her to the floor and cuddling her like a cat possessed.  “<i>And thank you, Urta!  Without the two of you, I wouldn’t... well, I...</i>”\n\n");
 			outputText("“<i>It’s alright, Kath, it’s alright.  I knew you had it in you,</i>” Urta says, stroking the cat’s ears.  “<i>Now, if you’d kindly get off of me and help me up...?</i>” she suggests with an embarrassed blush.  Kath promptly blushes as well and stands up, helping her new superior officer to her feet.\n\n");
 			outputText("You can’t help but laugh at the little display of affection from Kath.  Still... you’re curious... how was the test?\n\n");
 			outputText("Kath grins and points her thumb at herself.  “<i>I aced every last one of the written tests and the practical tests, thanks to the training you guys put me through,</i>” she proudly proclaims.\n\n");
 			outputText("Urta nods her head.  “<i>Indeed she did.  I’m proud of how far our little rebel has come.</i>”");
-			outputText("You clap your hands, congratulating Kath on a job well done.  Then ask her how does it feel?  To finally have a job?  Even if it wasn’t her dream job...\n\n");
+			outputText("\n\nYou clap your hands, congratulating Kath on a job well done, then ask her how it feels - to finally have a job?  Even if it wasn’t her dream job...\n\n");
 			outputText("“<i>You can say that again, but a job is a job, and it feels great - finally, I’ll be something more than a homeless vagrant!  I can hold my head high - even go and see my parents again!</i>” Kath cheers.  You smile at the cat-herm, then turn to Urta and take the vixen’s hands in yours, thanking her for her time and patience.  Kath would never have managed it if it weren’t for her.\n\n");
 			outputText("Urta smiles and waves her hand in a casual manner.  “<i>It’s okay; I was doing something to help out my " + player.mf("boy", "girl") + "friend; I got a petty criminal off the street and rehabilitated, and, heck, I even netted a cute little assistant to boot.  Though I wouldn’t say no to a little personal thank you later on...</i>” she trails off, winking at you.\n\n");
 			outputText("“<i>Wait, assistant?</i>” Kath asks, clearly baffled to hear that.  You can’t help but voice your surprise as well, asking Urta to elaborate.\n\n");
 			outputText("“<i>They were originally discussing assigning Kath to another part of the city, but I pulled a few strings and, well, you’re now my official assistant, Corporal Kath.  Which, incidentally, means you’ll be hanging around here where you and " + player.short + " have ample opportunities to bump into each other,</i>” The fox herm explains, giving her a knowing wink as she finishes.  This makes Kath blush and giggle nervously.");
-			outputText("“<i>That’s wonderful news!</i>” you say.  This way you'll always be able to see two of your favorite girls anytime.  Now that you have not one... but two girlfriends working in the watch... you ask what you get as a reward? grinning at them both.\n\n");
+			outputText("“<i>That’s wonderful news!</i>” you say.  This way you'll always be able to see two of your favorite girls anytime.  Now that you have not one... but two girlfriends working in the watch... you ask what you get as a reward, grinning at both of them.\n\n");
 			outputText("The two herms look at each other, grin and then look back at you.  “<i>Hmm... what do you say, Kath?  Would a nice, long spitroasting be reward enough?</i>” Urta suggests.  “<i>" + katherine.cockMultiple("I bag " + player.mf("his ass", "her pussy") + ", foxy - you’ll choke [him] on that supersize sausage of yours", "I bag the back end, I got two shafts for the price of one") + ",</i>” Kath purrs.\n\n");
 			outputText("The two of them start advancing menacingly towards you, and then they spring...!  ...Only to start smothering you in kisses.  You can’t help but scream at their lunge, only to begin laughing, tossing and turning as the girls continue to kiss you, you try to kiss them back, but the flurry of kisses you’re getting makes the task nearly impossible.  By the time Urta and Kath let you up, you’re panting, and more than a little aroused.  You grin at the girls and tell them you’ll take this as an invitation to seek them out later for some proper “<i>rewards</i>”.  Now then, this begs for a celebration.  “<i>Any ideas?</i>” you ask the two of them.\n\n");
 			outputText("“<i>We can all go to the Wet Bitch for a nice stiff drink,</i>” Urta suggests eagerly, tail wagging at the thought.\n\n");
 			outputText("“<i>It’d be nice to be inside the bar instead of rummaging through the dustbins outside...</i>” Kath agrees.\n\n");
-			outputText("Alright... the bar it is then.  You motion extend an arm for each of the herms.  They loop their arms around yours and you lead them away.\n\n");
+			outputText("All right... the bar it is then.  You motion extend an arm for each of the herms.  They loop their arms around yours and you lead them away.\n\n");
 			doNext(katherineTrainingWithUrtaCompleteContinued);
 		}
 
@@ -1090,18 +1137,21 @@ package classes.Scenes.Places.TelAdre{
 			flags[kFLAGS.KATHERINE_LOCATION] = Katherine.KLOC_KATHS_APT; //This ensures that after you talk Kath will disappear for the rest of the day due to stuff she needs to sort out
 			flags[kFLAGS.KATHERINE_URTA_AFFECTION] += 10; //Kath and Urta will like each other by the time they’re finished training
 			if (flags[kFLAGS.KATHERINE_URTA_AFFECTION] > 28) flags[kFLAGS.KATHERINE_URTA_AFFECTION] = 28; //Make sure they don't like each other too much
-			if (player.gender == 0)
-				doNext(katherineTrainingWithUrtaCompleteLeave);
-			else {
+			
+			menu();
+			if (player.isGenderless()) {
+				addDisabledButton(0, "Stay", "This scene requires you to have genitals.");
+			} else {
 				outputText("That’s an enticing sight... you should really get back to your duties... but on the other hand another hour with the two herm beauties wouldn’t be so bad, would it?  What to do...");
-				simpleChoices("Stay", katherineTrainingWithUrtaCompleteStay, "Leave", katherineTrainingWithUrtaCompleteLeave, "", null, "", null, "", null);
+				addButton(0, "Stay", katherineTrainingWithUrtaCompleteStay);
 			}
+			addButton(1, "Leave", katherineTrainingWithUrtaCompleteLeave);
 		}
 
 		private function katherineTrainingWithUrtaCompleteLeave():void
 		{
 			clearOutput();
-			outputText("You apologise to the amorous herms, but you really have to be going...\n\n");
+			outputText("You apologize to the amorous herms, but you really have to be going...\n\n");
 			outputText("“<i>Aw...</i>” the two sigh, clearly disappointed.  “<i>Well, I guess we’ll just try to have fun without you... but we’ll miss you,</i>” Urta says.  “<i>Yeah, so hurry back, lover,</i>” Kath winks, right before Urta reaches up and, to Kath’s own visible surprise, pulls her into a kiss... damn, but she must be drunk.\n\n");
 			outputText("On the way out, you pay your tab and wave to the two girls, who seem too busy with each other to notice... well... you’ll just find out how this ends via gossip later...");
 			doNext(camp.returnToCampUseFourHours); //Return to camp, use up four hours
@@ -1122,8 +1172,13 @@ package classes.Scenes.Places.TelAdre{
 			outputText("The two herms look at each other, and nod silently, then hug each other and say, “<i>I’m sorry,</i>” in unison.  Then, with a wicked grin, they spring up and hug you, letting you feel the prominent bulges of their erect cocks against your belly.\n\n");
 			outputText("Okay, okay, you say, laughing at the two amorous herms.  You don’t know about them, but you really don’t feel like being charged with public indecency... so let’s go to the back-rooms? you suggest once more.\n\n");
 			outputText("“<i>Sounds good to me!</i>” they cheer at once.  You lead the girls away, arm in arm, followed by the envious stares of more than a few patrons...");
-			var dpKath:Function = (player.hasCock() ? threesome.doublePenetrateKath : null);
-			simpleChoices("Let 'em fuck", threesome.doubleStuffKath, "DP Kath", dpKath, "", null, "", null, "", null);
+			menu();
+			addButton(0, "Let 'em fuck", threesome.doubleStuffKath);
+			if (player.hasCock()) {
+				addButton(1, "DP Kath", threesome.doublePenetrateKath);
+			} else {
+				addDisabledButton(1, "DP Kath", "This scene requires you to have cock.");
+			}
 		}
 
 		public function katherineGetsEmployed():void

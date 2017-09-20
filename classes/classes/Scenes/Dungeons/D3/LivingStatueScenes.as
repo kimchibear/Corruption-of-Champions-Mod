@@ -47,7 +47,7 @@ package classes.Scenes.Dungeons.D3
 			
 			player.createKeyItem("Stone Statue Lethicite", 0, 0, 0, 0);
 
-			cleanupAfterCombat(getGame().d3.resumeFromFight);
+			combat.cleanupAfterCombat(getGame().dungeons.resumeFromFight);
 		}
 		
 		public function fuckinMarbleOP(hpVictory:Boolean, pcCameWorms:Boolean):void
@@ -55,7 +55,7 @@ package classes.Scenes.Dungeons.D3
 			clearOutput();
 			outputText("You slump to your knees, overwhelmed and unable to see the shadow of the falling hammer. Your last thoughts are of regret.");
 			
-			doBadEnd();
+			getGame().gameOver();
 		}
 	}
 

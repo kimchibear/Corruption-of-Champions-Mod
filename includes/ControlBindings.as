@@ -1,7 +1,12 @@
 import classes.GlobalFlags.kGAMECLASS;
 import flash.ui.Keyboard;
+import coc.view.MainView;
+import classes.Bindings;
 
 use namespace kGAMECLASS;
+
+// I'm planning to move this whole thing out of includes later (Stadler76)
+var bindings:Bindings = kGAMECLASS.bindings;
 
 inputManager.AddBindableControl(
 	"Show Stats",
@@ -9,7 +14,7 @@ inputManager.AddBindableControl(
 	function():void {
 		if (mainView.menuButtonIsVisible(MainView.MENU_STATS) && player.str > 0)
 		{
-			displayStats(undefined);
+			kGAMECLASS.playerInfo.displayStats();
 		}
 	});
 
@@ -19,182 +24,29 @@ inputManager.AddBindableControl(
 	function():void {
 		if (mainView.menuButtonIsVisible(MainView.MENU_LEVEL) && player.str > 0)
 		{
-			levelUpGo(undefined);
+			kGAMECLASS.playerInfo.levelUpGo();
 		}
 	});
 
-inputManager.AddBindableControl(
-	"Quicksave 1",
-	"Quicksave the current game to slot 1",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA) && player.str > 0)
-		{
-			mainView.nameBox.text = "";
-			saves.saveGame("CoC_1");
-			outputText("Game saved to slot 1!", true);
-			doNext(1);
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quicksave 2",
-	"Quicksave the current game to slot 2",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA) && player.str > 0)
-		{
-			mainView.nameBox.text = "";
-			saves.saveGame("CoC_2");
-			outputText("Game saved to slot 2!", true);
-			doNext(1);
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quicksave 3",
-	"Quicksave the current game to slot 2",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA) && player.str > 0)
-		{
-			mainView.nameBox.text = "";
-			saves.saveGame("CoC_3");
-			outputText("Game saved to slot 3!", true);
-			doNext(1);
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quicksave 4",
-	"Quicksave the current game to slot 4",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA) && player.str > 0)
-		{
-			mainView.nameBox.text = "";
-			saves.saveGame("CoC_4");
-			outputText("Game saved to slot 4!", true);
-			doNext(1);
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quicksave 5",
-	"Quicksave the current game to slot 5",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA) && player.str > 0)
-		{
-			mainView.nameBox.text = "";
-			saves.saveGame("CoC_5");
-			outputText("Game saved to slot 5!", true);
-			doNext(1);
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quickload 1",
-	"Quickload the current game from slot 1",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA))
-		{
-			var saveFile:* = SharedObject.getLocal("CoC_1", "/");
-			if (saveFile.data.exists)
-			{
-				if (saves.loadGame("CoC_1"))
-				{
-					showStats();
-					statScreenRefresh();
-					outputText("Slot 1 Loaded!", true);
-					doNext(1);
-				}
-			}
-		}
-	});
+inputManager.AddBindableControl("Quicksave 1", "Quicksave the current game to slot 1", function():void { bindings.execQuickSave(1); });
+inputManager.AddBindableControl("Quicksave 2", "Quicksave the current game to slot 2", function():void { bindings.execQuickSave(2); });
+inputManager.AddBindableControl("Quicksave 3", "Quicksave the current game to slot 3", function():void { bindings.execQuickSave(3); });
+inputManager.AddBindableControl("Quicksave 4", "Quicksave the current game to slot 4", function():void { bindings.execQuickSave(4); });
+inputManager.AddBindableControl("Quicksave 5", "Quicksave the current game to slot 5", function():void { bindings.execQuickSave(5); });
 
-inputManager.AddBindableControl(
-	"Quickload 2",
-	"Quickload the current game from slot 2",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA))
-		{
-			var saveFile:* = SharedObject.getLocal("CoC_2", "/");
-			if (saveFile.data.exists)
-			{
-				if (saves.loadGame("CoC_2"))
-				{
-					showStats();
-					statScreenRefresh();
-					outputText("Slot 2 Loaded!", true);
-					doNext(1);
-				}
-			}
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quickload 3",
-	"Quickload the current game from slot 3",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA))
-		{
-			var saveFile:* = SharedObject.getLocal("CoC_3", "/");
-			if (saveFile.data.exists)
-			{
-				if (saves.loadGame("CoC_3"))
-				{
-					showStats();
-					statScreenRefresh();
-					outputText("Slot 3 Loaded!", true);
-					doNext(1);
-				}
-			}
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quickload 4",
-	"Quickload the current game from slot 4",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA))
-		{
-			var saveFile:* = SharedObject.getLocal("CoC_4", "/");
-			if (saveFile.data.exists)
-			{
-				if (saves.loadGame("CoC_4"))
-				{
-					showStats();
-					statScreenRefresh();
-					outputText("Slot 4 Loaded!", true);
-					doNext(1);
-				}
-			}
-		}
-	});
-	
-inputManager.AddBindableControl(
-	"Quickload 5",
-	"Quickload the current game from slot 5",
-	function():void {
-		if (mainView.menuButtonIsVisible(MainView.MENU_DATA))
-		{
-			var saveFile:* = SharedObject.getLocal("CoC_5", "/");
-			if (saveFile.data.exists)
-			{
-				if (saves.loadGame("CoC_5"))
-				{
-					showStats();
-					statScreenRefresh();
-					outputText("Slot 5 Loaded!", true);
-					doNext(1);
-				}
-			}
-		}
-	});
-	
+inputManager.AddBindableControl("Quickload 1", "Quickload the current game from slot 1", function():void { bindings.execQuickLoad(1); });
+inputManager.AddBindableControl("Quickload 2", "Quickload the current game from slot 2", function():void { bindings.execQuickLoad(2); });
+inputManager.AddBindableControl("Quickload 3", "Quickload the current game from slot 3", function():void { bindings.execQuickLoad(3); });
+inputManager.AddBindableControl("Quickload 4", "Quickload the current game from slot 4", function():void { bindings.execQuickLoad(4); });
+inputManager.AddBindableControl("Quickload 5", "Quickload the current game from slot 5", function():void { bindings.execQuickLoad(5); });
+
 inputManager.AddBindableControl(
 	"Show Menu",
 	"Show the main menu",
 	function():void {
 		if (mainView.menuButtonIsVisible(MainView.MENU_NEW_MAIN) && mainView.menuButtonHasLabel(MainView.MENU_NEW_MAIN, "Main Menu"))
 		{
-			mainMenu(undefined);
+			kGAMECLASS.mainMenu.mainMenu();
 		}
 	});
 
@@ -214,7 +66,7 @@ inputManager.AddBindableControl(
 	function():void {
 		if (mainView.menuButtonIsVisible(MainView.MENU_APPEARANCE))
 		{
-			appearance(undefined);
+			kGAMECLASS.playerAppearance.appearance();
 		}
 	});
 	
@@ -244,7 +96,7 @@ inputManager.AddBindableControl(
 	function():void {
 		if (mainView.menuButtonIsVisible(MainView.MENU_PERKS))
 		{
-			displayPerks(undefined);
+			kGAMECLASS.playerInfo.displayPerks();
 		}
 	});
 
@@ -487,6 +339,15 @@ inputManager.AddBindableControl(
 			executeButtonClick(14);
 		}
 	});
+inputManager.AddBindableControl(
+		"History",
+		"Show text history",
+		function():void {
+			if (flags[kFLAGS.SHIFT_KEY_DOWN]) {
+				trace(kGAMECLASS.mainViewManager.traceSelf());
+			}
+			kGAMECLASS.output.showHistory();
+		});
 
 inputManager.AddBindableControl(
 	"Cheat! Give Hummus",
@@ -594,7 +455,7 @@ inputManager.AddBindableControl(
 		{
 			if (keyCode == 71)
 			{
-				if (player.str > 0 && mainView.getButtonText(0).indexOf("Game Over") == -1)
+				if (player.str > 0 && mainView.getButtonText(0).indexOf("Game Over") == -1 && (debug && flags[kFLAGS.HARDCORE_MODE] <= 0 || CoC_Settings.debugBuild))
 				{
 					kGAMECLASS.debugMenu.accessDebugMenu();
 				}
@@ -650,5 +511,6 @@ inputManager.BindKeyToControl(Keyboard.S, "Button 12", InputManager.SECONDARYKEY
 inputManager.BindKeyToControl(Keyboard.D, "Button 13", InputManager.SECONDARYKEY);
 inputManager.BindKeyToControl(Keyboard.F, "Button 14", InputManager.SECONDARYKEY);
 inputManager.BindKeyToControl(Keyboard.G, "Button 15", InputManager.SECONDARYKEY);
+inputManager.BindKeyToControl(Keyboard.H, "History");
 
 inputManager.RegisterDefaults();

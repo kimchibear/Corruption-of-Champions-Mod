@@ -2,6 +2,7 @@ package classes.Scenes.Dungeons.D3
 {
 	import classes.*;
 	import classes.internals.*;
+	import classes.Items.*
 	
 	/**
 	 * ...
@@ -12,7 +13,7 @@ package classes.Scenes.Dungeons.D3
 		private function doubleAttack():void
 		{
 			outputText("The monstrous basilisk suddenly lunges forward, snarling wordlessly as he swings his cutlass at you twice, the blows of a savage yet expert swordsman.\n\n");
-			createStatusAffect(StatusAffects.Attacks, 2, 0, 0, 0);
+			createStatusEffect(StatusEffects.Attacks, 2, 0, 0, 0);
 			eAttack();
 			combatRoundOver();
 		}
@@ -34,11 +35,11 @@ package classes.Scenes.Dungeons.D3
 		
 		public function handleTease(lustDelta:Number, successful:Boolean):void
 		{
-			if (player.findStatusAffect(StatusAffects.RemovedArmor) < 0)
+			if (!player.hasStatusEffect(StatusEffects.RemovedArmor) && player.armor != ArmorLib.NOTHING)
 			{
 				outputText("\n\nJean-Claude stops circling you, looking mildly surprised as you attempt to entice him with your body.");
 
-				outputText("\n\n“<i>This is the legendary Champion of Ignam?</i>” he husks. “<i>Flaunting themselves like the most amateur of Lethice’s strippers?</i>” His eyes glow orange. “<i>If that was your intent all along, interloper, you should not do it so half-assedly. You should take off all your clothes, embrace what you truly are, show me what you are really made of.</i>” The hypnotic compulsion presses upon you, commanding you to raise your hands to your [armor]’s clasps...");
+				outputText("\n\n“<i>This is the legendary Champion of Ingnam?</i>” he husks. “<i>Flaunting themselves like the most amateur of Lethice’s strippers?</i>” His eyes glow orange. “<i>If that was your intent all along, interloper, you should not do it so half-assedly. You should take off all your clothes, embrace what you truly are, show me what you are really made of.</i>” The hypnotic compulsion presses upon you, commanding you to raise your hands to your [armor]’s clasps...");
 				
 				if (!successful)
 				{
@@ -51,20 +52,20 @@ package classes.Scenes.Dungeons.D3
 					outputText("\n\n“<i>Very nice, interloper,</i>” Jean-Claude breathes. His wide smile turns ugly. “<i>Look forward to seeing that every night. I hope it is not too chilly in here for you.</i>” The basilisks which surround you snigger and you blink, the scales falling from your eyes as you realize what you have just done. There is no time to claw your clothes back on: Jean-Claude is upon you, forcing you to fall back, and you will have to fight the rest of this battle in the buff!");
 
 					// (JC arousal up one level, PC’s armor removed for rest of battle)
-					player.createStatusAffect(StatusAffects.RemovedArmor, 0, 0, 0, 0);
+					player.createStatusEffect(StatusEffects.RemovedArmor, 0, 0, 0, 0);
 					
-					if (this.findStatusAffect(StatusAffects.JCLustLevel) < 0)
+					if (!this.hasStatusEffect(StatusEffects.JCLustLevel))
 					{
-						this.createStatusAffect(StatusAffects.JCLustLevel, 1, 0, 0, 0);
+						this.createStatusEffect(StatusEffects.JCLustLevel, 1, 0, 0, 0);
 						lustVuln += 0.1;
 					}
 					else
 					{
-						this.addStatusValue(StatusAffects.JCLustLevel, 1, 1);
+						this.addStatusValue(StatusEffects.JCLustLevel, 1, 1);
 					}
 					
 					applyTease(lustDelta);
-					game.dynStats("lus+", 20);
+					player.takeLustDamage(20, true);
 				}
 			}
 			else
@@ -72,7 +73,7 @@ package classes.Scenes.Dungeons.D3
 				outputText("\n\n“<i>Even when made the fool, still you try it, still you think you can entice me with things I have seen a thousand times before,</i>” Jean-Claude sighs. “<i>Why not give up, interloper? You do these things because they arouse YOU, not because you hope they arouse me. Give up, and embrace the life you were born to lead.</i>” Despite these words his hungry eyes remain on your body. Perhaps he can’t help it. You can only hope...");
 				
 				if (successful) applyTease(lustDelta);
-				game.dynStats("lus+", 20);
+				player.takeLustDamage(20, true);
 			}
 		}
 		
@@ -97,11 +98,14 @@ package classes.Scenes.Dungeons.D3
 			hipRating = HIP_RATING_AVERAGE;
 			buttRating = BUTT_RATING_AVERAGE;
 			lowerBody = LOWER_BODY_TYPE_LIZARD;
+			tailType = TAIL_TYPE_LIZARD;
 			skinDesc = "green-purple mottled hide";
 			initStrTouSpeInte(80, 100, 80, 60);
 			initLibSensCor(40, 40, 80);
 			faceType = FACE_LIZARD;
-			
+			earType = EARS_LIZARD;
+			eyeType = EYES_BASILISK;
+
 			weaponName = "cutlass";
 			weaponVerb = "slash";
 			weaponAttack = 20;
@@ -116,7 +120,9 @@ package classes.Scenes.Dungeons.D3
 			gems = 300 + rand(55);
 			
 			this.drop = NO_DROP;
-			
+
+			this.createPerk(PerkLib.BasiliskResistance, 0, 0, 0, 0);
+
 			checkMonster();
 		}
 		

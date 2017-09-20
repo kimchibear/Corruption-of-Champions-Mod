@@ -8,10 +8,22 @@ package classes.Scenes.Areas.GlacialRift
 		public var tempSpeedLoss:Number = 0;
 		
 		public function yetiClawAndPunch():void {
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("The yeti beast charges at you, though his claws only strike at air as you move nimbly over the ice flooring beneath you. The beast lets out an annoyed snarl.")
 			}
 			else {
+				if (hasStatusEffect(StatusEffects.Blind) && rand(3) > 0) {
+					outputText("The yeti furiously charges at you but blind as he is, he ends up running into the wall face-first instead. ");
+					var yetiDamage:Number = 30 + rand(50);
+					HP -= yetiDamage;
+					outputText("The beast takes <b><font color=\"#080000\">" + yetiDamage + "</font></b> damage. ");
+					if (rand(2) == 0) {
+						outputText("<b>He is now stunned.</b>");
+						createStatusEffect(StatusEffects.Stunned, 2, 0, 0, 0);
+					}
+					combatRoundOver();
+					return;
+				}
 				outputText("Like a white blur the yeti charges you, striking at you with his claws and slashing over your " + player.armorName + " before a fist collides with your side, sending you sliding over the icy floor. ")
 				var damage:Number = str + 25 + rand(50);
 				damage = player.reduceDamage(damage);
@@ -20,7 +32,7 @@ package classes.Scenes.Areas.GlacialRift
 			combatRoundOver();
 		}
 		public function yetiTackleTumble():void {
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				//yeti takes moderate damage
 				outputText("Sensing the beast’s intentions as you hear the cracking of ice under his feet, you dart to the side as the beast launches at you. With wide eyes, the ice yeti collides face first into the wall of the cave with a yelped growl. It rubs its face as it glares at you. ");
 				var yetiDamage:Number = 30 + rand(50);
@@ -37,10 +49,15 @@ package classes.Scenes.Areas.GlacialRift
 			combatRoundOver();
 		}
 		public function yetiSnowball():void {
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			if (player.getEvasionRoll()) {
 				outputText("The beast steps back, magic condensing mist into ice within his hand. With narrow eyes you ready your body, and as soon as the ball of frost is whipped at you, you dart to the side avoiding it. The ice shatters uselessly against the wall, the ice yeti looking quite annoyed in your direction. ");
 			}
 			else {
+				if (hasStatusEffect(StatusEffects.Blind) && rand(3) > 0) {
+					outputText("The beast takes a step back, mist forming into a ball in his clenched fist. It condenses into a ball before your eyes, and with a growl the beast whips it at you. Blind as he is, the ball ends up missing you and hitting the wall instead.");
+					combatRoundOver();
+					return;
+				}
 				outputText("The beast takes a step back, mist forming into a ball in his clenched fist. It condenses into a ball before your eyes, and with a growl the beast whips it at you. The ball slams into your " + player.armorName + " and explodes into frost, you hiss at the sting. The frost is also restricting your movement. ");
 				var damage:Number = (str / 2) + rand(20);
 				damage = player.reduceDamage(damage);
@@ -62,7 +79,7 @@ package classes.Scenes.Areas.GlacialRift
 			combatRoundOver();
 		}
 		
-		public function yetiAI():void
+		override protected function performCombatAction():void
 		{
 			var chooser:Number = 0;
 			chooser = rand(10);
@@ -71,18 +88,6 @@ package classes.Scenes.Areas.GlacialRift
 			if (chooser >= 4 && chooser < 7) yetiTackleTumble(); //30% chance
 			if (chooser >= 7 && chooser < 9) yetiTease(); //20% chance
 			if (chooser >= 9) yetiSnowball(); //10% chance
-		}
-		
-		override public function doAI():void
-		{
-			if (findStatusAffect(StatusAffects.Stunned) >= 0) {
-				outputText("Your foe is too dazed from your last hit to strike back!", false)
-				if (statusAffectv1(StatusAffects.Stunned) <= 0) removeStatusAffect(StatusAffects.Stunned);
-				else addStatusValue(StatusAffects.Stunned, 1, -1);
-				combatRoundOver();
-				return;
-			}
-			yetiAI();
 		}
 		
 		override public function defeated(hpVictory:Boolean):void
@@ -133,10 +138,7 @@ package classes.Scenes.Areas.GlacialRift
 			this.level = 20;
 			this.gems = 35 + rand(25);
 			this.drop = NO_DROP;
-			this.createStatusAffect(StatusAffects.GenericRunDisabled, 0, 0, 0, 0);
-			//this.special1 = spearAttack;
-			//this.special2 = shieldBash;
-			//this.special3 = aerialRave;
+			this.createStatusEffect(StatusEffects.GenericRunDisabled, 0, 0, 0, 0);
 			checkMonster();
 		}
 		

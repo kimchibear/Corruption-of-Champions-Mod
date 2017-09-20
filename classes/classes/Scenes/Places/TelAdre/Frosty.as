@@ -15,7 +15,7 @@ public function Frosty(){
 //[Deciding to talk to her]
 public function approachFrosty():void {
 	clearOutput();
-	if(flags[kFLAGS.MET_FROSTY] == 0)
+	if (flags[kFLAGS.MET_FROSTY] == 0)
 	{
 		flags[kFLAGS.MET_FROSTY] = 1;
 		outputText("You approach the pink girl and as she sees you walking towards her, she immediately makes a beeline for you. Before you know it, the girl is right in front of you, jamming one of her fliers right in your face and speaking fast and hyperactivily to you. “<i>Hello " + player.mf("sir","madam") + ", would you like to come to ‘Frosty Cake’s Cupcake stand’? I’m Frosty- Nice to meet you- I recently opened a sweets-stand and can’t wait to have loyal customers such as you coming to my stand every day and buying all kinds of super delicious cupcakes!”</i> You have to take a step back to process everything she just blurted out; you also take the flyer from her just so she stops pushing it against your face. “<i>So do you wanna come to my stand, do ya, do ya, do ya!?</i>” You answer her with an uncertain “<i>yes</i>”, still wondering what she just said.");
@@ -67,11 +67,11 @@ public function approachFrosty():void {
 public function frostyMainMenu():void
 {
 	menu();
-	if(player.gems >= 15) addButton(0,"x1",cupcakeBuy,1);
-	if(player.gems >= 60) addButton(1,"x5",cupcakeBuy,5);
-	if(player.gems >= 110) addButton(2,"x10",cupcakeBuy,10);
-	if(player.gems >= 200) addButton(3,"x20",cupcakeBuy,20);
-	if(flags[kFLAGS.SIGNED_FROSTYS_CONTRACT] == 0) addButton(8,"Contract",getAFuckingFuckContractFromFucks);
+	if (player.gems >= 15) addButton(0,"x1",cupcakeBuy,1);
+	if (player.gems >= 60) addButton(1,"x5",cupcakeBuy,5);
+	if (player.gems >= 110) addButton(2,"x10",cupcakeBuy,10);
+	if (player.gems >= 200) addButton(3,"x20",cupcakeBuy,20);
+	if (flags[kFLAGS.SIGNED_FROSTYS_CONTRACT] == 0) addButton(8,"Contract",getAFuckingFuckContractFromFucks);
 	else addButton(8,"Specials",frostysLimitedSpecialMenu);
 	addButton(14,"Leave",kGAMECLASS.telAdre.telAdreMenu);
 	
@@ -82,11 +82,11 @@ public function frostySpecialsMenu(free:Boolean = false):void
 	//1. Hand – 5. points
 	//2. Mouth-15. Points
 	menu();
-	if(!free && flags[kFLAGS.FROSTY_POINTS] < 5) outputText("\n\nYou don't have enough points for any services.")
-	else if(!free && flags[kFLAGS.FROSTY_POINTS] < 15) outputText("\n\nYou don't have enough points for mouth service.")
-	if(free || flags[kFLAGS.FROSTY_POINTS] >= 5) addButton(0,"Hand",frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp);
-	if(free || flags[kFLAGS.FROSTY_POINTS] >= 15) addButton(1,"Mouth",useFrostysMouth);
-	if(free || flags[kFLAGS.FROSTY_POINTS] >= 1) addButton(8,"EatHerOut",cunnilingateFrosty);
+	if (!free && flags[kFLAGS.FROSTY_POINTS] < 5) outputText("\n\nYou don't have enough points for any services.")
+	else if (!free && flags[kFLAGS.FROSTY_POINTS] < 15) outputText("\n\nYou don't have enough points for mouth service.")
+	if (free || flags[kFLAGS.FROSTY_POINTS] >= 5) addButton(0,"Hand",frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp);
+	if (free || flags[kFLAGS.FROSTY_POINTS] >= 15) addButton(1,"Mouth",useFrostysMouth);
+	if (free || flags[kFLAGS.FROSTY_POINTS] >= 1) addButton(8,"EatHerOut",cunnilingateFrosty);
 	addButton(14,"Back",approachFrosty);
 }
 
@@ -95,13 +95,13 @@ public function cupcakeBuy(arg:int = 1):void
 	clearOutput();
 	outputText("You make your purchase and swiftly devour the results. They're surprisingly delicious!");
 	//15
-	if(arg == 1) player.gems -= 15;
+	if (arg == 1) player.gems -= 15;
 	//60
-	if(arg == 5) player.gems -= 60;
+	if (arg == 5) player.gems -= 60;
 	//110
-	if(arg == 10) player.gems -= 110;
+	if (arg == 10) player.gems -= 110;
 	//200
-	if(arg == 20) player.gems -= 200;
+	if (arg == 20) player.gems -= 200;
 	frostyPoints(arg);
 	player.refillHunger(5 * arg);
 	menu();
@@ -135,7 +135,8 @@ public function yesIWantYourFreeSampleYouFuckingDiseasedCupcakeSlut():void
 //[No]
 public function noIDontWantAFreebieDiseaseYouSlut():void {
 	clearOutput();
-	outputText("You’re too busy right now, so you deny the free service. “<i>Okeydokey, see you around [name].</i>” Frosty does a twirl on one foot and runs back to her stand. Such a nice girl.");
+	outputText("You’re too busy right now, so you deny the free service. “<i>Okeydokey, see you around, [name]!</i>” Frosty does a twirl on one foot and runs back to her stand. Such a nice girl.");
+	menu();
 	addButton(0,"Next",kGAMECLASS.telAdre.telAdreMenu);
 }
 
@@ -193,11 +194,11 @@ public function frostysLimitedSpecialMenu():void
 }
 
 private function frostyPoints(arg:int = 0):int {
-	if(arg == 0) return flags[kFLAGS.FROSTY_POINTS];
+	if (arg == 0) return flags[kFLAGS.FROSTY_POINTS];
 	//If any change, add it in.
 	flags[kFLAGS.FROSTY_POINTS] += arg;
 	//Make sure it aint negative
-	if(flags[kFLAGS.FROSTY_POINTS] < 0) flags[kFLAGS.FROSTY_POINTS] = 0;
+	if (flags[kFLAGS.FROSTY_POINTS] < 0) flags[kFLAGS.FROSTY_POINTS] = 0;
 	return flags[kFLAGS.FROSTY_POINTS];
 }
 
@@ -205,12 +206,12 @@ private function frostyPoints(arg:int = 0):int {
 public function frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp():void
 {
 	clearOutput();
-	if(!player.hasCock() && !player.hasVagina())
+	if (!player.hasCock() && !player.hasVagina())
 	{
 		genderlessCatchAllForFrosty();
 		return;
 	}
-	if(player.hasCock() && !player.hasVagina())
+	if (player.hasCock() && !player.hasVagina())
 	{
 		outputText("“<i>Okay, one tug-and-pull comin' right up.</i>” she giggles at her own name for a hand-job and ducks under the table, pulling up a big, fancy, cushioned chair that looks like it belongs to a noble. It barely fits in the tiny space under her booth. She throws the chair right next to her stand and it lands perfectly, hardly making a sound. In one moment Frosty disappears and reappears on the chair, sitting on its arm and waving her hand over to the seat, gesturing for you to sit. You follow her gesture and take a seat in the comfy chair. Just sitting there makes you feel like the ruler of a land. Placing your arms on the armrests, you feel like a boss.");
 		outputText("\n\nYou didn’t even that notice Frosty has moved from the armrest and is now on her knees at level with your groin, her hands rubbing together, making a suggestive sound of rubbing flesh.");
@@ -221,7 +222,7 @@ public function frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp():void
 		outputText("\n\nShe wraps her sticky fingers around your cock; the syrup on them is as warm as the desert sun, slick like a cunt and her grip is as tight as a virgin’s slit. Each finger takes a turn to squeeze down on your member like she is playing a flute, a cock flute. She even makes a musical “doo-dah-lee-do” sound as she continues to “play” her song. Your cock begins hardening in her hand, pushing against her grip, making you feel like your growing cock is being choked by a leather strap.");
 		outputText("\n\n Only when it’s fully erect does she release you, strands of the syrup still connecting her fingers to the shaft of your [cock biggest]. She stares at her “handy” work and watches it pulsing and throbbing, just asking for her to give it the release it wants so much. She makes a little giggle, amused by your involuntary actions.");
 		outputText("\n\n“<i>Ooooh, your ");
-		if(player.biggestCockLength() < 7) outputText("little");
+		if (player.biggestCockLength() < 7) outputText("little");
 		else outputText("big");
 		outputText(" friend is just waiting for me to milk his cream out. Tee-hee.</i>”");
 
@@ -234,7 +235,7 @@ public function frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp():void
 		outputText("\n\n“<i>Thank you for your business, hope to see you again.</i>”");
 		outputText("\n\nYou ask her who's gonna clean the syrup off your cock. “<i>Oh my, I guess I can’t leave your ");
 
-		if(player.biggestCockLength() < 7) outputText("little");
+		if (player.biggestCockLength() < 7) outputText("little");
 		else outputText("big");
 		outputText(" friend all covered in the sweet goo.</i>” She licks her lips in a seductive manner. Sweet, you were able to get a free BJ from her. Frosty kneels back down, opens her mouth and puts two fingers inside of it. She makes a high-pitched sound that rings in your ears and in the next instant you’re both suddenly dosed in a waterfall of ice-cold water. You sit there wondering what just happened while Frosty looks up behind you and yells: “<i>Thanks Terry!!!</i>”");
 
@@ -244,7 +245,7 @@ public function frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp():void
 		//[Player is back at camp]}
 	}
 	//[If player is female]
-	else if(player.hasVagina() && !player.hasCock())
+	else if (player.hasVagina() && !player.hasCock())
 	{
 		outputText("“<i>Okay, one dig-dug comin' right up.</i>” she giggles at her own name for a fingering. She ducks under the table and pulls up a big, fancy cushioned chair that looks like it belongs to a noble and also shouldn’t be able to fit in the tiny space under her booth. She throws the chair right next to her stand and it lands perfectly, hardly making a sound. In one moment Frosty just disappears and reappears on the chair, sitting on its arm and waving her hand over to the seat, gesturing for you to sit. You follow her gesture and take a seat in the comfy chair; just sitting there makes you feel like the ruler of a land. Placing your arms on the armrests, you feel like a boss.");
 		outputText("\n\nFrosty has moved from the armrest and is now pulling at the bottom half of your [armor]. With one quick hard tug, she exposes your [butt] and [vagina] to the busy city street; a few people stop to gawk at the both of you. She places her thumbs on both sides of your cunt and stretches the lips wide and hard.");
@@ -274,7 +275,7 @@ public function frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp():void
 		outputText("\n\nShe lifts your cock up, giving it small strokes while holding it up, to get a look at your cunt, which is getting aroused and puffy from the stimulation from your dick. She gives your clit a light poke with one finger and holds it there, giving both your sensitive bits a light electric feeling of pleasure. Your cock growing hard in her hand and your cunt getting wet under her finger, she frees you from her teasing grip and poke.");
 		outputText("\n\nYour [cock biggest] stands erect and your [vagina] drips wetness. Frosty reaches under the chair and pulls out a bottle of syrup from there. She looks at the bottle with a grin, opens it, swirls it around like a fine wine and sniffs its sweet aroma in. Then she holds the bottle over your skyward pointing cock and tilts the bottle, spilling the desert-hot syrup onto your [cockHead biggest].");
 		outputText("\n\nIt pools a little bit on the head on then spills over, flowing down your shaft and onto ");
-		if(player.balls > 0) outputText("your [balls]");
+		if (player.balls > 0) outputText("your [balls]");
 		else outputText("your pussy lips");
 		outputText(". Your cock throbs and your pussy twitches as the brown ooze pleasures both your sex organs. Frosty spills the entire bottle's contents over your pleasure bits and helps spread the masses of syrup as she grips your [cock biggest] and strokes it with enthusiasm. She lets out little giggles here and there as your cock gets messy and sticky with the sweet liquid. Faster and faster she keeps stroking you, covering your entire dick and bringing you to the edge of cumming, but then she quickly releases her grip. Your cock throbs like crazy now; you can almost feel the cum about to shoot out.");
 		outputText("\n\nOne little touch would send you over the edge, but after a few seconds your hard throbbing slows down to nothing and your cum feels like it’s going back into your body.");
@@ -301,21 +302,21 @@ public function frostysHandsAreColdHolyShitWhyDontYouWarmTHoseMitsUp():void
 	frostyPoints(-5);
 	//[Player is back at camp]
 	dynStats("sen", -1);
-	player.orgasm();
+	player.orgasm('Generic');
 	doNext(camp.returnToCampUseOneHour);
 }
 
 //[Mouth]
 public function useFrostysMouth():void
 {
-	if(!player.hasCock() && !player.hasVagina())
+	if (!player.hasCock() && !player.hasVagina())
 	{
 		genderlessCatchAllForFrosty();
 		return;
 	}
 	clearOutput();
 	//[If player is male]
-	if(player.hasCock() && !player.hasVagina())
+	if (player.hasCock() && !player.hasVagina())
 	{
 		outputText("“<i>One banana-licking comin' right up.\"</i> You roll your eyes at the comment as Frosty blurs away her display then vaults over the counter with ease and is suddenly behind you. You quickly turn around just as she pushes your backside against her stand and falls to her knees. She’s about to pull the lower half your [armor] off but decides not to. You wonder what she’s going to do as she stretches her jaw and sticks out her tongue for a few minutes. After she’s done with that, she cracks her neck and looks at your pants, like it’s a challenge. Then, in an instant, she’s able to undo your [armor] with just her tongue and teeth and has you standing waist-down naked. Now you have second thoughts of having any of your naughty bits near that mouth.");
 		outputText("\n\nJust before Frosty starts her mouth sex, she raises a finger up like she’s remembering something and quickly crawls around to the back of the booth, wiggling her tush in the air. You hear her rummaging under the counter and then she’s suddenly back in front of you; did she even crawl back around? In her hands is a yellow bottle shaped like a bee-girl and a thin black rope. She plops back down on her ass with her boobs doing a little jiggle when she lands. She holds the black rope up and tells you what it’s for.");
@@ -338,7 +339,7 @@ public function useFrostysMouth():void
 		//[Player is back at camp]
 	}
 	//[If player is female]
-	else if(player.hasVagina() && !player.hasCock())
+	else if (player.hasVagina() && !player.hasCock())
 	{
 		outputText("“<i>One sundae-eating coming right up!</i>\" You roll your eyes at the comment as Frosty blurs away her display then vaults over the counter with ease and is suddenly behind you. You quickly turn around just as she pushes your backside against her stand and falls to her knees. She’s about to pull the lower half of your [armor] off but decides not to. You wonder what she’s going to do as she stretches her jaw and sticks out her tongue for a few minutes. After she’s done with that, she cracks her neck and looks at your pants, like it’s a challenge. Then, in an instant, she’s able to undo your [armor] with just her tongue and teeth and has you standing waist-down naked. Now you have second thoughts of having any of your naughty bits near that mouth. Just before Frosty starts her mouth sex, she raises a finger like she’s remembering something and quickly crawls around to the back of the booth, wiggling her tush in the air.");
 		outputText("\n\nYou hear her rummaging under the counter and then she’s suddenly back in front of you; did she even crawl back around? In her hands is a yellow bottle shaped like a bee-girl and a thin black rope. She plops back down on her ass with her boobs doing a little jiggle when she lands. She holds the black rope up and tells you what it’s for.");
@@ -377,7 +378,7 @@ public function useFrostysMouth():void
 	frostyPoints(-15);
 	//[Player is back at camp]
 	dynStats("sen", -1);
-	player.orgasm();
+	player.orgasm('Generic');
 	doNext(camp.returnToCampUseOneHour);
 }
 
@@ -385,7 +386,7 @@ public function useFrostysMouth():void
 public function genderlessCatchAllForFrosty():void
 {
 	clearOutput();
-	if(flags[kFLAGS.SEEN_GENDERLESS_FROSTY_REJECTION] == 0)
+	if (flags[kFLAGS.SEEN_GENDERLESS_FROSTY_REJECTION] == 0)
 	{
 		flags[kFLAGS.SEEN_GENDERLESS_FROSTY_REJECTION]++;
 		//[If player selects any option and is Gender-less 1st time]
@@ -465,7 +466,7 @@ Hitting the wall effect
 public function cunnilingateFrosty():void 
 {
 	clearOutput();
-	outputText("She looks at the service you selected and a wide smirk comes over her face. “<i>Ooooh, I love that one!</i>” she squeals in delight, putting away a good amout of her display in a blur, then vaulting over the counter. You jump back,  avoiding her legs as she takes a seat on the edge of your side of the counter with her legs crossed. You’re about to bend down to her crotch level and spread her two pink legs open when she suddenly holds up one finger to you and quickly blurts out: “<i>Oh wait, I forgot one more thing!</i>” She leans her back onto the counter, her hair draping on the other side as she it looks like she’s searching under the counter for something. You hear her let out an “A-HA!” as Frosty’s body shifts to grab what she was looking for; she gracefully pulls herself back with some strange lean metal cylinder with a thin nozzle on the top in her hand.");
+	outputText("She looks at the service you selected and a wide smirk comes over her face. “<i>Ooooh, I love that one!</i>” she squeals in delight, putting away a good amount of her display in a blur, then vaulting over the counter. You jump back,  avoiding her legs as she takes a seat on the edge of your side of the counter with her legs crossed. You’re about to bend down to her crotch level and spread her two pink legs open when she suddenly holds up one finger to you and quickly blurts out: “<i>Oh wait, I forgot one more thing!</i>” She leans her back onto the counter, her hair draping on the other side as she it looks like she’s searching under the counter for something. You hear her let out an “A-HA!” as Frosty’s body shifts to grab what she was looking for; she gracefully pulls herself back with some strange lean metal cylinder with a thin nozzle on the top in her hand.");
 	outputText("\n\nShe holds a finger up to the nozzle’s tip and you hear it make a spraying sound as a fluffy white substance is dispensed on her fingertip. She holds the fingers down to you, expecting you to suck the stuff off her finger. Maybe it is the heat of the moment or something else but you latch your mouth around that finger and have your tongue explore as much as it can. The white stuff is sweet and fluffy, immediately turning into a flat sugary liquid when it makes contract with your spit. You continue sucking on her finger, Frosty looking at you with delight, until the taste of the sweet stuff is gone. She pulls her finger from your craving mouth, a trail of saliva following and breaking as she takes it back.");
 	outputText("\n\n“<i>You really like my cream don’t ya?  Well, guess where you can get more?</i>”");
 
@@ -495,7 +496,7 @@ function analWithACupcakeSloot():void
 {
 	clearOutput();
 	//(If player has a cock, they are presented with this option)
-	if(player.hasCock())
+	if (player.hasCock())
 	{
 		outputText("“<i>So you wanna be the pitcher or the catcher?</i>” she ask with devilish smile. What the hell is that suppose to mean?");
 		//[pitcher?]  [catcher?]
@@ -511,10 +512,10 @@ function pitcherInTheRyeAndByRyeIMeanFrostysBrownHole():void
 	clearOutput();
 	outputText("“<i>Ok, let’s see if you can strike me out.</i>”  She closes one eye and sticks her tongue out at you.  This girl has a few screws loose, doesn’t she? You see her pull the strings of her bikini-bottom and you can assume she bare ass naked  behind the counter now. Through you couldn’t really see from where you standing, as the countertop is a little above waist level to her. She motions for you to walk around and join her on the cashier side.  You move around the counter, and you were right, her bikini bottom has fallen to the  ground and Frosty is practically naked, save for the little bit of cloth holding back her massive, pink tits.");
 	outputText("\n\n“<i>Well, what are you waiting for? Get that thing out and let the fun start!</i>\"");
-	outputText("\n\nYou squeeze behind her, there being just enough room for the two to stand front to butt from one another, your body squishing against her soft back-side.  You reach into your [armor] and release your " + multiCockDescriptLight() + " from ");
-	if(player.cockTotal() == 1) output("its");
+	outputText("\n\nYou squeeze behind her, there being just enough room for the two to stand front to butt from one another, your body squishing against her soft back-side.  You reach into your [armor] and release your " + player.multiCockDescriptLight() + " from ");
+	if (player.cockTotal() == 1) output("its");
 	else output("their");
-	outputText(" prision, the hot mass getting tangled in the curly hair draping over her back. It’ll take some maneuvering from the both of you but eventually your cock-head makes contact with her tight pink hole. Frosty take a deep breath and starts easing her-self down your " + cockDescript(x) + ". It takes her only a few moment for your cock to  be snugly secured in her insides. She stands up straight and the grip around your cock becomes tighter. She breath out “This is like the only service where I can man the shop and pleasure a customer, a bit exhausting but business is business.”   
+	outputText(" prision, the hot mass getting tangled in the curly hair draping over her back. It’ll take some maneuvering from the both of you but eventually your cock-head makes contact with her tight pink hole. Frosty take a deep breath and starts easing her-self down your " + player.cockDescript(x) + ". It takes her only a few moment for your cock to  be snugly secured in her insides. She stands up straight and the grip around your cock becomes tighter. She breath out “This is like the only service where I can man the shop and pleasure a customer, a bit exhausting but business is business.”   
 
 “Mph, you reply as you begin to rock your [hips], starting the pleasurable fiction. As you begin revving up, a centauress trot over to the booth. She has blonde hair done up in a bun and is sporting  two big lovely breast. She looks perplexed on why you're standing behind Frosty and why she’s breathing heavily and has a flushed look on her face. It’s doesn’t take long for her to put two and two together. She’s about to give you two some privately but Frosty quickly stops her.
 	
@@ -578,7 +579,7 @@ She rubs a finger along the length of your [cunt.descipt.], damping the crotch o
 
 	She looks into your eyes and smiles while her hands reaches to undo the bottoms of your [armor.descipt].  You help her a little and soon your [amor.desciption] no longer cover your [ass.descipt] or your [multi-/cock.descipt] [and] [cunt.dscipt]. You courstyly take a step forward and take a side-glance at Frosty, she still has that impish smile on, waiting to shove that 3ft cock-stick in your ass. You let a  little sigh and wonder if she want this more than you.
 
-	You bend over the counter and present your [buttDescript] to the fake herm nymph. She snaps her fingers once more and the strap-on spring backs to attention. You feel her spread your cheeks aparts, getting a better view of your (assholeDescript) She manuervers her hips to line the flared head up to your pucker.You feel it’s cold material lightly pushing brushing against your back-hole.  Knowing of what behind that small cold feeling causes your
+	You bend over the counter and present your [buttDescript] to the fake herm nymph. She snaps her fingers once more and the strap-on spring backs to attention. You feel her spread your cheeks aparts, getting a better view of your (player.assholeDescript) She manuervers her hips to line the flared head up to your pucker.You feel it’s cold material lightly pushing brushing against your back-hole.  Knowing of what behind that small cold feeling causes your
 
 [If player has just cock ] 
 	[cock.descipt]/[mulit-cock.decipt] to get hard and beads of pre form on it’s/their throbbing  tip(s).
@@ -592,7 +593,7 @@ She rubs a finger along the length of your [cunt.descipt.], damping the crotch o
 [If play is genderless]
 	heart beats in anticipation.
 [else]
-	You shallow down these lustful feelings of wanting and brace yourself when Frosty grabs onto your [hipDescrip] and slowly pushes her horse-cock in, spreading you [assholeDescript]. You’re to fully take this fucking but she stops pushing the foreign object only at 2-inches in, you relax your body. Thinking she stopped to let you catch your breath or something. So wrong, once you body relaxes, she shoves the rest of the 34-inches in you with one powerful thrust. You let out a shriek of surprise that echoes through the city, losing all the strength in your
+	You shallow down these lustful feelings of wanting and brace yourself when Frosty grabs onto your [hipDescrip] and slowly pushes her horse-cock in, spreading you [assholeDescript]. You’re to fully take this fucking but she stops pushing the foreign object only at 2-inches in, you relax your body. Thinking she stopped to let you catch your breath or something. So wrong, once your body relaxes, she shoves the rest of the 34-inches in you with one powerful thrust. You let out a shriek of surprise that echoes through the city, losing all the strength in your
 
 [if player has normal legs]
 legs, the left one doing an odd twitch 
@@ -615,7 +616,7 @@ You continue to stare at her with those cold eyes, her smiling back at them, hop
 
 You re-brace yourself as Frosty grabs onto your [hair.descipt] this time.  You arch your back  in pain  causing you to be pushed harder against the sex toy, you whine a little in agony as that devilous nymph begins rocking back and forth, you can feel the object move in you. 
 
-It moves only few inches on your onsides. Your mind starts racing with pleasure as Frosty’s other hand wanders over your [allBreastsDescript] and pinches on your [nippleDescript(0)], pulling and twisting the nip and taking nice hard grabs at your [ breastDescript(0)] A familiar build-up forms down in your crotch, you start pushing back against Frosty’s “cock” to hurry up the climax and start pinching your other [nippleDescript(0)] minicing the same action as the torturous nymph does, abusing the sensitive bud all in the name of sexaul pleasure.   
+It moves only few inches on your onsides. Your mind starts racing with pleasure as Frosty’s other hand wanders over your [allBreastsDescript] and pinches on your [nippleDescript(0)], pulling and twisting the nip and taking nice hard grabs at your [ player.breastDescript(0)] A familiar build-up forms down in your crotch, you start pushing back against Frosty’s “cock” to hurry up the climax and start pinching your other [nippleDescript(0)] minicing the same action as the torturous nymph does, abusing the sensitive bud all in the name of sexaul pleasure.   
 
 Frosty pushes your chest against the counter and starts thrusting more of the horsecock in and out of you, slapping her pink thighs against you [butt.descipt] when every push, A whole foot of body hot sex toy is being thrusted in with a loud smack and pulled back out with a moan from you.  Both of you keep twisting your nips, the desert hot wooden counter top, warming your chest and stomach, pushing the hands already against your body harder into you. She starting taking bigger thrust, pulling at least 2ft of the strap-on out of you and shoving it back in with echoing slap of flesh.  Your moans grow faster and her breath gets hotter, and in the next moment []
 
@@ -628,9 +629,9 @@ you sexes release a huge mix of male and female cum, making huge mess by your fe
 [If gender-less]
 you feel building up in your groin and then releasing a glow of ecstasy cross your whole body.
 [else]
-Frosty makes a satisfied sigh and thrusted her hip to make sure you satisfied. She releases your hair, your head thudding against the countertop. She snaps her fingers again and the toy shrivels out of your (assholeDescript) and dangels back to between her ankels, leaving your ass-hole gaping wide open. 
+Frosty makes a satisfied sigh and thrusted her hip to make sure you satisfied. She releases your hair, your head thudding against the countertop. She snaps her fingers again and the toy shrivels out of your (player.assholeDescript) and dangels back to between her ankles, leaving your ass-hole gaping wide open. 
 
-“Now that I think about it, I should have used some form of lube... oh well, it got the job done. Woudn’t you agree [play.name]?’”  You agree with a wave of the hand, still exhausted and riding on the wave pleasure. She laughs at your half-hearted yes and walks over to the other end of you and whisper in your ear “I would get up and go soon or that guy with the huge knot behind you is gonna think you butt-hole is part of the display. You  quickly turn onto your backside, feeling yourself knocking an eager cock off it’s course. 
+“Now that I think about it, I should have used some form of lube... oh well, it got the job done. Woudn’t you agree [play.name]?’”  You agree with a wave of the hand, still exhausted and riding on the wave pleasure. She laughs at your half-hearted yes and walks over to the other end of you and whisper in your ear “I would get up and go soon or that guy with the huge knot behind you is gonna think your butt-hole is part of the display. You  quickly turn onto your backside, feeling yourself knocking an eager cock off it’s course. 
 
 A dog-morph stands there with the biggest knotted cock you've ever seen. You quickly gather all your things and make you way past him. He looks to Frosty to relieve him of his stresses. You hear Frosty say “All you have to do is sign these.”
 
@@ -709,7 +710,7 @@ She gives a light tap of the paddle on her hand, making a soft slap. Oh you can 
 
 She raises the paddle slowly, you start to [grow hard/ get wet/ feel aroused] with every inch she raises it,  higher and higher it goes. Above her head and as far as her arm can strech, holding it high in place. Watching as you squirm and withering, awaiting this pain you so rightfully deserve.
 
-*WHACK* The paddle hits in pleasurable pain ”OOOOOOOOOOOH!“ you moan out as you throw in your head back. Soon there are three quick slaps to you rear, every slap feels like its own orgasmic wave of  pleasure; like a tsunami, it spreads throughout your body. From the top of your head to the tips of your toes/tail, you shake with pleasure and sweat in pain. You sexy bits being devastated with arousal in the wake of these waves. Three more smacks, the quick whacks give you burst of lust that you could just overdose on. You start panting with your tongue out as your eyes begin to form tears in reaction to the pain.  How those eyes try to betray your true feelings. 
+*WHACK* The paddle hits in pleasurable pain ”OOOOOOOOOOOH!“ you moan out as you throw in your head back. Soon there are three quick slaps to your rear, every slap feels like its own orgasmic wave of  pleasure; like a tsunami, it spreads throughout your body. From the top of your head to the tips of your toes/tail, you shake with pleasure and sweat in pain. You sexy bits being devastated with arousal in the wake of these waves. Three more smacks, the quick whacks give you burst of lust that you could just overdose on. You start panting with your tongue out as your eyes begin to form tears in reaction to the pain.  How those eyes try to betray your true feelings. 
 
 *WHACK* *WHACK *WHACK* *WHACK* 
 

@@ -11,14 +11,14 @@ package classes.Scenes.Areas.Plains
 	{
 		
 		public function scimitarSpecial():void {
-			if (rand(4) == 0) scimitarCrossAttack();
+			if (rand(3) == 0) scimitarCrossAttack();
 			else scimitarAttack();
 		}
 		
 		public function scimitarAttack():void {
 			
-			outputText("The gatekeeper raises his scimitars ", false);
-			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) > 0) {
+			outputText("The gatekeeper raises his scimitars ");
+			if (hasStatusEffect(StatusEffects.Blind) && rand(3) > 0) {
 				outputText("and slashes his scimitars blindly, missing you by a great deal!");
 				combatRoundOver();
 				return;
@@ -26,21 +26,22 @@ package classes.Scenes.Areas.Plains
 			else {
 				outputText("and slashes towards you. You attempt to dodge your way out ");
 			}
-			if (combatEvade() || combatMisdirect())
+			var evade:String = player.getEvasionReason();
+			if (evade == EVASION_EVADE || evade == EVASION_MISDIRECTION)
 			{
-				outputText("and you successfully dodge his scimitars thanks to your superior evasion! ", false);
+				outputText("and you successfully dodge his scimitars thanks to your superior evasion! ");
 			}
-			else if (combatFlexibility())
+			else if (evade == EVASION_FLEXIBILITY)
 			{
-				outputText("and you use your incredible flexibility to barely fold your body and avoid his attacks!", false);
+				outputText("and you use your incredible flexibility to barely fold your body and avoid his attacks!");
 			}
-			else if (combatMiss())
+			else if (evade == EVASION_SPEED || evade != null)
 			{
-				outputText("and you successfully dodge his scimitars! ", false);
+				outputText("and you successfully dodge his scimitars! ");
 			}
 			else
 			{
-				outputText("but you get hit instead! ", false);
+				outputText("but you get hit instead! ");
 				var damage:int = int(str + weaponAttack + 100);
 				damage = player.reduceDamage(damage);
 				player.takeDamage(damage, true);
@@ -49,7 +50,7 @@ package classes.Scenes.Areas.Plains
 		}
 		
 		public function scimitarCrossAttack():void {
-			if (findStatusAffect(StatusAffects.Uber) <= 0) {
+			if (!hasStatusEffect(StatusEffects.Uber)) {
 				outputText("The gatekeeper raises his scimitars! Judging from the way he is holding, <b>he is going to cross-slash you!</b>");
 				combatRoundOver();
 				return;
@@ -57,62 +58,63 @@ package classes.Scenes.Areas.Plains
 			if (flags[kFLAGS.IN_COMBAT_USE_PLAYER_WAITED_FLAG] > 0) {
 				outputText("The gatekeeper slashes his scimitar towards you! Thanks to your preparedness, you manage to avoid his scimitars in the nick of time.");
 			}
-			else if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) > 0) {
+			else if (hasStatusEffect(StatusEffects.Blind) && rand(3) > 0) {
 				outputText("The blind gatekeeper slashes his scimitars wide, missing you by a great deal!");
 			}
 			else {
-				outputText("The gatekeeper slashes you brutally! You are in a lot of pain. ", false);
+				outputText("The gatekeeper slashes you brutally! You are in a lot of pain. ");
 				var damage:int = int(str + weaponAttack + 250);
 				damage = player.reduceDamage(damage);
 				player.takeDamage(damage, true);
 			}
-			removeStatusAffect(StatusAffects.Uber);
+			removeStatusEffect(StatusEffects.Uber);
 			combatRoundOver();
 		}
 		
 		override public function doAI():void
 		{
-			if (findStatusAffect(StatusAffects.Stunned) >= 0) {
-				outputText("Your foe is too dazed from your last hit to strike back!", false)
-				if (findStatusAffect(StatusAffects.Uber) >= 0) {
+			if (hasStatusEffect(StatusEffects.Stunned)) {
+				outputText("Your foe is too dazed from your last hit to strike back!")
+				if (hasStatusEffect(StatusEffects.Uber)) {
 					outputText(" You've managed to interrupt his special attack!");
-					removeStatusAffect(StatusAffects.Uber);
+					removeStatusEffect(StatusEffects.Uber);
 				}
-				if (statusAffectv1(StatusAffects.Stunned) <= 0) removeStatusAffect(StatusAffects.Stunned);
-				else addStatusValue(StatusAffects.Stunned, 1, -1);
+				if (statusEffectv1(StatusEffects.Stunned) <= 0) removeStatusEffect(StatusEffects.Stunned);
+				else addStatusValue(StatusEffects.Stunned, 1, -1);
 				combatRoundOver();
 				return;
 			}
-			if (findStatusAffect(StatusAffects.Fear) >= 0) {
+			if (hasStatusEffect(StatusEffects.Fear)) {
 				game.outputText("The gatekeeper appears to be immune to your fear.\n\n");
-				removeStatusAffect(StatusAffects.Fear);
+				removeStatusEffect(StatusEffects.Fear);
 			}
-			if (findStatusAffect(StatusAffects.Uber) >= 0) {
+			if (hasStatusEffect(StatusEffects.Uber)) {
 				scimitarCrossAttack();
-				removeStatusAffect(StatusAffects.Uber);
+				return;
 			}
 			//Choose attacks
 			var chooser:int = rand(6);
-			if (chooser < 3) eAttack();
-			else if (chooser >= 3 && chooser < 5) scimitarAttack();
-			else scimitarCrossAttack();
+			if (chooser < 4) eAttack();
+			else scimitarSpecial();
 		}
 		
 		override public function defeated(hpVictory:Boolean):void
 		{
-			outputText("You manage to knock the guard off his feet. With the guard unconscious, you manage to check for loot before you head in.", true);
+			clearOutput();
+			outputText("You manage to knock the guard off his feet. With the guard unconscious, you manage to check for loot before you head in.");
 			doNext(game.bazaar.winAgainstGuard);
 		}
 		
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
+			clearOutput();
 			if (hpVictory) {
-				outputText("You collapse, too weak to continue fighting. You are covered in cuts and bruises. The world blacks out. When you wake up, you realize that you are in a random location in the plains. You make your way back to your camp.", true);
+				outputText("You collapse, too weak to continue fighting. You are covered in cuts and bruises. The world blacks out. When you wake up, you realize that you are in a random location in the plains. You make your way back to your camp.");
 			}
 			else {
-				outputText("You collapse from your overwhelming desires and black out. When you wake up, you realize that you are in a random location in the plains. You make your way back to your camp.", true);
+				outputText("You collapse from your overwhelming desires and black out. When you wake up, you realize that you are in a random location in the plains. You make your way back to your camp.");
 			}
-			doNext(cleanupAfterCombat);
+			doNext(game.combat.cleanupAfterCombat);
 		}
 		
 		public function BazaarGatekeeper() 

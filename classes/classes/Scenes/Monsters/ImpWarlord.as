@@ -8,8 +8,8 @@ package classes.Scenes.Monsters
 	public class ImpWarlord extends Imp
 	{
 		public function clawAttack():void {
-			outputText("The imp warlord suddenly charges at you with his claws ready! ");
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			outputText("The imp warlord charges at you with his claws ready! ");
+			if (player.getEvasionRoll()) {
 				outputText("You manage to avoid his claws thanks to your reaction!");
 				combatRoundOver();
 				return;
@@ -25,8 +25,8 @@ package classes.Scenes.Monsters
 		}
 
 		public function doubleAttack():void {
-			outputText("The imp warlord suddenly charges at you with his claws ready and sword raised! ");
-			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
+			outputText("The imp warlord charges at you with his claws ready and sword raised! ");
+			if (player.getEvasionRoll()) {
 				outputText("You manage to dodge his deadly attack!");
 				combatRoundOver();
 				return;
@@ -38,7 +38,7 @@ package classes.Scenes.Monsters
 				if (damage < 20) damage = 20; //Min-cap damage.
 				if (damage >= 50) {
 					outputText("You let out a cry in pain and you swear you could see your wounds bleeding. ");
-					player.createStatusAffect(StatusAffects.IzmaBleed, 2, 0, 0, 0);
+					player.createStatusEffect(StatusEffects.IzmaBleed, 2, 0, 0, 0);
 				}
 				else {
 					outputText("Thankfully the wounds aren't that serious. ");
@@ -57,7 +57,7 @@ package classes.Scenes.Monsters
 
 		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
 		{
-			game.impScene.loseToAnImpLord();
+			game.impScene.loseToAnImpLord(false);
 		}
 		
 		public function ImpWarlord() 
@@ -71,7 +71,7 @@ package classes.Scenes.Monsters
 			// Imps now only have demon dicks.
 			// Not sure if I agree with this, I can imagine the little fuckers abusing the
 			// shit out of any potions they can get their hands on.
-			this.createCock(rand(2)+11,2.5,CockTypesEnum.DEMON);
+			this.createCock(rand(2) +11,2.5,CockTypesEnum.DEMON);
 			this.balls = 2;
 			this.ballSize = 1;
 			this.cumMultiplier = 3;
@@ -102,9 +102,9 @@ package classes.Scenes.Monsters
 					add(consumables.LABOVA_,2).
 					add(consumables.INCUBID,12).
 					add(consumables.SUCMILK,12).
-					add(jewelries.POWRRNG,1);
-			this.wingType = WING_TYPE_IMP;
-			this.special1 = 5019;
+					add(jewelries.POWRRN1,1);
+			this.wingType = WING_TYPE_IMP_LARGE;
+			this.special1 = lustMagicAttack;
 			this.special2 = clawAttack;
 			checkMonster();
 		}

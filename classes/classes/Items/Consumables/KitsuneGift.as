@@ -34,7 +34,7 @@ package classes.Items.Consumables
 				case 2:
 				outputText("As the paper falls away, you carefully lift the cover of the box, your hands trembling nervously.  The inside of the box is lined with purple velvet, and to your delight, it is filled to the brim with shining gems!");
 				var gems:int = 2 + Utils.rand(20);
-				outputText("\n\n<b>You've received " + game.num2Text(gems) + " shining gems from the kitsune's gift!  How generous!</b>");
+				outputText("\n\n<b>You've received " + Utils.num2Text(gems) + " shining gems from the kitsune's gift!  How generous!</b>");
 				game.player.gems += gems;
 				//add X gems to inventory
 				game.statScreenRefresh();
@@ -96,7 +96,7 @@ package classes.Items.Consumables
 				outputText("As the paper falls away, you carefully lift the cover of the box, your hands trembling nervously.  The inside of the box is lined with purple velvet, and sitting in the center is an artfully crafted paper doll.  Before your eyes, the doll springs to life, dancing about fancifully.  Without warning, it tosses a handful of sweet-smelling pink dust into your face, then hops over the rim of the box and gallavants off into the woods.  Before you know what has happened, you feel yourself growing hot and flushed, unable to keep your hands away from your groin.");
 				outputText("\n\n<b>Oh no!  The kitsune's familiar has hit you with a powerful aphrodisiac!  You are debilitatingly aroused and can think of nothing other than masturbating.</b>");
 				//+100 LUST
-				game.dynStats("lus=", 100, "resisted", false);
+				game.dynStats("lus", 100, "scale", false);
 				break;
 
 			//[Wither]
